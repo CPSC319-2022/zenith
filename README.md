@@ -6,3 +6,4 @@ The team members for the project are:
 4. Shawn Zhu
 5. Andrew Liu
 6. Anusha Saleem
+7. Cheryl Yu
