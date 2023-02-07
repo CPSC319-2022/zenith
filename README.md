@@ -8,3 +8,4 @@ The team members for the project are:
 6. Anusha Saleem
 7. Cheryl Yu
 8. Eric Wong
+9. Anthony Baek
