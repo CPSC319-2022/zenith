@@ -7,3 +7,4 @@ The team members for the project are:
 5. Andrew Liu
 6. Anusha Saleem
 7. Cheryl Yu
+8. Eric Wong
