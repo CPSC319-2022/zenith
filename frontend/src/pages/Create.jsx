@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Write = () => {
+const Create = () => {
     return (
         <div>
             Write
@@ -8,4 +8,4 @@ const Write = () => {
     );
 };
 
-export default Write;
+export default Create;

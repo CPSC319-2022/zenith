@@ -1,0 +1,23 @@
+/*HEADER COMPONENT*/
+/* CSS HEX */
+/*--gunmetal: #2d3142ff;*/
+/*--silver: #bfc0c0ff;*/
+/*--white: #ffffffff;*/
+/*--coral: #ef8354ff;*/
+/*--paynes-gray: #4f5d75ff;*/
+
+.navbar {
+}
+
+.header-container {
+    padding: 10px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ml-auto {
+    font-size: 16px;
+    font-weight: 300;
+}
+
+

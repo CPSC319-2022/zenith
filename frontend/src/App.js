@@ -1,13 +1,14 @@
 import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/App.css';
 
 // imported components
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import Write from "./pages/Write";
+import Create from "./pages/Create";
 import SinglePost from "./pages/SinglePost";
-import Navbar from "./common components/Navbar";
+import Header from "./common components/Header";
 import Footer from "./common components/Footer";
 import Profile from "./pages/Profile";
 
@@ -18,7 +19,7 @@ const Layout = () => {
     return (
         // React fragment needed because multiple components cannot be used without parent
         <>
-            <Navbar />
+            <Header />
             <Outlet />
             <Footer />
         </>
@@ -41,8 +42,8 @@ const router = createBrowserRouter([
                 element: <SinglePost />
             },
             {
-                path: "/write",
-                element: <Write />
+                path: "/create",
+                element: <Create />
             },
             {
                 path: "/profile",
