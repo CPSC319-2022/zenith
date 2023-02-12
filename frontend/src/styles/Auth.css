@@ -1,0 +1,57 @@
+/*LOGIN PAGE*/
+/* CSS HEX */
+/*--gunmetal: #2d3142ff;*/
+/*--silver: #bfc0c0ff;*/
+/*--white: #ffffffff;*/
+/*--coral: #ef8354ff;*/
+/*--paynes-gray: #4f5d75ff;*/
+
+.auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #4f5d75ff;
+}
+
+.h1 {
+    font-size: 30px;
+    color: #2d3142ff;
+    margin-bottom: 20px;
+}
+
+.mb-3 {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    width: 200px;
+    padding: 10px;
+    gap: 20px;
+    margin-bottom: 0rem !important;
+}
+
+.input {
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #BFC0C0;
+}
+
+.auth-button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #4f5d75ff;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.auth-button:hover {
+    color: #ffffff;
+    background-color: #2d3142ff;
+}
+
+.span {
+    font-size: 12px;
+    text-align: center;
+}
