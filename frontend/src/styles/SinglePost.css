@@ -1,0 +1,58 @@
+.single-post {
+    display: flex;
+    gap: 50px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.content img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+span {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.icons {
+    cursor:pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user img {
+    margin-top: 20px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.info {
+    margin-top: 20px;
+}
+
+h1 {
+    color: #2d3142ff;
+    font-size: 42px;
+    font-weight: bold;
+    font-family: "Helvetica Neue", sans-serif;
+}
+
+p {
+    text-align: justify;
+    line-height: 30px;
+}
