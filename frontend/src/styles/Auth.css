@@ -12,7 +12,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #bfc0c0ff;;
+    background-color: #ffffff;
 }
 
 .h1 {
@@ -38,17 +38,19 @@
 }
 
 .auth-button {
-    margin-top: 10px;
+
     padding: 10px;
-    border: none;
-    background-color: #4f5d75ff;
+    background-color: #ffffff;
+    border: 1px solid #ef8354ff;
     cursor: pointer;
-    color: #ffffff;
+    color: #4f5d75ff;
+    margin-top: 10px;
 }
 
 .auth-button:hover {
     color: #ffffff;
-    background-color: #2d3142ff;
+    border: 1px solid #ef8354ff;
+    background-color: #ef8354ff;
 }
 
 .span {

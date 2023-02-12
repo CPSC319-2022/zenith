@@ -11,7 +11,7 @@ const Header = () => {
                     <img
                         src={blogImg}
                         width="120"
-                        height="70"
+                        height="90"
                         className="d-inline-block align-top"
                         alt="React Bootstrap logo"
                     />
