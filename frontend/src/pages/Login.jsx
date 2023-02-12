@@ -2,7 +2,6 @@ import React from 'react';
 import {Button, Form} from "react-bootstrap";
 import '../styles/Auth.css';
 import {Link} from "react-router-dom";
-import GoogleLogin from "react-google-login";
 
 const Login = () => {
     return (
@@ -18,8 +17,6 @@ const Login = () => {
                 <Button className="auth-button" variant="primary" type="submit">
                     Login
                 </Button>
-
-                <GoogleLogin />
 
                 <span className="span">
                     Don't have an account?
