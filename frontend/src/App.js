@@ -11,6 +11,8 @@ import Navbar from "./common components/Navbar";
 import Footer from "./common components/Footer";
 import Profile from "./pages/Profile";
 
+// comment 
+
 // Layout function needed to apply the Nav and Footer to different child pages
 const Layout = () => {
     return (
