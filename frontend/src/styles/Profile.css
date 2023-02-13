@@ -1,0 +1,43 @@
+.profile {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    text-align: center;
+}
+
+.email {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    text-align: center;
+}
+
+.avatar {
+    margin-top: 20px;
+    border-radius: 50%;
+    border: 2px solid #ef8354ff;
+    justify-content: center;
+    align-items: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.icons {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.about {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: justify;
+    line-height: 30px;
+    font-family: 'Roboto', sans-serif;
+}
