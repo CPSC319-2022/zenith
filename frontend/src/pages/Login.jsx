@@ -14,7 +14,7 @@ const Login = () => {
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Control className="input" type="password" placeholder="password" />
-                <Button className="auth-button" variant="primary" type="submit" formaction="http://localhost:3000">
+                <Button className="auth-button" variant="primary" type="submit" formaction="/">
                     Login
                 </Button>
 
