@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/data/fakePosts.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/styles/Home.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/images/avatar.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/common components/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/common components/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Home.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Auth.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/Auth.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Header.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/Header.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/SinglePost.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/SinglePost.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Profile.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/Profile.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +50,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/src/images" />
       <recent name="$PROJECT_DIR$/frontend/src" />
       <recent name="$PROJECT_DIR$/frontend/public/images" />
       <recent name="$PROJECT_DIR$/frontend/public" />
