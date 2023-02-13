@@ -1,28 +1,32 @@
 import React from 'react';
-import {Container, Nav, Navbar} from "react-bootstrap";
+import { Container, Nav, Navbar } from "react-bootstrap";
 import blogImg from '../images/icon.png'
 import '../styles/Header.css';
 
 const Header = () => {
     return (
-        <Navbar className="navbar">
-            <Container className="header-container">
-                <Navbar.Brand className="blog-img" href="/">
+        <Navbar className='nav-bar' expand="lg">
+            <Container>
+                <Navbar.Brand href="/">
                     <img
                         src={blogImg}
                         width="130"
                         height="90"
                         className="d-inline-block align-top"
-                        alt="React Bootstrap logo"
+                        alt="zenith-blog-logo"
                     />
                 </Navbar.Brand>
-                <Nav className="ml-auto" placement="end">
-                    <Nav.Link href="/">HOME</Nav.Link>
-                    <Nav.Link href="/create">CREATE</Nav.Link>
-                    <Nav.Link href="/profile">PROFILE</Nav.Link>
-                    <Nav.Link href="/wip">WIP</Nav.Link>
-                    <Nav.Link href="/login">LOGOUT</Nav.Link>
-                </Nav>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="ms-auto" placement="end">
+                        <Nav.Link href="/">HOME</Nav.Link>
+                        <Nav.Link href="/create">CREATE</Nav.Link>
+                        <Nav.Link href="/profile">PROFILE</Nav.Link>
+                        <Nav.Link href="/wip">WIP</Nav.Link>
+                        <Nav.Link href="/login">LOGOUT</Nav.Link>
+
+                    </Nav>
+                </Navbar.Collapse>
             </Container>
         </Navbar>
     );
