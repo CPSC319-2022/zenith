@@ -1,0 +1,79 @@
+.create {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.content {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #bfc0c0ff;
+}
+
+.editor-container {
+    height: 300px;
+    overflow: scroll;
+    border: 1px solid #bfc0c0ff;
+}
+
+.editor {
+    height: 100%;
+    border: none;
+}
+
+.menu {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.menu-item {
+    border: 1px solid #bfc0c0ff;
+    padding: 10px;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.publish {
+    font-size: 20px;
+}
+
+.visibility {
+    font-size: 12px;
+}
+
+.img-upload {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn1 {
+    cursor: pointer;
+    color: #ef8354ff;;
+    background-color: #ffffff;
+    border: 1px solid #ef8354ff;
+    padding: 3px 5px;
+}
+
+.btn2 {
+    cursor: pointer;
+    color: #ffffffff;
+    background-color: #ef8354ff;
+    border: 1px solid #ef8354ff;
+    padding: 3px 5px;
+}
