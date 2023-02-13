@@ -11,6 +11,7 @@ import SinglePost from "./pages/SinglePost";
 import Header from "./common components/Header";
 import Footer from "./common components/Footer";
 import Profile from "./pages/Profile";
+import WIP from "./pages/WIP";
 
 // comment 
 
@@ -48,7 +49,12 @@ const router = createBrowserRouter([
             {
                 path: "/profile",
                 element: <Profile />
+            },
+            {
+                path: "/wip",
+                element: <WIP />
             }
+
         ]
     },
     {

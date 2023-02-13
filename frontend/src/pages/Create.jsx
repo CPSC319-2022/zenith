@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../styles/Create.css';
+import Button from 'react-bootstrap/Button';
+
 
 const Create = () => {
     const [value, setValue] = useState('');
@@ -16,10 +18,11 @@ const Create = () => {
             </div>
             <div className="menu">
                 <div className="menu-item">
-                    <h1 className="publish">Publish</h1>
-                    <span className="visibility">
+                    {/* <h1 className="publish">Publish</h1> */}
+                    <Button variant="primary">Publish</Button>{' '}
+                    <div className="visibility">
                         <b> Visibility:</b> Public
-                    </span>
+                    </div>
                     <br/>
                     <input style={{display: 'none'}} type="file" id="file" />
                     <label className="img-upload" htmlFor="file">Upload Image</label>
