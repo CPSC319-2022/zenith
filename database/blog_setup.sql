@@ -1,3 +1,7 @@
+--Note that this is just the record of database setup
+--you don't need to use the commands inside this file
+
+--Create tables:
 CREATE TABLE Users(
     user_ID INTEGER,
     user_password CHAR(32) NOT NULL,
@@ -30,3 +34,8 @@ CREATE TABLE Comment(
     FOREIGN KEY(post_ID) REFERENCES Post(post_ID) ON DELETE CASCADE,
     FOREIGN KEY(user_ID) REFERENCES Users(user_ID) ON DELETE CASCADE
 );
+
+--Delete tables:
+drop table Comment;
+drop table Post;
+drop table Users;
