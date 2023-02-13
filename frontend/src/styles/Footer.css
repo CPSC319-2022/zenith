@@ -1,8 +1,10 @@
 .footer {
-    margin-top: 100px;
+    margin-top: 90vh;
     padding: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
+    background-color: white;
+
 }

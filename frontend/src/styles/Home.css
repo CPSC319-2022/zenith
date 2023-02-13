@@ -16,12 +16,18 @@
 .post-title {
     font-size: 36px;
     font-weight: 300;
-    font-family: "Helvetica Neue", sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .post {
     display: flex;
     gap: 100px;
+    background-image: linear-gradient(to right, rgba(205, 250, 245, 0),rgba(205, 250, 245, 0.1), rgba(205, 250, 245, 0.25),rgba(205, 250, 245, 0.1),rgba(205, 250, 245, 0));
+
+}
+.post-content {
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .post:nth-child(2n+1) {
@@ -49,13 +55,17 @@
     background-color: #ef8354ff;
 }
 
-.img {
+.img{
     margin-left: 60px;
     flex: 2;
     position: relative;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform .2s; 
+}
+.img:hover{
+   transform:scale(1.2);
 }
 
 .img::after {
@@ -72,3 +82,32 @@
 .content {
     flex:3;
 }
+
+/* write media query for mobile view where content and img are stacked in column */
+@media screen and (max-width: 768px) {
+    .posts {
+        flex-direction: column;
+        text-align: center;
+        position: relative;
+    }
+    .post {
+        position: relative;
+        gap: 50px;
+        padding: 5%;
+        text-align: center;
+    }
+    .content {
+        text-align: center;
+    }
+
+    .img {
+        margin-left: 0;
+        
+    }
+    .img::after{
+        display: none;
+    }
+
+
+}
+    

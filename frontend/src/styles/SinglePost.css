@@ -49,10 +49,11 @@ h1 {
     color: #2d3142ff;
     font-size: 42px;
     font-weight: bold;
-    font-family: "Helvetica Neue", sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 p {
     text-align: justify;
     line-height: 30px;
+    font-family: 'Roboto', sans-serif;
 }

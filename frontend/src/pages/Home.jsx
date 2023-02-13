@@ -18,7 +18,7 @@ const Home = () => {
                             <Link className="link" to={`/single-post/${post.id}`}>
                                 <h1 className="post-title">{post.title}</h1>
                             </Link>
-                            <p>{post.content}</p>
+                            <p className="post-content">{post.content}</p>
                             <Button className="read-button">Read More</Button>
                         </div>
                     </div>
