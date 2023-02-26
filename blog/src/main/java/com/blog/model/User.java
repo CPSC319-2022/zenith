@@ -3,24 +3,64 @@ package com.blog.model;
 import java.time.Clock;
 
 public class User {
-
-    private Integer user_ID;
-
+    private final int userID;  // TODO: reserve 0 for guest user?
     private String username;
-
-    private Integer password;
-
-    private String avatarPath;
-
-    private String email;
-
-    private Clock creationDate;
-
+    private UserLevel userLevel;
+    private final Clock creationDate;
     private Clock lastLogin;
+    private boolean isOnline;
 
-    private boolean ban_status;
+    // Default guest user constructor
+    public User() {
+        this.userID = 0;
+        this.userLevel = UserLevel.GUEST;
+        creationDate = null;  // TODO: change to current time
+    }
 
-    private boolean contributor;
+    //
+    public User(int userID) {
+        // TODO: pull data from database?
+        this.userID = userID;
+        creationDate = null;
+    }
 
-    private boolean administrator;
+    public int getUserID() {
+        return userID;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public UserLevel getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(UserLevel userLevel) {
+        this.userLevel = userLevel;
+    }
+
+    public Clock getCreationDate() {
+        return creationDate;
+    }
+
+    public Clock getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Clock lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
+    }
 }
