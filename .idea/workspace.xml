@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/UserLevel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Zenith-.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Zenith-.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Comment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +34,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="copyright" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -78,7 +76,7 @@
       <workItem from="1676166684937" duration="1339000" />
       <workItem from="1676168088316" duration="13492000" />
       <workItem from="1676186679101" duration="7599000" />
-      <workItem from="1677397703475" duration="4230000" />
+      <workItem from="1677397703475" duration="5025000" />
     </task>
     <servers />
   </component>
