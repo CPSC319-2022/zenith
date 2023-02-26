@@ -5,14 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Comment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UserTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit5 Test Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -30,7 +35,13 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -43,8 +54,45 @@
       <recent name="$PROJECT_DIR$/frontend/public/images" />
       <recent name="$PROJECT_DIR$/frontend/public" />
     </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.blog.model" />
+    </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.UserTest.guestConstructor">
+    <configuration name="UserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Zenith-" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.blog.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.blog.model" />
+      <option name="MAIN_CLASS_NAME" value="com.blog.model.UserTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserTest.guestConstructor" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Zenith-" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.blog.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.blog.model" />
+      <option name="MAIN_CLASS_NAME" value="com.blog.model.UserTest" />
+      <option name="METHOD_NAME" value="guestConstructor" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/frontend/package.json" />
       <command value="run" />
@@ -58,6 +106,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.UserTest.guestConstructor" />
+        <item itemvalue="JUnit.UserTest" />
         <item itemvalue="npm.start" />
       </list>
     </recent_temporary>
@@ -76,7 +126,7 @@
       <workItem from="1676166684937" duration="1339000" />
       <workItem from="1676168088316" duration="13492000" />
       <workItem from="1676186679101" duration="7599000" />
-      <workItem from="1677397703475" duration="5025000" />
+      <workItem from="1677397703475" duration="5562000" />
     </task>
     <servers />
   </component>
