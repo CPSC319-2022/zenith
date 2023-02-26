@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/images/avatar.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/UserLevel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Zenith-.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Zenith-.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/SinglePost.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/SinglePost.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Profile.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/Profile.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,23 +31,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  }
-}</component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/frontend/src/images" />
@@ -88,6 +78,7 @@
       <workItem from="1676166684937" duration="1339000" />
       <workItem from="1676168088316" duration="13492000" />
       <workItem from="1676186679101" duration="7599000" />
+      <workItem from="1677397703475" duration="4230000" />
     </task>
     <servers />
   </component>
@@ -104,6 +95,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
