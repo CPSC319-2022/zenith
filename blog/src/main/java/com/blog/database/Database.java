@@ -26,6 +26,11 @@ public class Database {
          */
     }
 
+    /**
+     * TODO
+     *
+     * @param comment
+     */
     public static void retrieveComment(Comment comment) {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
@@ -33,7 +38,14 @@ public class Database {
         throw new NotImplementedException();
     }
 
+    /**
+     * TODO
+     *
+     * @param post
+     */
     public static void retrievePost(Post post) {
+        int postID = post.getPostID();
+
         throw new NotImplementedException();
     }
 

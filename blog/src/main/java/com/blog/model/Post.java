@@ -1,36 +1,25 @@
 package com.blog.model;
 
+import com.blog.database.Database;
+
 import java.time.Clock;
 import java.util.Objects;
 
 public class Post {
     private final int postID;
-    private final int authorID;
+    private int authorID;
     private String title;
     private String content;
-    private final Clock creationDate;
+    private Clock creationDate;
     private Clock lastModified;
     private int views;
     private boolean allowComments;
     // private Tag tags; TODO: allow tags for posts
     // private int upvotes; TODO: allow upvoting/downvoting?
 
-    public Post(int postID,
-                int authorID,
-                String title,
-                String content,
-                Clock creationDate,
-                Clock lastModified,
-                int views,
-                boolean allowComments) {
+    public Post(int postID) {
         this.postID = postID;
-        this.authorID = authorID;
-        this.title = title;
-        this.content = content;
-        this.creationDate = creationDate;
-        this.lastModified = lastModified;
-        this.views = views;
-        this.allowComments = allowComments;
+        Database.retrievePost(this);
     }
 
     public int getPostID() {
@@ -39,6 +28,10 @@ public class Post {
 
     public int getAuthorID() {
         return authorID;
+    }
+
+    public void setAuthorID(int authorID) {
+        this.authorID = authorID;
     }
 
     public String getTitle() {
@@ -61,6 +54,10 @@ public class Post {
         return creationDate;
     }
 
+    public void setCreationDate(Clock creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public Clock getLastModified() {
         return lastModified;
     }
@@ -81,7 +78,7 @@ public class Post {
         return allowComments;
     }
 
-    public void setAllowComment(boolean allowComments) {
+    public void setAllowComments(boolean allowComments) {
         this.allowComments = allowComments;
     }
 }
