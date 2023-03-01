@@ -1,28 +1,26 @@
 package com.blog.model;
 
+import com.blog.database.Database;
+
 import java.time.Clock;
 
 public class Comment {
-    private final int commentID;
-    private final int authorID;
     private final int postID;
+    private final int commentID;
+    private int authorID;
     private String content;
-    private final Clock creationDate;
+    private Clock creationDate;
     private Clock lastModified;
     // private int upvotes; TODO: allow upvoting/downvoting?
 
-    public Comment(int commentID,
-                   int authorID,
-                   int postID,
-                   String content,
-                   Clock creationDate,
-                   Clock lastModified) {
-        this.commentID = commentID;
-        this.authorID = authorID;
+    public Comment(int postID, int commentID) {
         this.postID = postID;
-        this.content = content;
-        this.creationDate = creationDate;
-        this.lastModified = lastModified;
+        this.commentID = commentID;
+        Database.retrieveComment(this);
+    }
+
+    public int getPostID() {
+        return postID;
     }
 
     public int getCommentID() {
@@ -33,8 +31,8 @@ public class Comment {
         return authorID;
     }
 
-    public int getPostID() {
-        return postID;
+    public void setAuthorID(int authorID) {
+        this.authorID = authorID;
     }
 
     public String getContent() {
@@ -47,6 +45,10 @@ public class Comment {
 
     public Clock getCreationDate() {
         return creationDate;
+    }
+
+    public void setCreationDate(Clock creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Clock getLastModified() {

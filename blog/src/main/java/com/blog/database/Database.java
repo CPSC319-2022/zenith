@@ -27,6 +27,9 @@ public class Database {
     }
 
     public static void retrieveComment(Comment comment) {
+        int postID = comment.getPostID();
+        int commentID = comment.getCommentID();
+
         throw new NotImplementedException();
     }
 
