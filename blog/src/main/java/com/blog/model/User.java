@@ -1,27 +1,35 @@
 package com.blog.model;
 
+import com.blog.database.Database;
+
 import java.time.Clock;
 
 public class User {
-    private final int userID;  // TODO: reserve 0 for guest user?
+    private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
-    private final Clock creationDate;
+    private Clock creationDate;
     private Clock lastLogin;
-    private boolean isOnline;
+    private boolean isOnline;  // TODO: change to enum for online/offline/busy/away?
+    // TODO: discuss additional fields
 
-    // Default guest user constructor
+    /**
+     * Default guest user constructor.
+     */
     public User() {
         this.userID = 0;
         this.userLevel = UserLevel.GUEST;
         creationDate = null;  // TODO: change to current time
     }
 
-    //
+    /**
+     * Constructor for an existing user.
+     *
+     * @param userID  The unique user identifier.
+     */
     public User(int userID) {
-        // TODO: pull data from database?
         this.userID = userID;
-        creationDate = null;
+        Database.retrieveUser(this);
     }
 
     public int getUserID() {
