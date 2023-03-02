@@ -29,7 +29,7 @@ public class User {
      */
     public User(int userID) {
         this.userID = userID;
-        Database.retrieveUser(this);
+        Database.retrieve(this);
     }
 
     public int getUserID() {

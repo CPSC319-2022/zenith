@@ -16,7 +16,7 @@ public class Comment {
     public Comment(int postID, int commentID) {
         this.postID = postID;
         this.commentID = commentID;
-        Database.retrieveComment(this);
+        Database.retrieve(this);
     }
 
     public int getPostID() {

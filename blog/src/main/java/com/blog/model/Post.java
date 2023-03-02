@@ -19,7 +19,7 @@ public class Post {
 
     public Post(int postID) {
         this.postID = postID;
-        Database.retrievePost(this);
+        Database.retrieve(this);
     }
 
     public int getPostID() {

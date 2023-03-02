@@ -10,28 +10,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class Database {
     /**
-     * Retrieves the user record from the database with corresponding <code>userID</code> specified
-     * by the given <code>User</code> object and updates its fields.
-     *
-     * @param user  The <code>User</code> object to update. Contains the <code>userID</code>.
-     */
-    public static void retrieveUser(User user) {
-        int userID = user.getUserID();
-
-        throw new NotImplementedException();
-        /*
-        TODO: @Cheryl
-              Use userID to select corresponding user record from database.
-              Then use setter functions from User to fill out the private fields
-         */
-    }
-
-    /**
      * TODO
      *
      * @param comment
      */
-    public static void retrieveComment(Comment comment) {
+    public static void retrieve(Comment comment) {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
 
@@ -43,10 +26,27 @@ public class Database {
      *
      * @param post
      */
-    public static void retrievePost(Post post) {
+    public static void retrieve(Post post) {
         int postID = post.getPostID();
 
         throw new NotImplementedException();
+    }
+
+    /**
+     * Retrieves the user record from the database with corresponding <code>userID</code> specified
+     * by the given <code>User</code> object and updates its fields.
+     *
+     * @param user  The <code>User</code> object to update. Contains the <code>userID</code>.
+     */
+    public static void retrieve(User user) {
+        int userID = user.getUserID();
+
+        throw new NotImplementedException();
+        /*
+        TODO: @Cheryl
+              Use userID to select corresponding user record from database.
+              Then use setter functions from User to fill out the private fields
+         */
     }
 
     // TODO: corresponding static methods for updating a record
