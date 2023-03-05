@@ -5,6 +5,8 @@ import com.blog.model.Post;
 import com.blog.model.User;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.ArrayList;
+
 /**
  * This class handles all calls to the database related to the blog application.
  */
@@ -62,18 +64,72 @@ public class Database {
     }
 
     /**
+     * Retrieves the next <code>count</code> displayable comments starting from <code>commentIDStart</code> from
+     * the post with post ID <code>postID</code> into <code>comments</code>.
+     *
+     * @param comments
+     * @param postID
+     * @param commentIDStart
+     * @param count
+     */
+    public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count) {
+        throw new NotImplementedException();
+        /*
+        SELECT *
+        FROM   comments
+        WHERE  postID = postID
+               AND
+               commentID >= commentIDStart
+               AND
+               !isDeleted
+        LIMIT  count
+
+        for each record:
+            comments.add(new Comment(...))
+         */
+    }
+
+    /**
+     * Retrieves the next <code>count</code> displayable posts starting from <code>postIDStart</code>
+     * into <code>posts</code>.
+     *
+     * @param posts
+     * @param postIDStart
+     * @param count
+     */
+    public static void retrieve(ArrayList<Post> posts, int postIDStart, int count) {
+        throw new NotImplementedException();
+        /*
+        SELECT *
+        FROM   posts
+        WHERE  postID >= postIDStart
+               AND
+               !isDeleted
+        LIMIT  count
+
+        for each record:
+            post.add(new Post(...))
+         */
+    }
+
+    /**
      * TODO
      *
      * @param comment
+     *
+     * @return the commentID
      */
-    public static void save(Comment comment) {
+    public static int save(Comment comment) {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
 
         throw new NotImplementedException();
         /*
         TODO: if keys already exist in database, update
-              otherwise, create new record with the keys
+              if postID does not exist throw error
+              if commentID == 0, create new record with commentID being next smallest assignable ID
+              if commentID anything else throw error
+              Note: commentID == 0 reserved for creating new record
          */
     }
 
@@ -81,14 +137,18 @@ public class Database {
      * TODO
      *
      * @param post
+     *
+     * @return the postID
      */
-    public static void save(Post post) {
+    public static int save(Post post) {
         int postID = post.getPostID();
 
         throw new NotImplementedException();
         /*
-        TODO: if keys already exist in database, update
-              otherwise, create new record with the keys
+        TODO: if key already exist in database, update
+              if postID == 0, create new record with postID being next smallest assignable ID
+              if postID anything else throw error
+              Note: postID == 0 reserved for creating new record
          */
     }
 
@@ -96,14 +156,18 @@ public class Database {
      * Saves the given <code>User</code> object into the database.
      *
      * @param user  The <code>User</code> object to save. Contains the <code>userID</code>.
+     *
+     * @return the userID
      */
-    public static void save(User user) {
+    public static int save(User user) {
         int userID = user.getUserID();
 
         throw new NotImplementedException();
         /*
-        TODO: if keys already exist in database, update
-              otherwise, create new record with the keys
+        TODO: if key already exist in database, update
+              if userID == 0, create new record with userID being next smallest assignable ID
+              if userID anything else throw error
+              Note: userID == 0 reserved for creating new record
          */
     }
 

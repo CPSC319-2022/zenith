@@ -41,6 +41,20 @@ public class Comment extends Content {
         Database.retrieve(this);
     }
 
+    public Comment(int     postID,
+                   int     commentID,
+                   int     authorID,
+                   String  content,
+                   Clock   creationDate,
+                   Clock   lastModified,
+                   int     upvotes,
+                   int     downvotes,
+                   boolean isDeleted) {
+        super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
+        this.postID = postID;
+        this.commentID = commentID;
+    }
+
     public int getPostID() {
         return postID;
     }

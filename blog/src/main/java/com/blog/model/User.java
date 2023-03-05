@@ -56,6 +56,22 @@ public class User {
         Database.retrieve(this);
     }
 
+    public User(int        userID,
+                String     username,
+                UserLevel  userLevel,
+                Clock      creationDate,
+                Clock      lastLogin,
+                UserStatus userStatus,
+                String     profilePicture) {
+        this.userID = userID;
+        this.username = username;
+        this.userLevel = userLevel;
+        this.creationDate = creationDate;
+        this.lastLogin = lastLogin;
+        this.userStatus = userStatus;
+        this.profilePicture = profilePicture;
+    }
+
     public int getUserID() {
         return userID;
     }

@@ -33,6 +33,25 @@ abstract class Content {
     private int downvotes;
     private boolean isDeleted;
 
+    public Content() {
+    }
+
+    public Content(int     authorID,
+                   String  content,
+                   Clock   creationDate,
+                   Clock   lastModified,
+                   int     upvotes,
+                   int     downvotes,
+                   boolean isDeleted) {
+        this.authorID     = authorID;
+        this.content      = content;
+        this.creationDate = creationDate;
+        this.lastModified = lastModified;
+        this.upvotes      = upvotes;
+        this.downvotes    = downvotes;
+        this.isDeleted    = isDeleted;
+    }
+
     /**
      * Returns whether this content is displayable. That is, it has content and is not deleted.
      *

@@ -49,6 +49,24 @@ public class Post extends Content {
         Database.retrieve(this);
     }
 
+    public Post(int     authorID,
+                String  content,
+                Clock   creationDate,
+                Clock   lastModified,
+                int     upvotes,
+                int     downvotes,
+                boolean isDeleted,
+                int     postID,
+                String  title,
+                int     views,
+                boolean allowComments) {
+        super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
+        this.postID = postID;
+        this.title = title;
+        this.views = views;
+        this.allowComments = allowComments;
+    }
+
     public int getPostID() {
         return postID;
     }
