@@ -72,14 +72,14 @@ public class Database {
      * @param commentIDStart
      * @param count
      */
-    public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count) {
+    public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count, boolean reverse) {
         throw new NotImplementedException();
         /*
         SELECT *
         FROM   comments
         WHERE  postID = postID
                AND
-               commentID >= commentIDStart
+               commentID >= commentIDStart  -- <= if reverse, otherwise >=
                AND
                !isDeleted
         LIMIT  count
@@ -97,12 +97,12 @@ public class Database {
      * @param postIDStart
      * @param count
      */
-    public static void retrieve(ArrayList<Post> posts, int postIDStart, int count) {
+    public static void retrieve(ArrayList<Post> posts, int postIDStart, int count, boolean reverse) {
         throw new NotImplementedException();
         /*
         SELECT *
         FROM   posts
-        WHERE  postID >= postIDStart
+        WHERE  postID <= postIDStart  -- <= if reverse, otherwise >=
                AND
                !isDeleted
         LIMIT  count
