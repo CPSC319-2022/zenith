@@ -36,6 +36,7 @@ public class User {
     private Clock lastLogin;
     private UserStatus userStatus;
     private String profilePicture;  // URL to the profile picture
+    private boolean isDeleted;
 
     /**
      * Default guest user constructor.
@@ -62,14 +63,16 @@ public class User {
                 Clock      creationDate,
                 Clock      lastLogin,
                 UserStatus userStatus,
-                String     profilePicture) {
-        this.userID = userID;
-        this.username = username;
-        this.userLevel = userLevel;
-        this.creationDate = creationDate;
-        this.lastLogin = lastLogin;
-        this.userStatus = userStatus;
+                String     profilePicture,
+                boolean    isDeleted) {
+        this.userID         = userID;
+        this.username       = username;
+        this.userLevel      = userLevel;
+        this.creationDate   = creationDate;
+        this.lastLogin      = lastLogin;
+        this.userStatus     = userStatus;
         this.profilePicture = profilePicture;
+        this.isDeleted      = isDeleted;
     }
 
     public int getUserID() {
@@ -122,5 +125,13 @@ public class User {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }
