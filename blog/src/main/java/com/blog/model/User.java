@@ -4,14 +4,38 @@ import com.blog.database.Database;
 
 import java.time.Clock;
 
+/**
+ * Class that stores the details of a user.
+ *
+ * Constructors
+ * ----------
+ * User()
+ * User(int userID)
+ *
+ * Methods
+ * ----------
+ * int         getUserID()
+ * String      getUsername()
+ * void        setUsername(String username)
+ * UserLevel   getUserLevel()
+ * void        setUserLevel(UserLevel userLevel)
+ * Clock       getCreationDate()
+ * void        setCreationDate(Clock creationDate)
+ * Clock       getLastLogin()
+ * void        setLastLogin(Clock lastLogin)
+ * UserStatus  getUserStatus()
+ * void        setUserStatus(UserStatus userStatus)
+ * String      getProfilePicture()
+ * void        setProfilePicture(String profilePicture)
+ */
 public class User {
     private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
     private Clock creationDate;
     private Clock lastLogin;
-    private boolean isOnline;  // TODO: change to enum for online/offline/busy/away?
-    // TODO: discuss additional fields
+    private UserStatus userStatus;
+    private String profilePicture;  // URL to the profile picture
 
     /**
      * Default guest user constructor.
@@ -56,6 +80,10 @@ public class User {
         return creationDate;
     }
 
+    public void setCreationDate(Clock creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public Clock getLastLogin() {
         return lastLogin;
     }
@@ -64,11 +92,19 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    public boolean isOnline() {
-        return isOnline;
+    public UserStatus getUserStatus() {
+        return userStatus;
     }
 
-    public void setOnline(boolean online) {
-        isOnline = online;
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
