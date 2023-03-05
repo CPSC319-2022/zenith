@@ -7,11 +7,6 @@ import java.time.Clock;
 /**
  * Class that stores the details of a user.
  *
- * Constructors
- * ----------
- * User()
- * User(int userID)
- *
  * Methods
  * ----------
  * int         getUserID()
@@ -27,8 +22,13 @@ import java.time.Clock;
  * void        setUserStatus(UserStatus userStatus)
  * String      getProfilePicture()
  * void        setProfilePicture(String profilePicture)
+ *
+ * Inherited Methods
+ * ----------
+ * boolean     isDeleted()
+ * void        setDeleted(boolean deleted)
  */
-public class User {
+public class User extends Record {
     private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
@@ -36,7 +36,6 @@ public class User {
     private Clock lastLogin;
     private UserStatus userStatus;
     private String profilePicture;  // URL to the profile picture
-    private boolean isDeleted;
 
     /**
      * Default guest user constructor.
@@ -65,6 +64,7 @@ public class User {
                 UserStatus userStatus,
                 String     profilePicture,
                 boolean    isDeleted) {
+        super(isDeleted);
         this.userID         = userID;
         this.username       = username;
         this.userLevel      = userLevel;
@@ -72,7 +72,6 @@ public class User {
         this.lastLogin      = lastLogin;
         this.userStatus     = userStatus;
         this.profilePicture = profilePicture;
-        this.isDeleted      = isDeleted;
     }
 
     public int getUserID() {
@@ -125,13 +124,5 @@ public class User {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 }

@@ -21,17 +21,19 @@ import java.time.Clock;
  * void     setUpvotes(int upvotes)
  * int      getDownvotes()
  * void     setDownvotes(int downvotes)
+ *
+ * Inherited Methods
+ * ----------
  * boolean  isDeleted()
  * void     setDeleted(boolean deleted)
  */
-abstract class Content {
+abstract class Content extends Record {
     private int authorID;
     private String content;
     private Clock creationDate;
     private Clock lastModified;
     private int upvotes;
     private int downvotes;
-    private boolean isDeleted;
 
     public Content() {
     }
@@ -43,13 +45,13 @@ abstract class Content {
                    int     upvotes,
                    int     downvotes,
                    boolean isDeleted) {
+        super(isDeleted);
         this.authorID     = authorID;
         this.content      = content;
         this.creationDate = creationDate;
         this.lastModified = lastModified;
         this.upvotes      = upvotes;
         this.downvotes    = downvotes;
-        this.isDeleted    = isDeleted;
     }
 
     /**
@@ -58,7 +60,7 @@ abstract class Content {
      * @return boolean
      */
     public boolean isDisplayable() {
-        return content != null && !isDeleted;
+        return content != null && !isDeleted();
     }
 
     public int getAuthorID() {
@@ -107,13 +109,5 @@ abstract class Content {
 
     public void setDownvotes(int downvotes) {
         this.downvotes = downvotes;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 }

@@ -24,18 +24,20 @@ import java.util.Objects;
  *
  * Inherited Methods
  * ----------
- * int     getAuthorID()
- * void    setAuthorID(int authorID)
- * String  getContent()
- * void    setContent(String content)
- * Clock   getCreationDate()
- * void    setCreationDate(Clock creationDate)
- * Clock   getLastModified()
- * void    setLastModified(Clock lastModified)
- * int     getUpvotes()
- * void    setUpvotes(int upvotes)
- * int     getDownvotes()
- * void    setDownvotes(int downvotes)
+ * int      getAuthorID()
+ * void     setAuthorID(int authorID)
+ * String   getContent()
+ * void     setContent(String content)
+ * Clock    getCreationDate()
+ * void     setCreationDate(Clock creationDate)
+ * Clock    getLastModified()
+ * void     setLastModified(Clock lastModified)
+ * int      getUpvotes()
+ * void     setUpvotes(int upvotes)
+ * int      getDownvotes()
+ * void     setDownvotes(int downvotes)
+ * boolean  isDeleted()
+ * void     setDeleted(boolean deleted)
  */
 public class Post extends Content {
     private final int postID;
@@ -49,15 +51,15 @@ public class Post extends Content {
         Database.retrieve(this);
     }
 
-    public Post(int     authorID,
+    public Post(int     postID,
+                int     authorID,
+                String  title,
                 String  content,
                 Clock   creationDate,
                 Clock   lastModified,
                 int     upvotes,
                 int     downvotes,
                 boolean isDeleted,
-                int     postID,
-                String  title,
                 int     views,
                 boolean allowComments) {
         super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
