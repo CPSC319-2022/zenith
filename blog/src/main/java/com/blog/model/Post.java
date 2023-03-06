@@ -40,6 +40,7 @@ import java.util.Objects;
  * void     setDeleted(boolean deleted)
  */
 public class Post extends Content {
+    public static final int newPostIDFlag = 0;
     private final int postID;
     private String title;
     private int views;
