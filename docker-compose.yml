@@ -1,0 +1,12 @@
+services:
+  backend:
+    image: eclipse-temurin:17-jdk-jammy
+    ports: 
+      - 8000:8080 #placeholder ports until know which to use
+    working_dir: /backend
+    volumes:
+      - ./:/backend
+    # environment: # TODO: maybe not sure about this yet
+
+# must add front end and db to this file still
+  

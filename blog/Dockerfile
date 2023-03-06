@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:17-jdk-jammy as build
 WORKDIR /backend
 
 COPY .mvn/ .mvn
@@ -12,3 +12,5 @@ RUN chmod +x mvnw \
 COPY src ./src
 
 CMD ["./mvnw", "spring-boot:run"]
+# PLACEHOLDER PORT
+EXPOSE 8080 
