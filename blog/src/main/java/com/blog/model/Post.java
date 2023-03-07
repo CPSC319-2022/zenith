@@ -5,11 +5,11 @@ import org.json.JSONObject;
 
 /**
  * Class that stores the details of a blog post.
- *
+ * <p>
  * Constructors
  * ----------
  * Post(int postID)
- *
+ * <p>
  * Methods
  * ----------
  * int      getPostID()
@@ -19,7 +19,7 @@ import org.json.JSONObject;
  * void     setViews(int views)
  * boolean  isAllowComments()
  * void     setAllowComments(boolean allowComments)
- *
+ * <p>
  * Inherited Methods
  * ----------
  * int      getAuthorID()
@@ -51,16 +51,16 @@ public class Post extends Content {
         Database.retrieve(this);
     }
 
-    public Post(int     postID,
-                int     authorID,
-                String  title,
-                String  content,
-                String  creationDate,
-                String  lastModified,
-                int     upvotes,
-                int     downvotes,
+    public Post(int postID,
+                int authorID,
+                String title,
+                String content,
+                String creationDate,
+                String lastModified,
+                int upvotes,
+                int downvotes,
                 boolean isDeleted,
-                int     views,
+                int views,
                 boolean allowComments) {
         super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
         this.postID = postID;
@@ -75,14 +75,11 @@ public class Post extends Content {
      * @return JSONObject
      */
     public JSONObject asJSONObject() {
-        JSONObject json = super.asJSONObject();
-
-        json.put("postID", postID);
-        json.put("title", title);
-        json.put("views", views);
-        json.put("allowComments", allowComments);
-
-        return json;
+        return super.asJSONObject()
+                .put("postID", postID)
+                .put("title", title)
+                .put("views", views)
+                .put("allowComments", allowComments);
     }
 
     public int getPostID() {

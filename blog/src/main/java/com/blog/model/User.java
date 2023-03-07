@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 /**
  * Class that stores the details of a user.
- *
+ * <p>
  * Methods
  * ----------
  * int         getUserID()
@@ -22,7 +22,7 @@ import org.json.JSONObject;
  * void        setUserStatus(UserStatus userStatus)
  * String      getProfilePicture()
  * void        setProfilePicture(String profilePicture)
- *
+ * <p>
  * Inherited Methods
  * ----------
  * boolean     isDeleted()
@@ -49,28 +49,28 @@ public class User extends Record {
     /**
      * Constructor for an existing user.
      *
-     * @param userID  The unique user identifier.
+     * @param userID The unique user identifier.
      */
     public User(int userID) {
         this.userID = userID;
         Database.retrieve(this);
     }
 
-    public User(int        userID,
-                String     username,
-                UserLevel  userLevel,
-                String     creationDate,
-                String     lastLogin,
+    public User(int userID,
+                String username,
+                UserLevel userLevel,
+                String creationDate,
+                String lastLogin,
                 UserStatus userStatus,
-                String     profilePicture,
-                boolean    isDeleted) {
+                String profilePicture,
+                boolean isDeleted) {
         super(isDeleted);
-        this.userID         = userID;
-        this.username       = username;
-        this.userLevel      = userLevel;
-        this.creationDate   = creationDate;
-        this.lastLogin      = lastLogin;
-        this.userStatus     = userStatus;
+        this.userID = userID;
+        this.username = username;
+        this.userLevel = userLevel;
+        this.creationDate = creationDate;
+        this.lastLogin = lastLogin;
+        this.userStatus = userStatus;
         this.profilePicture = profilePicture;
     }
 
@@ -80,17 +80,14 @@ public class User extends Record {
      * @return JSONObject
      */
     public JSONObject asJSONObject() {
-        JSONObject json = super.asJSONObject();
-
-        json.put("userID", userID);
-        json.put("username", username);
-        json.put("userLevel", userLevel.ordinal());
-        json.put("creationDate", creationDate);
-        json.put("lastLogin", lastLogin);
-        json.put("userStatus", userStatus.ordinal());
-        json.put("profilePicture", profilePicture);
-
-        return json;
+        return super.asJSONObject()
+                .put("userID", userID)
+                .put("username", username)
+                .put("userLevel", userLevel.ordinal())
+                .put("creationDate", creationDate)
+                .put("lastLogin", lastLogin)
+                .put("userStatus", userStatus.ordinal())
+                .put("profilePicture", profilePicture);
     }
 
     /**

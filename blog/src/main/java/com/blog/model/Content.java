@@ -61,16 +61,13 @@ abstract class Content extends Record {
      * @return JSONObject
      */
     public JSONObject asJSONObject() {
-        JSONObject json = super.asJSONObject();
-
-        json.put("authorID", authorID);
-        json.put("content", content);
-        json.put("creationDate", creationDate);
-        json.put("lastModified", lastModified);
-        json.put("upvotes", upvotes);
-        json.put("downvotes", downvotes);
-
-        return json;
+        return super.asJSONObject()
+                .put("authorID", authorID)
+                .put("content", content)
+                .put("creationDate", creationDate)
+                .put("lastModified", lastModified)
+                .put("upvotes", upvotes)
+                .put("downvotes", downvotes);
     }
 
     /**

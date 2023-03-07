@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 /**
  * Abstract class for objects that can be saved in the database.
- *
+ * <p>
  * Methods
  * ----------
  * boolean  isDeleted()
@@ -26,11 +26,8 @@ abstract class Record {
      * @return JSONObject
      */
     public JSONObject asJSONObject() {
-        JSONObject json = new JSONObject();
-
-        json.put("isDeleted", isDeleted);
-
-        return json;
+        return new JSONObject()
+                .put("isDeleted", isDeleted);
     }
 
     public boolean isDeleted() {

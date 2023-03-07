@@ -5,16 +5,16 @@ import org.json.JSONObject;
 
 /**
  * Class that stores the details of a comment.
- *
+ * <p>
  * Constructors
  * ----------
  * Comment(int postID, int commentID)
- *
+ * <p>
  * Methods
  * ----------
  * int  getPostID()
  * int  getCommentID()
- *
+ * <p>
  * Inherited Methods
  * ----------
  * int     getAuthorID()
@@ -40,14 +40,14 @@ public class Comment extends Content {
         Database.retrieve(this);
     }
 
-    public Comment(int     postID,
-                   int     commentID,
-                   int     authorID,
-                   String  content,
-                   String  creationDate,
-                   String  lastModified,
-                   int     upvotes,
-                   int     downvotes,
+    public Comment(int postID,
+                   int commentID,
+                   int authorID,
+                   String content,
+                   String creationDate,
+                   String lastModified,
+                   int upvotes,
+                   int downvotes,
                    boolean isDeleted) {
         super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
         this.postID = postID;
@@ -60,12 +60,9 @@ public class Comment extends Content {
      * @return JSONObject
      */
     public JSONObject asJSONObject() {
-        JSONObject json = super.asJSONObject();
-
-        json.put("postID", postID);
-        json.put("commentID", commentID);
-
-        return json;
+        return super.asJSONObject()
+                .put("postID", postID)
+                .put("commentID", commentID);
     }
 
     public int getPostID() {
