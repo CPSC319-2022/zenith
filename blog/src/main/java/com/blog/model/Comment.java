@@ -2,8 +2,6 @@ package com.blog.model;
 
 import com.blog.database.Database;
 
-import java.time.Clock;
-
 /**
  * Class that stores the details of a comment.
  *
@@ -45,8 +43,8 @@ public class Comment extends Content {
                    int     commentID,
                    int     authorID,
                    String  content,
-                   Clock   creationDate,
-                   Clock   lastModified,
+                   String  creationDate,
+                   String  lastModified,
                    int     upvotes,
                    int     downvotes,
                    boolean isDeleted) {

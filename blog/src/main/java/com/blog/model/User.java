@@ -2,8 +2,6 @@ package com.blog.model;
 
 import com.blog.database.Database;
 
-import java.time.Clock;
-
 /**
  * Class that stores the details of a user.
  *
@@ -32,8 +30,8 @@ public class User extends Record {
     private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
-    private Clock creationDate;
-    private Clock lastLogin;
+    private String creationDate;
+    private String lastLogin;
     private UserStatus userStatus;
     private String profilePicture;  // URL to the profile picture
 
@@ -59,8 +57,8 @@ public class User extends Record {
     public User(int        userID,
                 String     username,
                 UserLevel  userLevel,
-                Clock      creationDate,
-                Clock      lastLogin,
+                String     creationDate,
+                String     lastLogin,
                 UserStatus userStatus,
                 String     profilePicture,
                 boolean    isDeleted) {
@@ -94,19 +92,19 @@ public class User extends Record {
         this.userLevel = userLevel;
     }
 
-    public Clock getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Clock creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Clock getLastLogin() {
+    public String getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(Clock lastLogin) {
+    public void setLastLogin(String lastLogin) {
         this.lastLogin = lastLogin;
     }
 

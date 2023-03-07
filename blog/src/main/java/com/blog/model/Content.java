@@ -1,7 +1,5 @@
 package com.blog.model;
 
-import java.time.Clock;
-
 /**
  * Abstract class Content to be extended by Post and Comment.
  *
@@ -30,8 +28,8 @@ import java.time.Clock;
 abstract class Content extends Record {
     private int authorID;
     private String content;
-    private Clock creationDate;
-    private Clock lastModified;
+    private String creationDate;
+    private String lastModified;
     private int upvotes;
     private int downvotes;
 
@@ -40,8 +38,8 @@ abstract class Content extends Record {
 
     public Content(int     authorID,
                    String  content,
-                   Clock   creationDate,
-                   Clock   lastModified,
+                   String  creationDate,
+                   String  lastModified,
                    int     upvotes,
                    int     downvotes,
                    boolean isDeleted) {
@@ -79,19 +77,19 @@ abstract class Content extends Record {
         this.content = content;
     }
 
-    public Clock getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Clock creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Clock getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Clock lastModified) {
+    public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
 
