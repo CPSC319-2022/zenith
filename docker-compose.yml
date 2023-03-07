@@ -1,8 +1,9 @@
 services:
   backend:
+    build: ./blog
     image: eclipse-temurin:17-jdk-jammy
     ports: 
-      - 8000:8080 #placeholder ports until know which to use
+      - "8080:8080" #placeholder ports until know which to use
     working_dir: /backend
     volumes:
       - ./:/backend
