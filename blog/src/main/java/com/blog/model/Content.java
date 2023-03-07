@@ -1,5 +1,7 @@
 package com.blog.model;
 
+import com.blog.utils.Utility;
+
 /**
  * Abstract class Content to be extended by Post and Comment.
  *
@@ -59,6 +61,27 @@ abstract class Content extends Record {
      */
     public boolean isDisplayable() {
         return content != null && !isDeleted();
+    }
+
+    /**
+     * Updates the last modified time to the current time.
+     */
+    public void lastModifiedNow() {
+        lastModified = Utility.getCurrentTime();
+    }
+
+    /**
+     * Increments the upvote counter.
+     */
+    public void upvote() {
+        upvotes++;
+    }
+
+    /**
+     * Increments the downvote counter.
+     */
+    public void downvote() {
+        downvotes++;
     }
 
     public int getAuthorID() {
