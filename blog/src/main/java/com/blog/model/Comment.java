@@ -1,21 +1,20 @@
 package com.blog.model;
 
 import com.blog.database.Database;
-
-import java.time.Clock;
+import org.json.JSONObject;
 
 /**
  * Class that stores the details of a comment.
- *
+ * <p>
  * Constructors
  * ----------
  * Comment(int postID, int commentID)
- *
+ * <p>
  * Methods
  * ----------
  * int  getPostID()
  * int  getCommentID()
- *
+ * <p>
  * Inherited Methods
  * ----------
  * int     getAuthorID()
@@ -41,18 +40,29 @@ public class Comment extends Content {
         Database.retrieve(this);
     }
 
-    public Comment(int     postID,
-                   int     commentID,
-                   int     authorID,
-                   String  content,
-                   Clock   creationDate,
-                   Clock   lastModified,
-                   int     upvotes,
-                   int     downvotes,
+    public Comment(int postID,
+                   int commentID,
+                   int authorID,
+                   String content,
+                   String creationDate,
+                   String lastModified,
+                   int upvotes,
+                   int downvotes,
                    boolean isDeleted) {
         super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
         this.postID = postID;
         this.commentID = commentID;
+    }
+
+    /**
+     * Returns the JSON representation of this object.
+     *
+     * @return JSONObject
+     */
+    public JSONObject asJSONObject() {
+        return super.asJSONObject()
+                .put("postID", postID)
+                .put("commentID", commentID);
     }
 
     public int getPostID() {

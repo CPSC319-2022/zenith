@@ -1,12 +1,12 @@
 package com.blog.model;
 
 import com.blog.database.Database;
-
-import java.time.Clock;
+import com.blog.utils.Utility;
+import org.json.JSONObject;
 
 /**
  * Class that stores the details of a user.
- *
+ * <p>
  * Methods
  * ----------
  * int         getUserID()
@@ -22,7 +22,7 @@ import java.time.Clock;
  * void        setUserStatus(UserStatus userStatus)
  * String      getProfilePicture()
  * void        setProfilePicture(String profilePicture)
- *
+ * <p>
  * Inherited Methods
  * ----------
  * boolean     isDeleted()
@@ -32,8 +32,8 @@ public class User extends Record {
     private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
-    private Clock creationDate;
-    private Clock lastLogin;
+    private String creationDate;
+    private String lastLogin;
     private UserStatus userStatus;
     private String profilePicture;  // URL to the profile picture
 
@@ -49,29 +49,52 @@ public class User extends Record {
     /**
      * Constructor for an existing user.
      *
-     * @param userID  The unique user identifier.
+     * @param userID The unique user identifier.
      */
     public User(int userID) {
         this.userID = userID;
         Database.retrieve(this);
     }
 
-    public User(int        userID,
-                String     username,
-                UserLevel  userLevel,
-                Clock      creationDate,
-                Clock      lastLogin,
+    public User(int userID,
+                String username,
+                UserLevel userLevel,
+                String creationDate,
+                String lastLogin,
                 UserStatus userStatus,
-                String     profilePicture,
-                boolean    isDeleted) {
+                String profilePicture,
+                boolean isDeleted) {
         super(isDeleted);
-        this.userID         = userID;
-        this.username       = username;
-        this.userLevel      = userLevel;
-        this.creationDate   = creationDate;
-        this.lastLogin      = lastLogin;
-        this.userStatus     = userStatus;
+        this.userID = userID;
+        this.username = username;
+        this.userLevel = userLevel;
+        this.creationDate = creationDate;
+        this.lastLogin = lastLogin;
+        this.userStatus = userStatus;
         this.profilePicture = profilePicture;
+    }
+
+    /**
+     * Returns the JSON representation of this object.
+     *
+     * @return JSONObject
+     */
+    public JSONObject asJSONObject() {
+        return super.asJSONObject()
+                .put("userID", userID)
+                .put("username", username)
+                .put("userLevel", userLevel.ordinal())
+                .put("creationDate", creationDate)
+                .put("lastLogin", lastLogin)
+                .put("userStatus", userStatus.ordinal())
+                .put("profilePicture", profilePicture);
+    }
+
+    /**
+     * Updates the last login time to the current time.
+     */
+    public void lastLoginNow() {
+        lastLogin = Utility.getCurrentTime();
     }
 
     public int getUserID() {
@@ -94,19 +117,19 @@ public class User extends Record {
         this.userLevel = userLevel;
     }
 
-    public Clock getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Clock creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Clock getLastLogin() {
+    public String getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(Clock lastLogin) {
+    public void setLastLogin(String lastLogin) {
         this.lastLogin = lastLogin;
     }
 
