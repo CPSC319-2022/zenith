@@ -7,18 +7,18 @@
 --
 
 INSERT INTO Users
-VALUES(user_ID, user_password, username, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+VALUES(user_ID, user_password, username, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 --System generate: user_ID(int)
 --User input: user_password(string), username(string)
 
 INSERT INTO Post
-VALUES(post_ID, user_ID, thumbnail, title, content, post_time)
+VALUES(post_ID, user_ID, thumbnail, title, content, post_time, DEFAULT)
 --System generate: post_ID(int), user_ID(int), post_time(Timestamp)
 --User input: thumbnail(string)(url for image, use DEFAULT if user leaves it blank),
 --            title(string), content(string) 
 
 INSERT INTO Comment
-VALUES(post_ID, comment_number, user_ID, content, post_time)
+VALUES(post_ID, comment_number, user_ID, content, post_time, DEFAULT)
 --System generate: post_ID(int), comment_number(int), user_ID(int), post_time(Timestamp)
 --User input: content(string) 
 
