@@ -1,6 +1,7 @@
 package com.blog.model;
 
-import java.time.Clock;
+import com.blog.utils.Utility;
+import org.json.JSONObject;
 
 /**
  * Abstract class Content to be extended by Post and Comment.
@@ -30,8 +31,8 @@ import java.time.Clock;
 abstract class Content extends Record {
     private int authorID;
     private String content;
-    private Clock creationDate;
-    private Clock lastModified;
+    private String creationDate;
+    private String lastModified;
     private int upvotes;
     private int downvotes;
 
@@ -40,8 +41,8 @@ abstract class Content extends Record {
 
     public Content(int     authorID,
                    String  content,
-                   Clock   creationDate,
-                   Clock   lastModified,
+                   String  creationDate,
+                   String  lastModified,
                    int     upvotes,
                    int     downvotes,
                    boolean isDeleted) {
@@ -55,12 +56,48 @@ abstract class Content extends Record {
     }
 
     /**
+     * Returns the JSON representation of this object.
+     *
+     * @return JSONObject
+     */
+    public JSONObject asJSONObject() {
+        return super.asJSONObject()
+                .put("authorID", authorID)
+                .put("content", content)
+                .put("creationDate", creationDate)
+                .put("lastModified", lastModified)
+                .put("upvotes", upvotes)
+                .put("downvotes", downvotes);
+    }
+
+    /**
      * Returns whether this content is displayable. That is, it has content and is not deleted.
      *
      * @return boolean
      */
     public boolean isDisplayable() {
         return content != null && !isDeleted();
+    }
+
+    /**
+     * Updates the last modified time to the current time.
+     */
+    public void lastModifiedNow() {
+        lastModified = Utility.getCurrentTime();
+    }
+
+    /**
+     * Increments the upvote counter.
+     */
+    public void upvote() {
+        upvotes++;
+    }
+
+    /**
+     * Increments the downvote counter.
+     */
+    public void downvote() {
+        downvotes++;
     }
 
     public int getAuthorID() {
@@ -79,19 +116,19 @@ abstract class Content extends Record {
         this.content = content;
     }
 
-    public Clock getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Clock creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Clock getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Clock lastModified) {
+    public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
 

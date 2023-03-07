@@ -1,17 +1,15 @@
 package com.blog.model;
 
 import com.blog.database.Database;
-
-import java.time.Clock;
-import java.util.Objects;
+import org.json.JSONObject;
 
 /**
  * Class that stores the details of a blog post.
- *
+ * <p>
  * Constructors
  * ----------
  * Post(int postID)
- *
+ * <p>
  * Methods
  * ----------
  * int      getPostID()
@@ -21,7 +19,7 @@ import java.util.Objects;
  * void     setViews(int views)
  * boolean  isAllowComments()
  * void     setAllowComments(boolean allowComments)
- *
+ * <p>
  * Inherited Methods
  * ----------
  * int      getAuthorID()
@@ -41,7 +39,8 @@ import java.util.Objects;
  */
 public class Post extends Content {
     // Delete final for convenience to retrieve data, may change later
-    public static final int newPostIDFlag = 0;
+    public static final int NEW_POST_ID = 0;
+
     private int postID;
     private String title;
     private int views;
@@ -53,22 +52,35 @@ public class Post extends Content {
         Database.retrieve(this);
     }
 
-    public Post(int     postID,
-                int     authorID,
-                String  title,
-                String  content,
-                Clock   creationDate,
-                Clock   lastModified,
-                int     upvotes,
-                int     downvotes,
+    public Post(int postID,
+                int authorID,
+                String title,
+                String content,
+                String creationDate,
+                String lastModified,
+                int upvotes,
+                int downvotes,
                 boolean isDeleted,
-                int     views,
+                int views,
                 boolean allowComments) {
         super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
         this.postID = postID;
         this.title = title;
         this.views = views;
         this.allowComments = allowComments;
+    }
+
+    /**
+     * Returns the JSON representation of this object.
+     *
+     * @return JSONObject
+     */
+    public JSONObject asJSONObject() {
+        return super.asJSONObject()
+                .put("postID", postID)
+                .put("title", title)
+                .put("views", views)
+                .put("allowComments", allowComments);
     }
 
     public int getPostID() {
