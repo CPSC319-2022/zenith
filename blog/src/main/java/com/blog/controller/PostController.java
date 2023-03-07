@@ -2,7 +2,6 @@ package com.blog.controller;
 
 import com.blog.exception.BlogException;
 import com.blog.model.Post;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import org.json.*;
 
 import java.time.Clock;
