@@ -1,6 +1,7 @@
 package com.blog.model;
 
 import com.blog.database.Database;
+import com.blog.utils.Utility;
 
 /**
  * Class that stores the details of a user.
@@ -70,6 +71,13 @@ public class User extends Record {
         this.lastLogin      = lastLogin;
         this.userStatus     = userStatus;
         this.profilePicture = profilePicture;
+    }
+
+    /**
+     * Updates the last login time to the current time.
+     */
+    public void lastLoginNow() {
+        lastLogin = Utility.getCurrentTime();
     }
 
     public int getUserID() {
