@@ -19,7 +19,7 @@ public class PostController {
             boolean allowComments = input.getBoolean("allowComments");
             validatePost(title, content, authorID);
             Clock time = Clock.systemDefaultZone();
-            Post p = new Post(Post.newPostIDFlag,authorID,title,content,time,time,
+            Post p = new Post(Post.NEW_POST_ID,authorID,title,content,time,time,
                     0,0,false,0,allowComments);
             return p;
         } catch (Exception e){
