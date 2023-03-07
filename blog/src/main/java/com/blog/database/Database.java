@@ -42,7 +42,6 @@ public class Database {
         throw new NotImplementedException();
         /*
         TODO: if post does not exist, return without error. but make sure that you do post.setContent(null) first.
-              DO NOT increment views
          */
     }
 
@@ -111,7 +110,6 @@ public class Database {
         for each record:
             post.add(new Post(...))
          */
-        // TODO: Increment views for posts every time this function is called
     }
 
     /**
