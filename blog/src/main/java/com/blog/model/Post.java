@@ -40,8 +40,9 @@ import java.util.Objects;
  * void     setDeleted(boolean deleted)
  */
 public class Post extends Content {
+    // Delete final for convenience to retrieve data, may change later
     public static final int newPostIDFlag = 0;
-    private final int postID;
+    private int postID;
     private String title;
     private int views;
     private boolean allowComments;
@@ -72,6 +73,10 @@ public class Post extends Content {
 
     public int getPostID() {
         return postID;
+    }
+
+    public void setPostID(int postID) {
+        this.postID = postID;
     }
 
     public String getTitle() {

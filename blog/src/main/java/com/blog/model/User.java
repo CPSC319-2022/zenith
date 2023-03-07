@@ -29,7 +29,8 @@ import java.time.Clock;
  * void        setDeleted(boolean deleted)
  */
 public class User extends Record {
-    private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
+    // Delete final for userID for convenience to retrieve data, may change later
+    private int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
     private Clock creationDate;
@@ -76,6 +77,10 @@ public class User extends Record {
 
     public int getUserID() {
         return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getUsername() {

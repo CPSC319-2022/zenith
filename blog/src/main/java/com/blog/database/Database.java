@@ -4,8 +4,13 @@ import com.blog.model.Comment;
 import com.blog.model.Post;
 import com.blog.model.User;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import java.sql.*;
 import java.util.ArrayList;
+
+import com.blog.database.*;
 
 /**
  * This class handles all calls to the database related to the blog application.
@@ -16,6 +21,13 @@ public class Database {
      *       Need static method to make the connection (maybe also close)
      */
 
+     @Autowired
+	private static JdbcTemplate jdbcTemplate;
+
+	public static JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
     /**
      * TODO
      *
@@ -24,8 +36,9 @@ public class Database {
     public static void retrieve(Comment comment) {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
+        String sql = "SELECT * FROM Comment WHERE post_ID = ? AND comment_id = ?";
+	   comment =  getJdbcTemplate().queryForObject(sql, new CommentRowMapper(), postID, commentID);
 
-        throw new NotImplementedException();
         /*
         TODO: if comment does not exist, return without error. but make sure that you do comment.setContent(null) first.
          */
@@ -38,8 +51,9 @@ public class Database {
      */
     public static void retrieve(Post post) {
         int postID = post.getPostID();
+        String sql = "SELECT * FROM Post WHERE post_ID = ?";
+	   post =  getJdbcTemplate().queryForObject(sql, new PostRowMapper(), postID);
 
-        throw new NotImplementedException();
         /*
         TODO: if post does not exist, return without error. but make sure that you do post.setContent(null) first.
          */
@@ -53,8 +67,9 @@ public class Database {
      */
     public static void retrieve(User user) {
         int userID = user.getUserID();
+        String sql = "SELECT * FROM User WHERE user_ID = ?";
+	   user = getJdbcTemplate().queryForObject(sql, new UserRowMapper(), userID);
 
-        throw new NotImplementedException();
         /*
         TODO: Use userID to select corresponding user record from database.
               Then use setter functions from User to fill out the private fields
@@ -216,4 +231,5 @@ public class Database {
               instead, we'll soft delete by setting a deleted flag
          */
     }
+
 }
