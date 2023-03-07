@@ -1,9 +1,7 @@
 package com.blog.model;
 
 import com.blog.database.Database;
-
-import java.time.Clock;
-import java.util.Objects;
+import org.json.JSONObject;
 
 /**
  * Class that stores the details of a blog post.
@@ -40,7 +38,8 @@ import java.util.Objects;
  * void     setDeleted(boolean deleted)
  */
 public class Post extends Content {
-    public static final int newPostIDFlag = 0;
+    public static final int NEW_POST_ID = 0;
+
     private final int postID;
     private String title;
     private int views;
@@ -68,6 +67,22 @@ public class Post extends Content {
         this.title = title;
         this.views = views;
         this.allowComments = allowComments;
+    }
+
+    /**
+     * Returns the JSON representation of this object.
+     *
+     * @return JSONObject
+     */
+    public JSONObject asJSONObject() {
+        JSONObject json = super.asJSONObject();
+
+        json.put("postID", postID);
+        json.put("title", title);
+        json.put("views", views);
+        json.put("allowComments", allowComments);
+
+        return json;
     }
 
     public int getPostID() {

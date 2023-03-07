@@ -1,6 +1,7 @@
 package com.blog.model;
 
 import com.blog.utils.Utility;
+import org.json.JSONObject;
 
 /**
  * Abstract class Content to be extended by Post and Comment.
@@ -52,6 +53,24 @@ abstract class Content extends Record {
         this.lastModified = lastModified;
         this.upvotes      = upvotes;
         this.downvotes    = downvotes;
+    }
+
+    /**
+     * Returns the JSON representation of this object.
+     *
+     * @return JSONObject
+     */
+    public JSONObject asJSONObject() {
+        JSONObject json = super.asJSONObject();
+
+        json.put("authorID", authorID);
+        json.put("content", content);
+        json.put("creationDate", creationDate);
+        json.put("lastModified", lastModified);
+        json.put("upvotes", upvotes);
+        json.put("downvotes", downvotes);
+
+        return json;
     }
 
     /**

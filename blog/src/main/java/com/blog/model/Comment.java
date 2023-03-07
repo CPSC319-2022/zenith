@@ -1,6 +1,7 @@
 package com.blog.model;
 
 import com.blog.database.Database;
+import org.json.JSONObject;
 
 /**
  * Class that stores the details of a comment.
@@ -51,6 +52,20 @@ public class Comment extends Content {
         super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
         this.postID = postID;
         this.commentID = commentID;
+    }
+
+    /**
+     * Returns the JSON representation of this object.
+     *
+     * @return JSONObject
+     */
+    public JSONObject asJSONObject() {
+        JSONObject json = super.asJSONObject();
+
+        json.put("postID", postID);
+        json.put("commentID", commentID);
+
+        return json;
     }
 
     public int getPostID() {

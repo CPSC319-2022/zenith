@@ -2,6 +2,7 @@ package com.blog.model;
 
 import com.blog.database.Database;
 import com.blog.utils.Utility;
+import org.json.JSONObject;
 
 /**
  * Class that stores the details of a user.
@@ -71,6 +72,25 @@ public class User extends Record {
         this.lastLogin      = lastLogin;
         this.userStatus     = userStatus;
         this.profilePicture = profilePicture;
+    }
+
+    /**
+     * Returns the JSON representation of this object.
+     *
+     * @return JSONObject
+     */
+    public JSONObject asJSONObject() {
+        JSONObject json = super.asJSONObject();
+
+        json.put("userID", userID);
+        json.put("username", username);
+        json.put("userLevel", userLevel.ordinal());
+        json.put("creationDate", creationDate);
+        json.put("lastLogin", lastLogin);
+        json.put("userStatus", userStatus.ordinal());
+        json.put("profilePicture", profilePicture);
+
+        return json;
     }
 
     /**
