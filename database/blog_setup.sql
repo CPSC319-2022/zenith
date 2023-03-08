@@ -2,7 +2,7 @@
 --you don't need to use the commands inside this file
 
 --Create tables:
-CREATE TABLE Users(
+CREATE TABLE User(
     user_ID INTEGER,
     user_password CHAR(32) NOT NULL,
     username CHAR(32) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE Post(
     post_time TIMESTAMP NOT NULL,
     invalid BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY(post_ID),
-    FOREIGN KEY(user_ID) REFERENCES Users(user_ID) ON DELETE CASCADE
+    FOREIGN KEY(user_ID) REFERENCES User(user_ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Comment(
@@ -36,10 +36,10 @@ CREATE TABLE Comment(
     invalid BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY(post_ID, comment_number),
     FOREIGN KEY(post_ID) REFERENCES Post(post_ID) ON DELETE CASCADE,
-    FOREIGN KEY(user_ID) REFERENCES Users(user_ID) ON DELETE CASCADE
+    FOREIGN KEY(user_ID) REFERENCES User(user_ID) ON DELETE CASCADE
 );
 
 --Delete tables:
 drop table Comment;
 drop table Post;
-drop table Users;
+drop table User;

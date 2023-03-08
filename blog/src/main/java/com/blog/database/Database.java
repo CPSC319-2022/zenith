@@ -3,7 +3,6 @@ package com.blog.database;
 import com.blog.model.Comment;
 import com.blog.model.Post;
 import com.blog.model.User;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,6 +14,7 @@ import com.blog.database.*;
 /**
  * This class handles all calls to the database related to the blog application.
  */
+
 public class Database {
     /*
      * TODO: Need some static fields to store the connection to the database.
@@ -27,6 +27,7 @@ public class Database {
 	public static JdbcTemplate getJdbcTemplate() {
 		return jdbcTemplate;
 	}
+     
 
     /**
      * TODO
@@ -88,7 +89,7 @@ public class Database {
      * @param count
      */
     public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count, boolean reverse) {
-        throw new NotImplementedException();
+        
         /*
         SELECT *
         FROM   comments
@@ -113,7 +114,7 @@ public class Database {
      * @param count
      */
     public static void retrieve(ArrayList<Post> posts, int postIDStart, int count, boolean reverse) {
-        throw new NotImplementedException();
+        
         /*
         SELECT *
         FROM   posts
@@ -138,7 +139,7 @@ public class Database {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
 
-        throw new NotImplementedException();
+        return 0;
         /*
         TODO: if keys already exist in database, update
               if postID does not exist throw error
@@ -158,7 +159,7 @@ public class Database {
     public static int save(Post post) {
         int postID = post.getPostID();
 
-        throw new NotImplementedException();
+        return 0;
         /*
         TODO: if key already exist in database, update
               if postID == 0, create new record with postID being next smallest assignable ID
@@ -177,7 +178,7 @@ public class Database {
     public static int save(User user) {
         int userID = user.getUserID();
 
-        throw new NotImplementedException();
+        return 0;
         /*
         TODO: if key already exist in database, update
               if userID == 0, create new record with userID being next smallest assignable ID
@@ -195,7 +196,6 @@ public class Database {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
 
-        throw new NotImplementedException();
         /*
         TODO: don't hard delete the record
               instead, we'll soft delete by setting a deleted flag
@@ -210,7 +210,6 @@ public class Database {
     public static void delete(Post post) {
         int postID = post.getPostID();
 
-        throw new NotImplementedException();
         /*
         TODO: don't hard delete the record
               instead, we'll soft delete by setting a deleted flag
@@ -225,7 +224,6 @@ public class Database {
     public static void delete(User user) {
         int userID = user.getUserID();
 
-        throw new NotImplementedException();
         /*
         TODO: don't hard delete the record
               instead, we'll soft delete by setting a deleted flag

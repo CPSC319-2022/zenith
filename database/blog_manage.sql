@@ -6,7 +6,7 @@
 --Create new item
 --
 
-INSERT INTO Users
+INSERT INTO User
 VALUES(user_ID, user_password, username, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 --System generate: user_ID(int)
 --User input: user_password(string), username(string)
@@ -26,7 +26,7 @@ VALUES(post_ID, comment_number, user_ID, content, post_time, DEFAULT)
 --Delete item from table
 --
 
-DELETE FROM Users WHERE user_ID = x
+DELETE FROM User WHERE user_ID = x
 -- x is an int, post and comment created by this user will be also deleted
 
 DELETE FROM Post WHERE post_ID = x
@@ -39,7 +39,7 @@ DELETE FROM Comment WHERE post_ID = x AND comment_number = y
 --Some use cases
 --
 
-SELECT username FROM Users WHERE contributor = true
+SELECT username FROM User WHERE contributor = true
 --Get username of all contributors
 
 SELECT Count(*) FROM Post

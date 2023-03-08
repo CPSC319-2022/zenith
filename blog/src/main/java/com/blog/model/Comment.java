@@ -37,6 +37,11 @@ public class Comment extends Content {
     private int postID;
     private int commentID;
 
+    public Comment() {
+        this.postID = 0;
+        this.commentID = 0;
+    }
+
     public Comment(int postID, int commentID) {
         this.postID = postID;
         this.commentID = commentID;

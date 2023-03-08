@@ -49,6 +49,10 @@ public class Post extends Content {
     private boolean allowComments;
     // private Tag tags; TODO: allow tags for posts
 
+    public Post() {
+        this.postID = 0;
+    }
+
     public Post(int postID) {
         this.postID = postID;
         Database.retrieve(this);
