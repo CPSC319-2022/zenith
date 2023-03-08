@@ -294,7 +294,7 @@ public class CommentController {
 
         // Check whether the user has UserLevel of at least UserLevel.READER
         if (UserLevel.READER.compareTo(user.getUserLevel()) < 0) {
-            throw new BlogException("User does not have the necessary permission to make a comment.")
+            throw new BlogException("User does not have the necessary permission to make a comment.");
         }
     }
 }
