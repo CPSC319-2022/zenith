@@ -16,7 +16,7 @@ public class DatabaseConfig {
     @Bean
     public static DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setDriverClassName("com.mysql.jdbc.Driver");
+        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setJdbcUrl(String.format("jdbc:mysql://google/%s?cloudSqlInstance=%s", "blog", "blog-pipe:us-central1:blog-database"));
         config.setUsername("blog-connect");
         config.setPassword("KKBl<cT\"z~j,Z0*/");
