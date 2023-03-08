@@ -1,5 +1,6 @@
 package com.blog.model;
 
+import com.blog.exception.BlogException;
 import com.blog.utils.Utility;
 import org.json.JSONObject;
 
@@ -28,7 +29,9 @@ import org.json.JSONObject;
  * boolean  isDeleted()
  * void     setDeleted(boolean deleted)
  */
-abstract class Content extends Record {
+public abstract class Content extends Record {
+    static final int MIN_CONTENT_LENGTH = 1;
+
     private int authorID;
     private String content;
     private String creationDate;
@@ -68,6 +71,18 @@ abstract class Content extends Record {
                 .put("lastModified", lastModified)
                 .put("upvotes", upvotes)
                 .put("downvotes", downvotes);
+    }
+
+    /**
+     * Validates the length of the content field.
+     *
+     * @param content The content to validate.
+     * @throws BlogException
+     */
+    public static void validateContent(String content) throws BlogException {
+        if (content.length() < MIN_CONTENT_LENGTH) {
+            throw new BlogException("Content length is too short.");
+        }
     }
 
     /**

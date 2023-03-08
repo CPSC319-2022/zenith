@@ -32,6 +32,8 @@ import org.json.JSONObject;
  */
 public class Comment extends Content {
     // Delete final for convenience to retrieve data, may change later
+    public static final int NEW_COMMENT_ID = 0;
+
     private int postID;
     private int commentID;
 

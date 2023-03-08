@@ -3,6 +3,9 @@ package com.blog.controller;
 import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.model.Comment;
+import com.blog.model.Content;
+import com.blog.model.User;
+import com.blog.model.UserLevel;
 import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,15 +14,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class CommentController {
-    static final int MIN_CONTENT_LENGTH = 1;
-
     /**
-     * Return a JSON containing the comment requested to be viewed.
+     * Returns a JSON containing the requested comment.
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post containing the comment to view.
-     *              "commentID": int   // The comment to view.
+     *              "postID":    int,  // The post containing the requested comment.
+     *              "commentID": int   // The requested comment.
      *              }
      * @return The JSON representing the comment using the following syntax:
      * {
@@ -35,7 +36,7 @@ public class CommentController {
      * }
      * @throws BlogException
      */
-    public static JSONObject viewComment(JSONObject input) throws BlogException {
+    public static JSONObject getComment(JSONObject input) throws BlogException {
         // Retrieve the comment
         Comment comment = retrieveComment(input);
 
@@ -44,14 +45,14 @@ public class CommentController {
     }
 
     /**
-     * Return a JSON containing the comments requested to be viewed.
+     * Returns a JSON containing the requested comments.
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":         int,     // The post containing the comments to view.
-     *              "commentIDStart": int,     // The first comment to view.
-     *              "count":          int,     // The number of comments to view.
-     *              "reverse":        boolean  // Whether to view comments incrementally or decrementally.
+     *              "postID":         int,     // The post containing the requested comments.
+     *              "commentIDStart": int,     // The first requested comment.
+     *              "count":          int,     // The number of requested comments.
+     *              "reverse":        boolean  // Whether to get comments incrementally or decrementally.
      *              }
      * @return The JSON representing the comments using the following syntax:
      * [
@@ -60,17 +61,17 @@ public class CommentController {
      * "commentID":    int,       //
      * "authorID":     int,       //
      * "content":      String,    //
-     * "creationDate": String,    // This represents one comment!
+     * "creationDate": String,    // <--- This represents one comment!
      * "lastModified": String,    //
      * "upvotes":      int,       //
      * "downvotes":    int,       //
      * "isDeleted":    boolean    //
      * },                         //
-     * ...  // The JSON array will contain <code>count</code> number of comment representations.
+     * ...  // The JSON array will contain at most <code>count</code> number of comment representations.
      * ]
      * @throws BlogException
      */
-    public static JSONArray viewComments(JSONObject input) throws BlogException {
+    public static JSONArray getComments(JSONObject input) throws BlogException {
         int postID;
         int commentIDStart;
         int count;
@@ -131,14 +132,17 @@ public class CommentController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
 
+        // Check whether author has permission to comment
+        validatePermission(authorID);
+
         // Validate the data
-        validateContent(content);
+        Comment.validateContent(content);
 
         // Create new comment
         String currentTime = Utility.getCurrentTime();
         Comment comment = new Comment(
                 postID,
-                0,
+                Comment.NEW_COMMENT_ID,
                 authorID,
                 content,
                 currentTime,
@@ -194,7 +198,7 @@ public class CommentController {
         }
 
         // Validate the data
-        validateContent(content);
+        Comment.validateContent(content);
 
         // Retrieve the comment
         Comment comment = retrieveComment(input);
@@ -250,18 +254,6 @@ public class CommentController {
     }
 
     /**
-     * Validates the length of the content field.
-     *
-     * @param content The content to validate.
-     * @throws BlogException
-     */
-    private static void validateContent(String content) throws BlogException {
-        if (content.length() < MIN_CONTENT_LENGTH) {
-            throw new BlogException("Content length is too short.");
-        }
-    }
-
-    /**
      * Retrieves a comment from the database.
      *
      * @param input A JSON containing the following key-value pairs:
@@ -288,5 +280,21 @@ public class CommentController {
 
         // Return the retrieved comment
         return new Comment(postID, commentID);
+    }
+
+    /**
+     * Validates whether the user has the necessary permissions to make a comment.
+     *
+     * @param userID The user to validate.
+     * @throws BlogException
+     */
+    private static void validatePermission(int userID) throws BlogException {
+        // Retrieve the user
+        User user = new User(userID);
+
+        // Check whether the user has UserLevel of at least UserLevel.READER
+        if (UserLevel.READER.compareTo(user.getUserLevel()) < 0) {
+            throw new BlogException("User does not have the necessary permission to make a comment.");
+        }
     }
 }
