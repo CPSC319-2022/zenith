@@ -1,6 +1,7 @@
 package com.blog.model;
 
 import com.blog.database.Database;
+import com.blog.exception.BlogException;
 import org.json.JSONObject;
 
 /**
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 public class Post extends Content {
     // Delete final for convenience to retrieve data, may change later
     public static final int NEW_POST_ID = 0;
+    static final int MIN_TITLE_LENGTH = 1;
 
     private int postID;
     private String title;
@@ -81,6 +83,18 @@ public class Post extends Content {
                 .put("title", title)
                 .put("views", views)
                 .put("allowComments", allowComments);
+    }
+
+    /**
+     * Validates the length of the title field.
+     *
+     * @param title The title to validate.
+     * @throws BlogException
+     */
+    public static void validateTitle(String title) throws BlogException {
+        if (title.length() < MIN_TITLE_LENGTH) {
+            throw new BlogException("Title length is too short.");
+        }
     }
 
     public int getPostID() {
