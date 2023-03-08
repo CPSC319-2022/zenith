@@ -136,7 +136,7 @@ public class CommentController {
         validatePermission(authorID);
 
         // Validate the data
-        Content.validateContent(content);
+        Comment.validateContent(content);
 
         // Create new comment
         String currentTime = Utility.getCurrentTime();
@@ -198,7 +198,7 @@ public class CommentController {
         }
 
         // Validate the data
-        Content.validateContent(content);
+        Comment.validateContent(content);
 
         // Retrieve the comment
         Comment comment = retrieveComment(input);
