@@ -31,8 +31,9 @@ import org.json.JSONObject;
  * void    setDownvotes(int downvotes)
  */
 public class Comment extends Content {
-    private final int postID;
-    private final int commentID;
+    // Delete final for convenience to retrieve data, may change later
+    private int postID;
+    private int commentID;
 
     public Comment(int postID, int commentID) {
         this.postID = postID;
@@ -69,7 +70,17 @@ public class Comment extends Content {
         return postID;
     }
 
+    public void setPostID(int postID) {
+        this.postID = postID;
+    }
+
     public int getCommentID() {
         return commentID;
     }
+
+    public void setCommentID(int commentID) {
+        this.commentID = commentID;
+    }
+
+
 }

@@ -10,7 +10,7 @@ package com.blog.model;
  * BUSY
  * OFFLINE
  */
-enum UserStatus {
+public enum UserStatus {
     ONLINE,
     AWAY,
     BUSY,

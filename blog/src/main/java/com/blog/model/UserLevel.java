@@ -14,7 +14,7 @@ package com.blog.model;
  * GUEST:
  *     Not logged in. Only has read privileges.
  */
-enum UserLevel {
+public enum UserLevel {
     ADMIN,
     CONTRIBUTOR,
     READER,
