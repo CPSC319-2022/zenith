@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
 import com.blog.database.*;
 
 /**
@@ -21,12 +23,12 @@ public class Database {
      *       Need static method to make the connection (maybe also close)
      */
 
-     @Autowired
 	private static JdbcTemplate jdbcTemplate;
 
-	public static JdbcTemplate getJdbcTemplate() {
-		return jdbcTemplate;
-	}
+	public static void createTemplate() {
+          DataSource dataSource = DatabaseConfig.dataSource();
+          jdbcTemplate = new JdbcTemplate(dataSource);
+     }
      
 
     /**
@@ -38,7 +40,10 @@ public class Database {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
         String sql = "SELECT * FROM Comment WHERE post_ID = ? AND comment_id = ?";
-	   comment =  getJdbcTemplate().queryForObject(sql, new CommentRowMapper(), postID, commentID);
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+	   comment =  jdbcTemplate.queryForObject(sql, new CommentRowMapper(), postID, commentID);
 
         /*
         TODO: if comment does not exist, return without error. but make sure that you do comment.setContent(null) first.
@@ -53,7 +58,10 @@ public class Database {
     public static void retrieve(Post post) {
         int postID = post.getPostID();
         String sql = "SELECT * FROM Post WHERE post_ID = ?";
-	   post =  getJdbcTemplate().queryForObject(sql, new PostRowMapper(), postID);
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+	   post =  jdbcTemplate.queryForObject(sql, new PostRowMapper(), postID);
 
         /*
         TODO: if post does not exist, return without error. but make sure that you do post.setContent(null) first.
@@ -69,7 +77,10 @@ public class Database {
     public static void retrieve(User user) {
         int userID = user.getUserID();
         String sql = "SELECT * FROM User WHERE user_ID = ?";
-	   user = getJdbcTemplate().queryForObject(sql, new UserRowMapper(), userID);
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+	   user = jdbcTemplate.queryForObject(sql, new UserRowMapper(), userID);
 
         /*
         TODO: Use userID to select corresponding user record from database.
