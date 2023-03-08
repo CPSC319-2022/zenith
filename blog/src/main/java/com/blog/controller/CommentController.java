@@ -4,6 +4,8 @@ import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.model.Comment;
 import com.blog.model.Content;
+import com.blog.model.User;
+import com.blog.model.UserLevel;
 import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -130,8 +132,11 @@ public class CommentController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
 
+        // Check whether author has permission to comment
+        validatePermission(authorID);
+
         // Validate the data
-        Content.validate(content);
+        Content.validateContent(content);
 
         // Create new comment
         String currentTime = Utility.getCurrentTime();
@@ -193,7 +198,7 @@ public class CommentController {
         }
 
         // Validate the data
-        Content.validate(content);
+        Content.validateContent(content);
 
         // Retrieve the comment
         Comment comment = retrieveComment(input);
@@ -275,5 +280,21 @@ public class CommentController {
 
         // Return the retrieved comment
         return new Comment(postID, commentID);
+    }
+
+    /**
+     * Validates whether the user has the necessary permissions to make a comment.
+     *
+     * @param userID The user to validate.
+     * @throws BlogException
+     */
+    private static void validatePermission(int userID) throws BlogException {
+        // Retrieve the user
+        User user = new User(userID);
+
+        // Check whether the user has UserLevel of at least UserLevel.READER
+        if (UserLevel.READER.compareTo(user.getUserLevel()) < 0) {
+            throw new BlogException("User does not have the necessary permission to make a comment.")
+        }
     }
 }

@@ -79,7 +79,7 @@ public abstract class Content extends Record {
      * @param content The content to validate.
      * @throws BlogException
      */
-    public static void validate(String content) throws BlogException {
+    public static void validateContent(String content) throws BlogException {
         if (content.length() < MIN_CONTENT_LENGTH) {
             throw new BlogException("Content length is too short.");
         }
