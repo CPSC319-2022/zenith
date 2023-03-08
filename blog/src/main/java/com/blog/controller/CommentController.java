@@ -3,6 +3,7 @@ package com.blog.controller;
 import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.model.Comment;
+import com.blog.model.Content;
 import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,8 +12,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class CommentController {
-    static final int MIN_CONTENT_LENGTH = 1;
-
     /**
      * Return a JSON containing the comment requested to be viewed.
      *
@@ -132,7 +131,7 @@ public class CommentController {
         }
 
         // Validate the data
-        validateContent(content);
+        Content.validate(content);
 
         // Create new comment
         String currentTime = Utility.getCurrentTime();
@@ -194,7 +193,7 @@ public class CommentController {
         }
 
         // Validate the data
-        validateContent(content);
+        Content.validate(content);
 
         // Retrieve the comment
         Comment comment = retrieveComment(input);
@@ -247,18 +246,6 @@ public class CommentController {
 
         // Save comment to database
         Database.save(comment);
-    }
-
-    /**
-     * Validates the length of the content field.
-     *
-     * @param content The content to validate.
-     * @throws BlogException
-     */
-    private static void validateContent(String content) throws BlogException {
-        if (content.length() < MIN_CONTENT_LENGTH) {
-            throw new BlogException("Content length is too short.");
-        }
     }
 
     /**

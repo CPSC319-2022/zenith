@@ -10,7 +10,7 @@ import org.json.JSONObject;
  * boolean  isDeleted()
  * void     setDeleted(boolean deleted)
  */
-abstract class Record {
+public abstract class Record {
     private boolean isDeleted;
 
     public Record() {

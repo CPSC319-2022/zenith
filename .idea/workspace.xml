@@ -7,7 +7,8 @@
     <list default="true" id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Content.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Content.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Record.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Record.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +50,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
@@ -145,7 +147,9 @@
       <workItem from="1677906178082" duration="6901000" />
       <workItem from="1677972599470" duration="10057000" />
       <workItem from="1678015070561" duration="695000" />
-      <workItem from="1678179511528" duration="15106000" />
+      <workItem from="1678179511528" duration="17766000" />
+      <workItem from="1678216422362" duration="1474000" />
+      <workItem from="1678234058652" duration="1000000" />
     </task>
     <servers />
   </component>
