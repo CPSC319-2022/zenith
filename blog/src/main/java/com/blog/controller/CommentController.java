@@ -15,12 +15,12 @@ import java.util.ArrayList;
 
 public class CommentController {
     /**
-     * Returns a JSON containing the comment requested to be viewed.
+     * Returns a JSON containing the requested comment.
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post containing the comment to view.
-     *              "commentID": int   // The comment to view.
+     *              "postID":    int,  // The post containing the requested comment.
+     *              "commentID": int   // The requested comment.
      *              }
      * @return The JSON representing the comment using the following syntax:
      * {
@@ -36,7 +36,7 @@ public class CommentController {
      * }
      * @throws BlogException
      */
-    public static JSONObject viewComment(JSONObject input) throws BlogException {
+    public static JSONObject getComment(JSONObject input) throws BlogException {
         // Retrieve the comment
         Comment comment = retrieveComment(input);
 
@@ -45,14 +45,14 @@ public class CommentController {
     }
 
     /**
-     * Returns a JSON containing the comments requested to be viewed.
+     * Returns a JSON containing the requested comments.
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":         int,     // The post containing the comments to view.
-     *              "commentIDStart": int,     // The first comment to view.
-     *              "count":          int,     // The number of comments to view.
-     *              "reverse":        boolean  // Whether to view comments incrementally or decrementally.
+     *              "postID":         int,     // The post containing the requested comments.
+     *              "commentIDStart": int,     // The first requested comment.
+     *              "count":          int,     // The number of requested comments.
+     *              "reverse":        boolean  // Whether to get comments incrementally or decrementally.
      *              }
      * @return The JSON representing the comments using the following syntax:
      * [
@@ -71,7 +71,7 @@ public class CommentController {
      * ]
      * @throws BlogException
      */
-    public static JSONArray viewComments(JSONObject input) throws BlogException {
+    public static JSONArray getComments(JSONObject input) throws BlogException {
         int postID;
         int commentIDStart;
         int count;
