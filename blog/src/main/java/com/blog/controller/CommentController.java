@@ -61,7 +61,7 @@ public class CommentController {
      * "commentID":    int,       //
      * "authorID":     int,       //
      * "content":      String,    //
-     * "creationDate": String,    // This represents one comment!
+     * "creationDate": String,    // <--- This represents one comment!
      * "lastModified": String,    //
      * "upvotes":      int,       //
      * "downvotes":    int,       //
