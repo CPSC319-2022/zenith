@@ -142,7 +142,7 @@ public class CommentController {
         String currentTime = Utility.getCurrentTime();
         Comment comment = new Comment(
                 postID,
-                0,
+                Comment.NEW_COMMENT_ID,
                 authorID,
                 content,
                 currentTime,
