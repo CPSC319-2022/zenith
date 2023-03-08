@@ -97,6 +97,13 @@ public class Post extends Content {
         }
     }
 
+    /**
+     * Increments the view counter.
+     */
+    public void view() {
+        views++;
+    }
+
     public int getPostID() {
         return postID;
     }
