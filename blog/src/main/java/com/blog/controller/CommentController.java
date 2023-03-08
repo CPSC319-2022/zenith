@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class CommentController {
     /**
-     * Return a JSON containing the comment requested to be viewed.
+     * Returns a JSON containing the comment requested to be viewed.
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
@@ -45,7 +45,7 @@ public class CommentController {
     }
 
     /**
-     * Return a JSON containing the comments requested to be viewed.
+     * Returns a JSON containing the comments requested to be viewed.
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
