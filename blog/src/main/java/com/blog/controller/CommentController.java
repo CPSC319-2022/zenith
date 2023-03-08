@@ -67,7 +67,7 @@ public class CommentController {
      * "downvotes":    int,       //
      * "isDeleted":    boolean    //
      * },                         //
-     * ...  // The JSON array will contain <code>count</code> number of comment representations.
+     * ...  // The JSON array will contain at most <code>count</code> number of comment representations.
      * ]
      * @throws BlogException
      */
