@@ -209,7 +209,15 @@ public class UserController {
 
     }
 
-
+    /**
+     * @param input A JSON containing the following key-value pairs:
+     *              {
+     *              "userID":    int,     // The user to retrieve.
+     *              "profile_picture": String // URL of the new profile picture of the user
+     *              }
+     * @return Updates the profile picture and saves the changes in the database
+     * @throws BlogException
+     */
     private static void updateProfilePicture(JSONObject input) throws BlogException {
         User user;
         String profile_picture;
