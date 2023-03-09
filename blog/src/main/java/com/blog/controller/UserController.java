@@ -191,7 +191,7 @@ public class UserController {
      * @return Updates the User Status and saves the changes in the database
      * @throws BlogException
      */
-    private static void updateUserateStatus(JSONObject input) throws BlogException {
+    private static void updateUserStatus(JSONObject input) throws BlogException {
         User user;
         String status;
 
@@ -235,6 +235,20 @@ public class UserController {
     }
 
     private static void updateLastLogin(JSONObject input) throws BlogException {
+        User user;
+        String last_login;
+
+        try {
+            user = retrieveUser(input);
+            profile_picture = input.getString("profile_picture");
+            user.setProfilePicture(profile_picture);
+            Database.save(user);
+        } catch (JSONException e) {
+            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new BlogException("JSON object received is null. \n" + e.getMessage());
+        }
+    }
     }
 
 
