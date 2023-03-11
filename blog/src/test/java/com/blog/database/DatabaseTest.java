@@ -6,6 +6,8 @@ import com.blog.model.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+
 class DatabaseTest {
     @Test
     void testSaveUser() {
@@ -137,6 +139,18 @@ class DatabaseTest {
         assertEquals(0, comment.getUpvotes());
         assertEquals(0, comment.getDownvotes());
         assertEquals(false, comment.isDeleted());
+    }
+
+    @Test
+    void testRetrieveMultiplePost() {
+        ArrayList<Post> posts = new ArrayList<Post>();
+        try {
+            Database.retrieve(posts, 3, 2, false);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        assertEquals("testtitlec", posts.get(1).getTitle());
+        //will fail if database reset, need to change later
     }
 
     @Test

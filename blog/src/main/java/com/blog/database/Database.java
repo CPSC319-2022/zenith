@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -126,7 +128,19 @@ public class Database {
      * @param count
      */
     public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count, boolean reverse) {
-        
+          String sql;
+          if (reverse) {
+               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number <= " + commentIDStart + " AND is_deleted = false LIMIT " + count;
+          } else {
+               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number >= " + commentIDStart + " AND is_deleted = false LIMIT " + count;
+          }
+          if (jdbcTemplate == null) {
+               createTemplate();
+          }
+          List<Comment> temp = jdbcTemplate.query(sql, new CommentRowMapper());
+          for (Comment c : temp) {
+               comments.add(c);
+          }
         /*
         SELECT *
         FROM   comments
@@ -151,7 +165,20 @@ public class Database {
      * @param count
      */
     public static void retrieve(ArrayList<Post> posts, int postIDStart, int count, boolean reverse) {
-        
+          String sql;
+          if (reverse) {
+               sql = "SELECT * FROM Post WHERE post_ID <= " + postIDStart + " AND is_deleted = false LIMIT " + count;
+          } else {
+               sql = "SELECT * FROM Post WHERE post_ID >= " + postIDStart + " AND is_deleted = false LIMIT " + count;
+          }
+          if (jdbcTemplate == null) {
+               createTemplate();
+          }
+          List<Post> temp = jdbcTemplate.query(sql, new PostRowMapper());
+          for (Post p : temp) {
+               posts.add(p);
+          }
+
         /*
         SELECT *
         FROM   posts
