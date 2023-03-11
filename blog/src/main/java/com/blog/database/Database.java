@@ -98,12 +98,12 @@ public class Database {
         }
         try {
           User temp = jdbcTemplate.queryForObject(sql, new UserRowMapper());
-          if (temp.isDeleted()) {
-               throw new UserIsDeletedException(userID + " is deleted.");
-          }
           user.copy(temp);
+          if (temp.isDeleted()) {
+               throw new UserIsDeletedException("User with ID " + userID + " is deleted.");
+          }
         } catch (EmptyResultDataAccessException e) {
-          throw new UserDoesNotExistException(userID + " does not exist.");
+          throw new UserDoesNotExistException("User with ID " + userID + " does not exist.");
         }
 	   
         /*
@@ -211,9 +211,27 @@ public class Database {
      * @return the userID
      */
     public static int save(User user) {
+        // TODO: Need to add user status to database.
         int userID = user.getUserID();
-
-        return 0;
+        String sql = "SELECT MAX(user_id) FROM User";
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+        int maxID = 0;
+        maxID = jdbcTemplate.queryForObject(sql, Integer.class);
+        if (userID > maxID) {
+          throw new Error("Invalid user ID.");
+        }
+        if (userID != 0) {
+          sql = "DELETE FROM User WHERE user_ID = " + userID;
+          jdbcTemplate.update(sql);
+        } else {
+          userID = maxID + 1;
+        }
+        sql = user.formSQL(userID);
+        jdbcTemplate.update(sql);
+        return userID;
+        // Note that since user ID is final, you will have to create a new user later for further use.
         /*
         TODO: if key already exist in database, update
               if userID == 0, create new record with userID being next smallest assignable ID
@@ -230,6 +248,12 @@ public class Database {
     public static void delete(Comment comment) {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
+        String sql = "UPDATE Comment SET is_deleted = true WHERE post_ID = " + postID + " AND comment_number = " + commentID;
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+        jdbcTemplate.update(sql);
+        comment.setDeleted(true);
 
         /*
         TODO: don't hard delete the record
@@ -244,7 +268,12 @@ public class Database {
      */
     public static void delete(Post post) {
         int postID = post.getPostID();
-
+        String sql = "UPDATE Post SET is_deleted = true WHERE post_ID = " + postID;
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+        jdbcTemplate.update(sql);
+        post.setDeleted(true);
         /*
         TODO: don't hard delete the record
               instead, we'll soft delete by setting a deleted flag
@@ -258,7 +287,15 @@ public class Database {
      */
     public static void delete(User user) {
         int userID = user.getUserID();
+        String sql = "UPDATE User SET is_deleted = true WHERE user_ID = " + userID;
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+        jdbcTemplate.update(sql);
+        user.setDeleted(true);
 
+        // Note that there is no warning even if the user does not exist.
+        
         /*
         TODO: don't hard delete the record
               instead, we'll soft delete by setting a deleted flag
