@@ -58,5 +58,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="org.springframework.boot:spring-boot:2.7.0" level="project" />
+    <orderEntry type="library" name="org.springframework.boot:spring-boot-autoconfigure:2.7.0" level="project" />
   </component>
 </module>
