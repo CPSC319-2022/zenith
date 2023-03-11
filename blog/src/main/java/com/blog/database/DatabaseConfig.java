@@ -19,7 +19,7 @@ public class DatabaseConfig {
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setJdbcUrl(String.format("jdbc:mysql://google/%s?cloudSqlInstance=%s", "blog", "blog-pipe:us-central1:blog-database"));
         config.setUsername("blog-connect");
-        config.setPassword("KKBl<cT\"z~j,Z0*/");
+        config.setPassword("uhMYAun5kWp4Rd3");
         config.setMaximumPoolSize(5);
         config.addDataSourceProperty("socketFactory", "com.google.cloud.sql.mysql.SocketFactory");
         config.addDataSourceProperty("cloudSqlInstance", "blog-pipe:us-central1:blog-database");
