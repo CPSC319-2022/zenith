@@ -3,6 +3,8 @@ package com.blog.database;
 import com.blog.model.Comment;
 import com.blog.model.Post;
 import com.blog.model.User;
+import com.blog.model.UserLevel;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -173,8 +175,28 @@ public class Database {
     public static int save(Comment comment) {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
-
-        return 0;
+        String sql = "SELECT MAX(comment_number) FROM Comment";
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+        int maxID;
+        try {
+          maxID = jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+          maxID = 0;
+        }
+        if (maxID != 0 && commentID > maxID) {
+          throw new Error("Invalid comment ID.");
+        }
+        if (commentID != 0) {
+          sql = "DELETE FROM Comment WHERE post_ID = " + postID + " AND comment_number = " + commentID;
+          jdbcTemplate.update(sql);
+        } else {
+          commentID = maxID + 1;
+        }
+        sql = formSQL(comment, commentID);
+        jdbcTemplate.update(sql);
+        return postID;
         /*
         TODO: if keys already exist in database, update
               if postID does not exist throw error
@@ -193,8 +215,29 @@ public class Database {
      */
     public static int save(Post post) {
         int postID = post.getPostID();
+        String sql = "SELECT MAX(post_id) FROM Post";
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+        int maxID;
+        try {
+          maxID = jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+          maxID = 0;
+        }
+        if (maxID != 0 && postID > maxID) {
+          throw new Error("Invalid post ID.");
+        }
+        if (postID != 0) {
+          sql = "DELETE FROM Post WHERE post_ID = " + postID;
+          jdbcTemplate.update(sql);
+        } else {
+          postID = maxID + 1;
+        }
+        sql = formSQL(post, postID);
+        jdbcTemplate.update(sql);
+        return postID;
 
-        return 0;
         /*
         TODO: if key already exist in database, update
               if postID == 0, create new record with postID being next smallest assignable ID
@@ -217,9 +260,13 @@ public class Database {
         if (jdbcTemplate == null) {
           createTemplate();
         }
-        int maxID = 0;
-        maxID = jdbcTemplate.queryForObject(sql, Integer.class);
-        if (userID > maxID) {
+        int maxID;
+        try {
+          maxID = jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+          maxID = 0;
+        }
+        if (maxID != 0 && userID > maxID) {
           throw new Error("Invalid user ID.");
         }
         if (userID != 0) {
@@ -228,7 +275,7 @@ public class Database {
         } else {
           userID = maxID + 1;
         }
-        sql = user.formSQL(userID);
+        sql = formSQL(user, userID);
         jdbcTemplate.update(sql);
         return userID;
         // Note that since user ID is final, you will have to create a new user later for further use.
@@ -302,4 +349,34 @@ public class Database {
          */
     }
 
+    private static String formSQL(User user, int id) {
+          // TODO: no password for now
+          String password = "abc";
+          String profile = "DEFAULT";
+          if (user.getProfilePicture() != null) {
+              profile = "\"" + user.getProfilePicture() + "\"";
+          }
+          String level = "";
+          if (user.getUserLevel() == UserLevel.ADMIN) {
+              level = "false, true";
+          } else if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
+               level = "true, false";
+          } else {
+               level = "false, false";
+          }
+          return "INSERT INTO User VALUES(" + id + ", \"" + password + "\", \"" + user.getUsername() 
+          + "\", \"" + user.getCreationDate() + "\", \"" + user.getLastLogin() + "\", " + profile + ", " + level + ", " + user.isDeleted() + ")";
+     }
+
+     private static String formSQL(Post post, int id) {
+          return "INSERT INTO Post VALUES(" + id + ", " + post.getAuthorID() + ", \"" + post.getTitle() + "\", \"" + post.getContent() + "\", \"" 
+          + post.getCreationDate() + "\", \"" + post.getLastModified() + "\", " + post.getUpvotes() + ", " + post.getDownvotes() + ", " 
+          + post.getViews() + ", " + post.isDeleted() + ", " + post.isAllowComments() + ")";
+     }
+
+     private static String formSQL(Comment comment, int id) {
+          return "INSERT INTO Comment VALUES(" + comment.getPostID() + ", " + id + ", " + comment.getAuthorID() + ", \"" + comment.getContent() + "\", \"" 
+          + comment.getCreationDate() + "\", \"" + comment.getLastModified() + "\", " + comment.getUpvotes() + ", " + comment.getDownvotes() + ", " 
+          + comment.isDeleted() + ")";
+     }
 }

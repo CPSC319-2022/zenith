@@ -99,24 +99,6 @@ public class User extends Record {
         this.setDeleted(u.isDeleted());
     }
 
-    public String formSQL(int id) {
-        // TODO: no password for now
-        String password = "abc";
-        String profile = "DEFAULT";
-        if (this.profilePicture != null) {
-            profile = "\"" + this.profilePicture + "\"";
-        }
-        String level = "";
-        if (this.userLevel == UserLevel.ADMIN) {
-            level = "false, true";
-        } else if (this.userLevel == UserLevel.CONTRIBUTOR) {
-            level = "true, false";
-        } else {
-            level = "false, false";
-        }
-        return "INSERT INTO User VALUES(" + id + ", \"" + password + "\", \"" + this.username 
-        + "\", \"" + this.creationDate + "\", \"" + this.lastLogin + "\", " + profile + ", " + level + ", " + this.isDeleted() + ")";
-    }
 
     /**
      * Updates the last login time to the current time.

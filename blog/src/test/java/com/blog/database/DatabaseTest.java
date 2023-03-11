@@ -30,6 +30,61 @@ class DatabaseTest {
     }
 
     @Test
+    void testSavePost() {
+        Post post = new Post(1);
+        post.setAuthorID(1);
+        post.setTitle("testtitle");
+        post.setContent("testcontent");
+        post.setCreationDate("2023-03-01 01:02:03");
+        post.setLastModified("2023-03-01 01:02:03");
+        post.setUpvotes(1);
+        post.setDownvotes(2);
+        post.setViews(3);
+        post.setDeleted(false);
+        post.setAllowComments(true);
+        try {
+            int num = Database.save(post);
+            assertEquals(1, num);
+            assertEquals("testtitle", post.getTitle());
+            assertEquals("testcontent", post.getContent());
+            assertEquals("2023-03-01 01:02:03", post.getCreationDate());
+            assertEquals("2023-03-01 01:02:03", post.getLastModified());
+            assertEquals(1, post.getUpvotes());
+            assertEquals(2, post.getDownvotes());
+            assertEquals(3, post.getViews());
+            assertEquals(false, post.isDeleted());
+            assertEquals(true, post.isAllowComments());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }  
+    }
+
+    @Test
+    void testSaveComment() {
+        Comment comment = new Comment(1, 1);
+        comment.setAuthorID(1);
+        comment.setContent("testcontent");
+        comment.setCreationDate("2023-03-01 01:02:03");
+        comment.setLastModified("2023-03-01 01:02:03");
+        comment.setUpvotes(1);
+        comment.setDownvotes(2);
+        comment.setDeleted(false);
+        try {
+            int num = Database.save(comment);
+            assertEquals(1, num);
+            assertEquals(1, comment.getPostID());
+            assertEquals("testcontent", comment.getContent());
+            assertEquals("2023-03-01 01:02:03", comment.getCreationDate());
+            assertEquals("2023-03-01 01:02:03", comment.getLastModified());
+            assertEquals(1, comment.getUpvotes());
+            assertEquals(2, comment.getDownvotes());
+            assertEquals(false, comment.isDeleted());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }  
+    }
+
+    @Test
     void testRetrieveUser() {
         User guest = new User(1);
         try {
