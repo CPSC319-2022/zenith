@@ -57,11 +57,11 @@ public class Database {
      */
     public static void retrieve(Post post) {
         int postID = post.getPostID();
-        String sql = "SELECT * FROM Post WHERE post_ID = ?";
+        String sql = "SELECT * FROM Post WHERE post_ID = " + postID;
         if (jdbcTemplate == null) {
           createTemplate();
         }
-	   post =  jdbcTemplate.queryForObject(sql, new PostRowMapper(), postID);
+	   post = jdbcTemplate.queryForObject(sql, new PostRowMapper());
 
         /*
         TODO: if post does not exist, return without error. but make sure that you do post.setContent(null) first.
@@ -76,12 +76,12 @@ public class Database {
      */
     public static void retrieve(User user) {
         int userID = user.getUserID();
-        String sql = "SELECT * FROM User WHERE user_ID = ?";
+        String sql = "SELECT * FROM User WHERE user_ID = " + userID;
         if (jdbcTemplate == null) {
           createTemplate();
         }
-	   user = jdbcTemplate.queryForObject(sql, new UserRowMapper(), userID);
-
+	   User temp = jdbcTemplate.queryForObject(sql, new UserRowMapper());
+        user.copy(temp);
         /*
         TODO: Use userID to select corresponding user record from database.
               Then use setter functions from User to fill out the private fields
