@@ -22,6 +22,8 @@ CREATE TABLE Post(
     content TEXT NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     last_modified TIMESTAMP NOT NULL,
+    upvotes INTEGER NOT NULL DEFAULT 0,
+    downvotes INTEGER NOT NULL DEFAULT 0,
     views INTEGER NOT NULL DEFAULT 0,
     is_deleted BOOLEAN NOT NULL DEFAULT false,
     allow_comments BOOLEAN NOT NULL DEFAULT true,

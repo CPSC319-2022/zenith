@@ -4,6 +4,7 @@ import com.blog.model.Comment;
 import com.blog.model.Post;
 import com.blog.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import javax.sql.DataSource;
 
 import com.blog.database.*;
+import com.blog.exception.UserDoesNotExistException;
+import com.blog.exception.UserIsDeletedException;
 
 /**
  * This class handles all calls to the database related to the blog application.
@@ -39,11 +42,17 @@ public class Database {
     public static void retrieve(Comment comment) {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
-        String sql = "SELECT * FROM Comment WHERE post_ID = ? AND comment_id = ?";
+        String sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number = " + commentID;
         if (jdbcTemplate == null) {
           createTemplate();
         }
-	   comment =  jdbcTemplate.queryForObject(sql, new CommentRowMapper(), postID, commentID);
+        try {
+          Comment temp =  jdbcTemplate.queryForObject(sql, new CommentRowMapper());
+          comment.copy(temp);
+          // TODO: what if the comment is deleted?
+        } catch (EmptyResultDataAccessException e) {
+          comment.setContent(null);
+        }
 
         /*
         TODO: if comment does not exist, return without error. but make sure that you do comment.setContent(null) first.
@@ -61,8 +70,13 @@ public class Database {
         if (jdbcTemplate == null) {
           createTemplate();
         }
-	   post = jdbcTemplate.queryForObject(sql, new PostRowMapper());
-
+        try {
+          Post temp = jdbcTemplate.queryForObject(sql, new PostRowMapper());
+          post.copy(temp);
+          // TODO: what if the post is deleted?
+        } catch (EmptyResultDataAccessException e) {
+          post.setContent(null);
+        }
         /*
         TODO: if post does not exist, return without error. but make sure that you do post.setContent(null) first.
          */
@@ -73,15 +87,25 @@ public class Database {
      * by the given <code>User</code> object and updates its fields.
      *
      * @param user  The <code>User</code> object to update. Contains the <code>userID</code>.
+     * @throws UserDoesNotExistException
+     * @throws UserIsDeletedException
      */
-    public static void retrieve(User user) {
+    public static void retrieve(User user) throws UserDoesNotExistException, UserIsDeletedException {
         int userID = user.getUserID();
         String sql = "SELECT * FROM User WHERE user_ID = " + userID;
         if (jdbcTemplate == null) {
           createTemplate();
         }
-	   User temp = jdbcTemplate.queryForObject(sql, new UserRowMapper());
-        user.copy(temp);
+        try {
+          User temp = jdbcTemplate.queryForObject(sql, new UserRowMapper());
+          if (temp.isDeleted()) {
+               throw new UserIsDeletedException(userID + " is deleted.");
+          }
+          user.copy(temp);
+        } catch (EmptyResultDataAccessException e) {
+          throw new UserDoesNotExistException(userID + " does not exist.");
+        }
+	   
         /*
         TODO: Use userID to select corresponding user record from database.
               Then use setter functions from User to fill out the private fields
