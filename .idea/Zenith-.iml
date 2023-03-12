@@ -37,5 +37,8 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="json" level="project" />
+    <orderEntry type="library" name="springframework.boot.spring" level="project" />
+    <orderEntry type="library" name="springframework.boot.spring.autoconfigure" level="project" />
+    <orderEntry type="library" name="springframework.spring.web" level="project" />
   </component>
 </module>
