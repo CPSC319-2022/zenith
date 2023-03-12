@@ -11,20 +11,19 @@ export default function CreatePost() {
     const dispatch = useDispatch();
 
     const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
 
     function dispatchInput(e) {
         e.preventDefault();
         
         const body = new FormData(e.target);
-
         dispatch(postSliceActions.createPost({ body }));
 
         setTitle('');
+        setBody('');
     }
 
 //const Create = () => {
-//    const [value, setValue] = useState('');
-
     return (
         <div className="create">
             <form
@@ -32,15 +31,15 @@ export default function CreatePost() {
                 onSubmit={dispatchInput}
             >
                 <div className="content">
-                    <input type="text" id="name" name="title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}/>
+                    <input type="text" id="name" name="title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                     <div className="editor-container">
-                        <ReactQuill className="editor" theme="snow" value={value} onChange={setValue} />
+                        <ReactQuill className="editor" theme="snow" value={body} onChange={(e) => setBody(e.target.value)} />
                     </div>
                 </div>
                 <div className="menu">
                     <div className="menu-item col-md-auto">
                     
-                        <Button as="input" type="submit" value="Submit" variant="primary" size="lg">Publish</Button>{' '}
+                        <Button as="input" type="submit" value="Publish" variant="primary" size="lg" />{' '}
                     
                         <Form.Group controlId="formFile" >
                             

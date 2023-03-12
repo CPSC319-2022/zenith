@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 //import apiName from
 
 const getAllPosts = createAsyncThunk(
-    'chat/getAll',
+    'posts/getAll',
     async (input, thunkAPI) => {
         try {
             //const res = await apiName.getAllPosts();
@@ -11,15 +11,15 @@ const getAllPosts = createAsyncThunk(
             return thunkAPI.rejectWithValue(e);
         }
     }
-)
+);
 
 const createPost = createAsyncThunk(
-    'post/create',
+    'posts/create',
     async (input, thunkAPI) => {
         try {
             const { body } = input;
             const title = body.get('title');
-            const text = body.get('editor');
+            const text = body.get('body');
             //formfile?
             //const res = await apiName.createPost(title, text);
             //return res.data;
@@ -27,7 +27,20 @@ const createPost = createAsyncThunk(
             return thunkAPI.rejectWithValue(e);
         }
     }
-)
+);
+
+const deletePostByID = createAsyncThunk(
+    'posts/deleteByID',
+    async (input, thunkAPI) => {
+        try {
+            const { _id } = input;
+            //const res = await apiName.deletePostByID(_id);
+            //return res.data;
+        } catch (e) {
+            return thunkAPI.rejectWithValue(e);
+        }
+    }
+);
 
 const postSlice = createSlice({
     name: 'postSlice',
@@ -43,12 +56,16 @@ const postSlice = createSlice({
         builder.addCase(createPost.fulfilled, (state, action) => {
             state.posts.push(action.payload);
         });
+        builder.addCase(deletePostByID.fulfilled, (state, action) => {
+            state.posts = state.posts.filter((posts) => posts._id !== action.payload);
+        });
     },
 });
 
 export const postSliceActions = {
     getAllPosts,
     createPost,
+    deletePostByID,
     ...postSlice.actions,
 };
 export default postSlice.reducer;
