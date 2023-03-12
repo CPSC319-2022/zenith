@@ -2,6 +2,7 @@ package com.blog;
 
 import com.blog.controller.PostController;
 import com.blog.exception.BlogException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,7 +28,7 @@ public class BlogApplication {
 
 	@GetMapping("/getPosts")
 	@ResponseBody
-	public ResponseEntity<JSONObject> getPosts(@RequestParam String input) {
+	public ResponseEntity<JSONArray> getPosts(@RequestParam String input) {
 		try {
 			return ResponseEntity.ok(PostController.getPosts(new JSONObject(input)));
 		} catch (BlogException e) {
