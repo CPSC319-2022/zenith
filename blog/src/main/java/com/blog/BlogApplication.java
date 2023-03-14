@@ -15,35 +15,4 @@ public class BlogApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BlogApplication.class, args);
 	}
-
-	@GetMapping("/getPost")
-	@ResponseBody
-	public ResponseEntity<JSONObject> getPost(@RequestParam String input) {
-		try {
-			return ResponseEntity.ok(PostController.getPost(new JSONObject(input)));
-		} catch (BlogException e) {
-			return ResponseEntity.notFound().build();
-		}
-	}
-
-	@GetMapping("/getPosts")
-	@ResponseBody
-	public ResponseEntity<JSONArray> getPosts(@RequestParam String input) {
-		try {
-			return ResponseEntity.ok(PostController.getPosts(new JSONObject(input)));
-		} catch (BlogException e) {
-			return ResponseEntity.notFound().build();
-		}
-	}
-
-	@PostMapping("/createPost")
-	@ResponseBody
-	public ResponseEntity<JSONObject> createPost(@RequestParam String input) {
-		try {
-			PostController.createPost(new JSONObject(input));
-			return ResponseEntity.ok().build();
-		} catch (BlogException e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
 }
