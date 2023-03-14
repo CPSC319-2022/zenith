@@ -42,7 +42,7 @@ public class CommentController {
     public ResponseEntity<String> createComment(@RequestParam String input) {
         try {
             createComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -64,7 +64,7 @@ public class CommentController {
     public ResponseEntity<String> editComment(@RequestParam String input) {
         try {
             editComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -75,7 +75,7 @@ public class CommentController {
     public ResponseEntity<String> upvoteComment(@RequestParam String input) {
         try {
             upvoteComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -86,7 +86,7 @@ public class CommentController {
     public ResponseEntity<String> downvoteComment(@RequestParam String input) {
         try {
             downvoteComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
