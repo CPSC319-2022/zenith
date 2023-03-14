@@ -29,9 +29,8 @@ import org.json.JSONObject;
  * void        setDeleted(boolean deleted)
  */
 public class User extends Record {
-    // Delete final for userID for convenience to retrieve data, may change later
     public static final int NEW_USER_ID = 0;
-    private int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
+    private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
     private String creationDate;
@@ -55,7 +54,6 @@ public class User extends Record {
      */
     public User(int userID) {
         this.userID = userID;
-        Database.retrieve(this);
     }
 
     public User(int userID,
@@ -92,6 +90,16 @@ public class User extends Record {
                 .put("profilePicture", profilePicture);
     }
 
+    public void copy(User u) {
+        this.setUsername(u.getUsername());
+        this.setCreationDate(u.getCreationDate());
+        this.setLastLogin(u.getLastLogin());
+        this.setProfilePicture(u.getProfilePicture());
+        this.setUserLevel(u.getUserLevel());
+        this.setDeleted(u.isDeleted());
+    }
+
+
     /**
      * Updates the last login time to the current time.
      */
@@ -101,10 +109,6 @@ public class User extends Record {
 
     public int getUserID() {
         return userID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
     }
 
     public String getUsername() {

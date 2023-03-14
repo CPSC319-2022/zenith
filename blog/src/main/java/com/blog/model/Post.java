@@ -39,23 +39,17 @@ import org.json.JSONObject;
  * void     setDeleted(boolean deleted)
  */
 public class Post extends Content {
-    // Delete final for convenience to retrieve data, may change later
     public static final int NEW_POST_ID = 0;
     static final int MIN_TITLE_LENGTH = 1;
 
-    private int postID;
+    private final int postID;
     private String title;
     private int views;
     private boolean allowComments;
     // private Tag tags; TODO: allow tags for posts
 
-    public Post() {
-        this.postID = 0;
-    }
-
     public Post(int postID) {
         this.postID = postID;
-        Database.retrieve(this);
     }
 
     public Post(int postID,
@@ -101,6 +95,18 @@ public class Post extends Content {
         }
     }
 
+    public void copy(Post p) {
+        this.setAuthorID(p.getAuthorID());
+        this.setTitle(p.getTitle());
+        this.setContent(p.getContent());
+        this.setCreationDate(p.getCreationDate());
+        this.setLastModified(p.getLastModified());
+        this.setUpvotes(p.getUpvotes());
+        this.setDownvotes(p.getDownvotes());
+        this.setDeleted(p.isDeleted());
+        this.setAllowComments(p.isAllowComments());
+    }
+
     /**
      * Increments the view counter.
      */
@@ -110,10 +116,6 @@ public class Post extends Content {
 
     public int getPostID() {
         return postID;
-    }
-
-    public void setPostID(int postID) {
-        this.postID = postID;
     }
 
     public String getTitle() {
