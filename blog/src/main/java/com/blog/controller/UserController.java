@@ -30,7 +30,7 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestParam String input) {
         try {
             createUser(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -52,7 +52,7 @@ public class UserController {
     public ResponseEntity<String> updateUserLevel(@RequestParam String input) {
         try {
             updateUserLevel(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
