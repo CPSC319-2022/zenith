@@ -25,10 +25,6 @@ import com.blog.exception.UserIsDeletedException;
  */
 
 public class Database {
-    /*
-     * TODO: Need some static fields to store the connection to the database.
-     *       Need static method to make the connection (maybe also close)
-     */
 
 	private static JdbcTemplate jdbcTemplate;
 
@@ -39,7 +35,7 @@ public class Database {
      
 
     /**
-     * TODO
+     * 
      *
      * @param comment
      */
@@ -59,7 +55,7 @@ public class Database {
         }
 
         /*
-        TODO: if comment does not exist, return without error. but make sure that you do comment.setContent(null) first.
+        if comment does not exist, return without error. but make sure that you do comment.setContent(null) first.
          */
     }
 
@@ -82,7 +78,7 @@ public class Database {
           post.setContent(null);
         }
         /*
-        TODO: if post does not exist, return without error. but make sure that you do post.setContent(null) first.
+        if post does not exist, return without error. but make sure that you do post.setContent(null) first.
          */
     }
 
@@ -111,7 +107,7 @@ public class Database {
         }
 	   
         /*
-        TODO: Use userID to select corresponding user record from database.
+              Use userID to select corresponding user record from database.
               Then use setter functions from User to fill out the private fields
               Maybe throw an exception if user does not exist, e.g. throw new UserDoesNotExistException()
               If user is deleted maybe throw new UserIsDeletedException()
@@ -141,19 +137,7 @@ public class Database {
           for (Comment c : temp) {
                comments.add(c);
           }
-        /*
-        SELECT *
-        FROM   comments
-        WHERE  postID = postID
-               AND
-               commentID >= commentIDStart  -- <= if reverse, otherwise >=
-               AND
-               !isDeleted
-        LIMIT  count
 
-        for each record:
-            comments.add(new Comment(...))
-         */
     }
 
     /**
@@ -193,7 +177,7 @@ public class Database {
     }
 
     /**
-     * TODO
+     * 
      *
      * @param comment
      *
@@ -225,7 +209,7 @@ public class Database {
         jdbcTemplate.update(sql);
         return postID;
         /*
-        TODO: if keys already exist in database, update
+              if keys already exist in database, update
               if postID does not exist throw error
               if commentID == 0, create new record with commentID being next smallest assignable ID
               if commentID anything else throw error
@@ -234,7 +218,7 @@ public class Database {
     }
 
     /**
-     * TODO
+     * 
      *
      * @param post
      *
@@ -266,7 +250,7 @@ public class Database {
         return postID;
 
         /*
-        TODO: if key already exist in database, update
+              if key already exist in database, update
               if postID == 0, create new record with postID being next smallest assignable ID
               if postID anything else throw error
               Note: postID == 0 reserved for creating new record
@@ -307,7 +291,7 @@ public class Database {
         return userID;
         // Note that since user ID is final, you will have to create a new user later for further use.
         /*
-        TODO: if key already exist in database, update
+              if key already exist in database, update
               if userID == 0, create new record with userID being next smallest assignable ID
               if userID anything else throw error
               Note: userID == 0 reserved for creating new record
@@ -328,11 +312,6 @@ public class Database {
         }
         jdbcTemplate.update(sql);
         comment.setDeleted(true);
-
-        /*
-        TODO: don't hard delete the record
-              instead, we'll soft delete by setting a deleted flag
-         */
     }
 
     /**
@@ -348,10 +327,6 @@ public class Database {
         }
         jdbcTemplate.update(sql);
         post.setDeleted(true);
-        /*
-        TODO: don't hard delete the record
-              instead, we'll soft delete by setting a deleted flag
-         */
     }
 
     /**
@@ -369,11 +344,6 @@ public class Database {
         user.setDeleted(true);
 
         // Note that there is no warning even if the user does not exist.
-        
-        /*
-        TODO: don't hard delete the record
-              instead, we'll soft delete by setting a deleted flag
-         */
     }
 
     private static String formSQL(User user, int id) {

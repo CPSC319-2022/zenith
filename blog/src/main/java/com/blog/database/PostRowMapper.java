@@ -11,16 +11,17 @@ public class PostRowMapper implements RowMapper<Post> {
  
 	@Override
 	public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Post post = new Post(rs.getInt("post_ID"));
-		post.setAuthorID(rs.getInt("user_ID"));
-        post.setTitle(rs.getString("title"));
-        post.setContent(rs.getString("content"));
-		post.setCreationDate(rs.getString("creation_date"));
-		post.setLastModified(rs.getString("last_modified"));
-		post.setUpvotes(rs.getInt("upvotes"));
-		post.setDownvotes(rs.getInt("downvotes"));
-		post.setDeleted(rs.getBoolean("is_deleted"));
-		post.setAllowComments(rs.getBoolean("allow_comments"));
-		return post;
+		int postID = rs.getInt("post_ID");
+		int authorID = rs.getInt("user_ID");
+		String title = rs.getString("title");
+		String content = rs.getString("content");
+		String creationDate = rs.getString("creation_date");
+		String lastModified = rs.getString("last_modified");
+		int upvotes = rs.getInt("upvotes");
+		int downvotes = rs.getInt("downvotes");
+		boolean isDeleted = rs.getBoolean("is_deleted");
+		int views = rs.getInt("views");
+		boolean allowComments = rs.getBoolean("allow_comments");
+		return new Post(postID, authorID, title, content, creationDate, lastModified, upvotes, downvotes, isDeleted, views, allowComments);
 	}
 }

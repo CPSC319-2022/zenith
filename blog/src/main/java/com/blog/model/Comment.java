@@ -44,6 +44,7 @@ public class Comment extends Content {
     public Comment(int postID, int commentID) {
         this.postID = postID;
         this.commentID = commentID;
+        Database.retrieve(this);
     }
 
     public Comment(int postID,

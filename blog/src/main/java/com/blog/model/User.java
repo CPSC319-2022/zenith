@@ -1,6 +1,8 @@
 package com.blog.model;
 
 import com.blog.database.Database;
+import com.blog.exception.UserDoesNotExistException;
+import com.blog.exception.UserIsDeletedException;
 import com.blog.utils.Utility;
 import org.json.JSONObject;
 
@@ -55,6 +57,13 @@ public class User extends Record {
      */
     public User(int userID) {
         this.userID = userID;
+        try {
+            Database.retrieve(this);
+        } catch (UserDoesNotExistException e) {
+            // todo
+        } catch (UserIsDeletedException e) {
+            // todo
+        }
     }
 
     public User(int userID,

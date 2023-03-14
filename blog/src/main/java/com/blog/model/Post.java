@@ -50,6 +50,7 @@ public class Post extends Content {
 
     public Post(int postID) {
         this.postID = postID;
+        Database.retrieve(this);
     }
 
     public Post(int postID,

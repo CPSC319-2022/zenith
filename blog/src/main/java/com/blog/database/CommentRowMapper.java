@@ -11,14 +11,15 @@ public class CommentRowMapper implements RowMapper<Comment> {
  
 	@Override
 	public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Comment comment = new Comment(rs.getInt("post_ID"), rs.getInt("comment_number"));
-		comment.setAuthorID(rs.getInt("user_ID"));
-        comment.setContent(rs.getString("content"));
-		comment.setCreationDate(rs.getString("creation_date"));
-		comment.setLastModified(rs.getString("last_modified"));
-		comment.setUpvotes(rs.getInt("upvotes"));
-		comment.setDownvotes(rs.getInt("downvotes"));
-		comment.setDeleted(rs.getBoolean("is_deleted"));
-		return comment;
+		int postID = rs.getInt("post_ID");
+		int commentID = rs.getInt("comment_number");
+		int authorID = rs.getInt("user_ID");
+		String content = rs.getString("content");
+		String creationDate = rs.getString("creation_date");
+		String lastModified = rs.getString("last_modified");
+		int upvotes = rs.getInt("upvotes");
+		int downvotes = rs.getInt("downvotes");
+		boolean isDeleted = rs.getBoolean("is_deleted");
+		return new Comment(postID, commentID, authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
 	}
 }
