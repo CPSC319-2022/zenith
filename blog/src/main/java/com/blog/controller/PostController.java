@@ -9,10 +9,99 @@ import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+@RestController
 public class PostController {
+    @GetMapping("/getPost")
+    @ResponseBody
+    public ResponseEntity<String> getPost(@RequestBody String input) {
+        try {
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getPosts")
+    @ResponseBody
+    public ResponseEntity<String> getPosts(@RequestBody String input) {
+        try {
+            return ResponseEntity.ok(getPosts(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/createPost")
+    @ResponseBody
+    public ResponseEntity<String> createPost(@RequestParam String input) {
+        try {
+            createPost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (BlogException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/deletePost")
+    @ResponseBody
+    public ResponseEntity<String> deletePost(@RequestParam String input) {
+        try {
+            deletePost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (BlogException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/editPost")
+    @ResponseBody
+    public ResponseEntity<String> editPost(@RequestParam String input) {
+        try {
+            editPost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (BlogException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/upvotePost")
+    @ResponseBody
+    public ResponseEntity<String> upvotePost(@RequestParam String input) {
+        try {
+            upvotePost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (BlogException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/downvotePost")
+    @ResponseBody
+    public ResponseEntity<String> downvotePost(@RequestParam String input) {
+        try {
+            downvotePost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (BlogException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/viewPost")
+    @ResponseBody
+    public ResponseEntity<String> viewPost(@RequestParam String input) {
+        try {
+            viewPost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (BlogException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     /**
      * Returns a JSON containing the requested post.
      *
@@ -36,7 +125,7 @@ public class PostController {
      * }
      * @throws BlogException
      */
-    public static JSONObject getPost(JSONObject input) throws BlogException {
+    private static JSONObject getPost(JSONObject input) throws BlogException {
         // Retrieve the post
         Post post = retrievePost(input);
 
@@ -72,7 +161,7 @@ public class PostController {
      * ]
      * @throws BlogException
      */
-    public static JSONArray getPosts(JSONObject input) throws BlogException {
+    private static JSONArray getPosts(JSONObject input) throws BlogException {
         int postIDStart;
         int count;
         boolean reverse;
@@ -116,7 +205,7 @@ public class PostController {
      *              }
      * @throws BlogException
      */
-    public static void createPost(JSONObject input) throws BlogException {
+    private static void createPost(JSONObject input) throws BlogException {
         int authorID;
         String title;
         String content;
@@ -170,7 +259,7 @@ public class PostController {
      *              }
      * @throws BlogException
      */
-    public static void deletePost(JSONObject input) throws BlogException {
+    private static void deletePost(JSONObject input) throws BlogException {
         // Retrieve the post
         Post post = retrievePost(input);
 
@@ -190,7 +279,7 @@ public class PostController {
      *              }
      * @throws BlogException
      */
-    public static void editPost(JSONObject input) throws BlogException {
+    private static void editPost(JSONObject input) throws BlogException {
         String title;
         String content;
         boolean allowComments;
@@ -232,7 +321,7 @@ public class PostController {
      *              }
      * @throws BlogException
      */
-    public static void upvotePost(JSONObject input) throws BlogException {
+    private static void upvotePost(JSONObject input) throws BlogException {
         // Retrieve the comment
         Post post = retrievePost(input);
 
@@ -252,7 +341,7 @@ public class PostController {
      *              }
      * @throws BlogException
      */
-    public static void downvotePost(JSONObject input) throws BlogException {
+    private static void downvotePost(JSONObject input) throws BlogException {
         // Retrieve the post
         Post post = retrievePost(input);
 
@@ -272,7 +361,7 @@ public class PostController {
      *              }
      * @throws BlogException
      */
-    public static void viewPost(JSONObject input) throws BlogException {
+    private static void viewPost(JSONObject input) throws BlogException {
         // Retrieve the post
         Post post = retrievePost(input);
 
