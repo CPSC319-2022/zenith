@@ -1,6 +1,7 @@
 package com.blog.controller;
 
 import com.blog.database.Database;
+import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.model.*;
 import com.blog.utils.Utility;
@@ -121,11 +122,12 @@ public class UserController {
     }
 
 
-    /** JSONObject would contain the following key-value pairs:
+    /**
+     * JSONObject would contain the following key-value pairs:
      * userID of promoter,
      * userID of promotee, and
      * the new user level for the promotee
-    */
+     */
     public void updateUserLevel(JSONObject input) throws BlogException {
         int promoterID;
         int promoteeID;
@@ -183,14 +185,14 @@ public class UserController {
 
     /**
      * @param input A JSON containing the following key-value pairs:
-     *   {
-     *    "userID":    int,     // The user to retrieve.
-     *    "user_status": String // New user status of the user
-     *   }
+     *              {
+     *              "userID":    int,     // The user to retrieve.
+     *              "user_status": String // New user status of the user
+     *              }
      * @return Updates the User Status and saves the changes in the database
      * @throws BlogException
      */
-    private static void updateStatus(JSONObject input) throws BlogException {
+    private static void updateUserStatus(JSONObject input) throws BlogException {
         User user;
         String status;
 
@@ -208,14 +210,46 @@ public class UserController {
 
     }
 
-
+    /**
+     * @param input A JSON containing the following key-value pairs:
+     *              {
+     *              "userID":    int,     // The user to retrieve.
+     *              "profile_picture": String // URL of the new profile picture of the user
+     *              }
+     * @return Updates the profile picture and saves the changes in the database
+     * @throws BlogException
+     */
     private static void updateProfilePicture(JSONObject input) throws BlogException {
+        User user;
+        String profile_picture;
+
+        try {
+            user = retrieveUser(input);
+            profile_picture = input.getString("profile_picture");
+            user.setProfilePicture(profile_picture);
+            Database.save(user);
+        } catch (JSONException e) {
+            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new BlogException("JSON object received is null. \n" + e.getMessage());
+        }
     }
 
     private static void updateLastLogin(JSONObject input) throws BlogException {
+        User user;
+        String last_login;
+
+        try {
+            user = retrieveUser(input);
+            profile_picture = input.getString("profile_picture");
+            user.setProfilePicture(profile_picture);
+            Database.save(user);
+        } catch (JSONException e) {
+            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new BlogException("JSON object received is null. \n" + e.getMessage());
+        }
     }
-
-
 }
 
 

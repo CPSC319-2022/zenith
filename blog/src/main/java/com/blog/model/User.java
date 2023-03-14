@@ -30,6 +30,7 @@ import org.json.JSONObject;
  */
 public class User extends Record {
     public static final int NEW_USER_ID = 0;
+    
     private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
