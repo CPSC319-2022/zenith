@@ -41,7 +41,7 @@ public class PostController {
     public ResponseEntity<String> createPost(@RequestParam String input) {
         try {
             createPost(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -63,7 +63,7 @@ public class PostController {
     public ResponseEntity<String> editPost(@RequestParam String input) {
         try {
             editPost(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -74,7 +74,7 @@ public class PostController {
     public ResponseEntity<String> upvotePost(@RequestParam String input) {
         try {
             upvotePost(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -85,7 +85,7 @@ public class PostController {
     public ResponseEntity<String> downvotePost(@RequestParam String input) {
         try {
             downvotePost(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -96,7 +96,7 @@ public class PostController {
     public ResponseEntity<String> viewPost(@RequestParam String input) {
         try {
             viewPost(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
         } catch (BlogException e) {
             return ResponseEntity.badRequest().build();
         }

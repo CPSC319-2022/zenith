@@ -8,11 +8,55 @@ import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-
+@RestController
 public class UserController {
+    @GetMapping("/getUser")
+    @ResponseBody
+    public ResponseEntity<String> getUser(@RequestBody String input) {
+        try {
+            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/createUser")
+    @ResponseBody
+    public ResponseEntity<String> createUser(@RequestParam String input) {
+        try {
+            createUser(new JSONObject(input));
+            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
+        } catch (BlogException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/deleteUser")
+    @ResponseBody
+    public ResponseEntity<String> deleteUser(@RequestParam String input) {
+        try {
+            deleteUser(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (BlogException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/updateUserLevel")
+    @ResponseBody
+    public ResponseEntity<String> updateUserLevel(@RequestParam String input) {
+        try {
+            updateUserLevel(new JSONObject(input));
+            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
+        } catch (BlogException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
     //Returns a json containing the requested user
     public static JSONObject getUser(JSONObject input) throws BlogException {
@@ -235,6 +279,7 @@ public class UserController {
         }
     }
 
+    /* TODO: DELETE?
     private static void updateLastLogin(JSONObject input) throws BlogException {
         User user;
         String last_login;
@@ -249,7 +294,7 @@ public class UserController {
         } catch (NullPointerException e) {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
-    }
+    }*/
 }
 
 
