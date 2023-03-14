@@ -1,0 +1,38 @@
+steps:
+# Install
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+
+  - name: maven
+    entrypoint: mvn
+    args: ['install']
+# Test
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'test']
+    allowFailure: false
+    timeout: 300s
+  
+  - name: maven
+    entrypoint: mvn
+    args: ['test']
+    allowFailure: false
+    timeout: 300s
+  
+# Build -> May not need this step if dockerfile handles building 
+  # - name: npm
+  #   args: ['run', 'build']
+
+  # - name: maven
+  #   entrypoint: mvn
+  #   args: ['package','-Dmaven.test.skip=true']
+
+# Containerize
+  - name: 'grc.io/cloud-builder/docker'
+  - args: ['build', '-t', 'gcr.io/137046975675/backend', '-f', './blog', "."]
+  - images: ['build', '-t', 'gcr.io/137046975675/backend']
+
+  - name: 'grc.io/cloud-builder/docker'
+  - args: ['build', '-t', 'gcr.io/137046975675/frontend:latest', '-f', './frontend/frontend.dockerfile', "."]
+  - images: ['build', '-t', 'gcr.io/137046975675/frontend:latest']
+  
+# Deploy

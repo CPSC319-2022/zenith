@@ -1,6 +1,7 @@
 package com.blog.controller;
 
 import com.blog.database.Database;
+import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.model.*;
 import com.blog.utils.Utility;
@@ -249,9 +250,6 @@ public class UserController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
     }
-    }
-
-
 }
 
 
