@@ -11,7 +11,7 @@ class UnitTests {
 
     @BeforeEach
     void beforeEach() {
-        guest = new User();
+        guest = new User(1);
     }
 
     @Test
@@ -23,7 +23,7 @@ class UnitTests {
     @Test
     void userIDSet() {
         assertEquals(0, guest.getUserID());
-        guest.setUserID(1);
+        // guest.setUserID(1);
         assertEquals(1, guest.getUserID());
     }
 

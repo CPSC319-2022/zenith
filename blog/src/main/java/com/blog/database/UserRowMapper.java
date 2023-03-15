@@ -25,10 +25,20 @@ public class UserRowMapper implements RowMapper<User> {
 		}
 		String creationDate = rs.getString("creation_date");
 		String lastLogin = rs.getString("last_login");
-		UserStatus userStatus = UserStatus.OFFLINE;
-		// todo
+		UserStatus userStatus = null;
+		int status = rs.getInt("user_status");
+		if (status == 0) {
+			userStatus = UserStatus.ONLINE;
+		} else if (status == 1) {
+			userStatus = UserStatus.AWAY;
+		} else if (status == 2) {
+			userStatus = UserStatus.BUSY;
+		} else {
+			userStatus = UserStatus.OFFLINE;
+		}
 		String profilePicture = rs.getString("profile_picture");
+		String bio = rs.getString("bio");
 		boolean isDeleted = rs.getBoolean("is_deleted");
-		return new User(userId, username, userLevel, creationDate, lastLogin, userStatus, profilePicture, isDeleted);
+		return new User(userId, username, userLevel, creationDate, lastLogin, userStatus, profilePicture, bio, isDeleted);
 	}
 }

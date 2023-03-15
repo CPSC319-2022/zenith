@@ -7,7 +7,7 @@
 --
 
 INSERT INTO User
-VALUES(user_ID, user_password, username, creationDate, creationDate, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+VALUES(user_ID, user_password, username, creationDate, creationDate, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 --System generate: user_ID(int)
 --User input: user_password(string), username(string)
 --Example: INSERT INTO User

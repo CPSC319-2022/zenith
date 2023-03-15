@@ -83,12 +83,15 @@ public class UserController {
         String username;
         UserLevel ul;
         String profile_picture;
+        String bio;
 
         try {
             username = input.getString("username");
             ul = UserLevel.READER;
             profile_picture = input.getString("profilepicture");
             String currenttime = Utility.getCurrentTime();
+            bio = "";
+            // todo for bio
 
             validateUser(username);
 
@@ -99,6 +102,7 @@ public class UserController {
                     currenttime,
                     UserStatus.ONLINE,
                     profile_picture,
+                    bio,
                     false);
 
             Database.save(user);

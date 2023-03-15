@@ -40,6 +40,7 @@ public class User extends Record {
     private String lastLogin;
     private UserStatus userStatus;
     private String profilePicture;  // URL to the profile picture
+    private String bio;
 
     /**
      * Default guest user constructor.
@@ -73,6 +74,7 @@ public class User extends Record {
                 String lastLogin,
                 UserStatus userStatus,
                 String profilePicture,
+                String bio,
                 boolean isDeleted) {
         super(isDeleted);
         this.userID = userID;
@@ -82,6 +84,7 @@ public class User extends Record {
         this.lastLogin = lastLogin;
         this.userStatus = userStatus;
         this.profilePicture = profilePicture;
+        this.bio = bio;
     }
 
     /**
@@ -167,5 +170,13 @@ public class User extends Record {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getBio() {
+        return this.bio;
     }
 }

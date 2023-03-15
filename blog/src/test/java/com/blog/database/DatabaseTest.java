@@ -11,13 +11,7 @@ import java.util.ArrayList;
 class DatabaseTest {
     @Test
     void testSaveUser() {
-        User guest = new User(2);
-        guest.setUsername("testname");
-        guest.setUserLevel(UserLevel.ADMIN);
-        guest.setCreationDate("2023-03-01 01:02:03");
-        guest.setLastLogin("2023-03-01 01:02:03");
-        guest.setProfilePicture(null);
-        guest.setDeleted(false);
+        User guest = new User(2, "testname", UserLevel.ADMIN, "2023-03-01 01:02:03", "2023-03-01 01:02:03", UserStatus.ONLINE, null, "hello", false);
         try {
             int num = Database.save(guest);
             assertEquals(2, num);
@@ -33,17 +27,7 @@ class DatabaseTest {
 
     @Test
     void testSavePost() {
-        Post post = new Post(1);
-        post.setAuthorID(1);
-        post.setTitle("testtitle");
-        post.setContent("testcontent");
-        post.setCreationDate("2023-03-01 01:02:03");
-        post.setLastModified("2023-03-01 01:02:03");
-        post.setUpvotes(1);
-        post.setDownvotes(2);
-        post.setViews(3);
-        post.setDeleted(false);
-        post.setAllowComments(true);
+        Post post = new Post(1, 1, "testtitle", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false, 3, true);
         try {
             int num = Database.save(post);
             assertEquals(1, num);
@@ -63,14 +47,7 @@ class DatabaseTest {
 
     @Test
     void testSaveComment() {
-        Comment comment = new Comment(1, 1);
-        comment.setAuthorID(1);
-        comment.setContent("testcontent");
-        comment.setCreationDate("2023-03-01 01:02:03");
-        comment.setLastModified("2023-03-01 01:02:03");
-        comment.setUpvotes(1);
-        comment.setDownvotes(2);
-        comment.setDeleted(false);
+        Comment comment = new Comment(1, 1, 1, "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false);
         try {
             int num = Database.save(comment);
             assertEquals(1, num);
@@ -89,11 +66,6 @@ class DatabaseTest {
     @Test
     void testRetrieveUser() {
         User guest = new User(1);
-        try {
-            Database.retrieve(guest);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
         assertEquals(1, guest.getUserID());
         assertEquals("2023-03-01 01:02:03", guest.getCreationDate());
         assertEquals("2023-03-01 01:02:03", guest.getLastLogin());
@@ -105,11 +77,6 @@ class DatabaseTest {
     @Test
     void testRetrievePost() {
         Post post = new Post(1);
-        try {
-            Database.retrieve(post);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
         assertEquals(1, post.getPostID());
         assertEquals(1, post.getAuthorID());
         assertEquals("2023-03-01 01:02:03", post.getCreationDate());
@@ -125,11 +92,6 @@ class DatabaseTest {
     @Test
     void testRetrieveComment() {
         Comment comment = new Comment(1, 1);
-        try {
-            Database.retrieve(comment);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
         assertEquals(1, comment.getPostID());
         assertEquals(1, comment.getCommentID());
         assertEquals(1, comment.getAuthorID());

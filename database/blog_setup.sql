@@ -2,13 +2,16 @@
 --you don't need to use the commands inside this file
 
 --Create tables:
+--for user status 0:online, 1:away, 2:busy, 3:offline
 CREATE TABLE User(
     user_ID INTEGER,
     user_password CHAR(32) NOT NULL,
     username CHAR(32) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     last_login TIMESTAMP NOT NULL,
+    user_status TINYINT NOT NULL DEFAULT 0,
     profile_picture VARCHAR(250) DEFAULT NULL,
+    bio VARCHAR(1000) DEFAULT NULL,
     contributor BOOLEAN NOT NULL DEFAULT false,
     administrator BOOLEAN NOT NULL DEFAULT false,
     is_deleted BOOLEAN NOT NULL DEFAULT false,
@@ -19,7 +22,7 @@ CREATE TABLE Post(
     post_ID INTEGER,
     user_ID INTEGER,
     title VARCHAR(200) NOT NULL,
-    content TEXT NOT NULL,
+    content VARCHAR(20000) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     last_modified TIMESTAMP NOT NULL,
     upvotes INTEGER NOT NULL DEFAULT 0,
