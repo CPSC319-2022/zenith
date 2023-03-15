@@ -43,7 +43,7 @@ public class CommentController {
     public ResponseEntity<String> createComment(@RequestBody String input) {
         try {
             createComment(new JSONObject(input));
-            return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -65,7 +65,7 @@ public class CommentController {
     public ResponseEntity<String> editComment(@RequestBody String input) {
         try {
             editComment(new JSONObject(input));
-            return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -76,7 +76,7 @@ public class CommentController {
     public ResponseEntity<String> upvoteComment(@RequestBody String input) {
         try {
             upvoteComment(new JSONObject(input));
-            return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -87,7 +87,7 @@ public class CommentController {
     public ResponseEntity<String> downvoteComment(@RequestBody String input) {
         try {
             downvoteComment(new JSONObject(input));
-            return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
