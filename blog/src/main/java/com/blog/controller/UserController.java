@@ -67,51 +67,18 @@ public class UserController {
         return user.asJSONObject();
     }
 
-//    /**
-//     * understand and complete this method
-//     * @param input
-//     * @return
-//     * @throws BlogException
-//     */
-//    public static JSONArray getUsers(JSONObject input) throws BlogException {
-//        int userID;
-//        int commentIDStart;
-//        int count;
-//        boolean reverse;
-//
-//        // Read data from JSON
-//        try {
-//            userID = input.getInt("userID");
-//            commentIDStart = input.getInt("commentIDStart");
-//            count = input.getInt("count");
-//            reverse = input.getBoolean("reverse");
-//        } catch (JSONException e) {
-//            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
-//        } catch (NullPointerException e) {
-//            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-//        }
-//
-//        // Create array to store retrieved comments
-//        ArrayList<Comment> comments = new ArrayList<>();
-//
-//        // Retrieve the comments
-//        Database.retrieve(comments, userID, commentIDStart, count, reverse);
-//
-//        // Build the JSON response
-//        JSONArray response = new JSONArray();
-//        for (Comment comment : comments) {
-//            response.put(comment.asJSONObject());
-//        }
-//
-//        // Return the JSON response
-//        return response;
-//    }
 
 
-    /* JSONObject would contain the following key-value pairs:
-    1) username for the new user,
-    2) URL for the profile picture (if any), and
-    */
+    /**
+     * Creates a user in the database
+     *
+     * @param input JSONObject would contain the following key-value pairs:
+     *              {
+     *                  "username": username for the new user,
+     *                  "profilepicture": URL for the profile picture (if any)
+     *              }
+     * @throws BlogException
+     */
     public static void createUser(JSONObject input) throws BlogException {
         String username;
         UserLevel ul;
@@ -168,15 +135,19 @@ public class UserController {
 
 
     /**
-     * JSONObject would contain the following key-value pairs:
-     * userID of promoter,
-     * userID of promotee, and
-     * the new user level for the promotee
+     * Updates user level of the promotee only if the promoter has the authorization to do so.
+     * @param input JSONObject would contain the following key-value pairs:
+     *              {
+     *              "promoterID": userID of promoter,
+     *              "promoteeID": userID of promotee, and
+     *              "new_level": the new user level for the promotee
+     *              }
+     * @throws BlogException
      */
     public void updateUserLevel(JSONObject input) throws BlogException {
         int promoterID;
         int promoteeID;
-
+        String new_level;
         //READ DATA FROM JSON
         try {
             promoterID = input.getInt("promoterID");
@@ -189,7 +160,7 @@ public class UserController {
             if (promoter.getUserLevel() != UserLevel.ADMIN)
                 throw new BlogException("Promoter not authorized to make the required changes");
 
-            String new_level = input.getString("new_level");
+            new_level = input.getString("new_level");
             promotee.setUserLevel(UserLevel.valueOf(new_level)); //converting string to enum
             //promotee.UserLevel = UserLevel.valueOf(new_level);
 
@@ -245,6 +216,10 @@ public class UserController {
             //userID = input.getInt("userID");
             user = retrieveUser(input);
             status = input.getString("user_status");
+
+            if (status.toUpperCase() == "OFFLINE")
+                user.setLastLogin(Utility.getCurrentTime());
+
             user.setUserStatus(UserStatus.valueOf(status));
             Database.save(user);
         } catch (JSONException e) {
@@ -279,23 +254,6 @@ public class UserController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
     }
-
-    /* TODO: DELETE?
-    private static void updateLastLogin(JSONObject input) throws BlogException {
-        User user;
-        String last_login;
-
-        try {
-            user = retrieveUser(input);
-            profile_picture = input.getString("profile_picture");
-            user.setProfilePicture(profile_picture);
-            Database.save(user);
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
-    }*/
 }
 
 
