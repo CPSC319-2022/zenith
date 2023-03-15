@@ -1,12 +1,8 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+import postReducer from './slices/postSlice';
 
-const store = configureStore({
-    reducer: {
-
-    },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-        serializableCheck: false,
-    }),
+export const store = configureStore({
+  reducer: {
+    posts: postReducer,
+  },
 });
-
-export default store;

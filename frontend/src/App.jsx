@@ -1,4 +1,4 @@
-import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
 
@@ -13,72 +13,39 @@ import Footer from "./common components/Footer";
 import Profile from "./pages/Profile";
 import WIP from "./pages/WIP";
 
-// comment 
-
 // Layout function needed to apply the Nav and Footer to different child pages
-const Layout = () => {
+const Layout = ({ children }) => {
     return (
         // React fragment needed because multiple components cannot be used without parent
         <>
             <Header />
-            <Outlet />
+            {children}
             <Footer />
         </>
     );
 };
-
-
-// this will navigate between the different pages of the app
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Layout />,
-        children: [
-            {
-                path: "/",
-                element: <Home />
-            },
-            {
-                path: "/single-post/:id",
-                element: <SinglePost />
-            },
-            {
-                path: "/create",
-                element: <Create />
-            },
-            {
-                path: "/profile",
-                element: <Profile />
-            },
-            {
-                path: "/wip",
-                element: <WIP />
-            }
-
-        ]
-    },
-    {
-        path: "/register",
-        element: <Register />,
-    },
-    {
-        path: "/login",
-        element: <Login />,
-    }
-]);
-
-
 
 // this will render the app
 function App() {
     return (
         <div className="app">
             <div className="app-container">
-                <RouterProvider router={router} />
+                <BrowserRouter>
+                    <Layout>
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/single-post/:id" element={<SinglePost />} />
+                            <Route path="/create" element={<Create />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="/wip" element={<WIP />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/login" element={<Login />} />
+                        </Routes>
+                    </Layout>
+                </BrowserRouter>
             </div>
         </div>
     );
-
 }
 
 export default App;

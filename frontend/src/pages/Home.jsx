@@ -1,53 +1,39 @@
-import React, {useState} from 'react';
-import { useNavigate } from 'react-router-dom';
-import {fakePosts} from '../data/fakePosts';
-import {Link} from "react-router-dom";
-import {Button} from "react-bootstrap";
-import "../styles/Home.css"
-import Pagination from "./Pagination";
+// Home.jsx
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchPosts } from '../redux/slices/postSlice';
 
 const Home = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage, setPostsPerPage] = useState(4);
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.posts.posts);
+  const status = useSelector((state) => state.posts.status);
+  const error = useSelector((state) => state.posts.error);
 
-    const lastPostIndex = currentPage * postsPerPage;
-    const firstPostIndex = lastPostIndex - postsPerPage;
-    const currentPosts = fakePosts.slice(firstPostIndex, lastPostIndex);
-
-    const navigate = useNavigate();
-    function handleClick(id) {
-        navigate(`/single-post/${id}`);
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchPosts({ postIDStart: 20, count: 20, reverse: true }));
     }
+  }, [status, dispatch]);
 
-    return (
-        <div className="home">
-            <div className="posts">
-                {currentPosts.map(post => (
-                    <div className="post" key={post.id}>
-                        <div className="img">
-                            <img src={post.img} alt=""/>
-                        </div>
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
 
-                        <div className="content">
-                            <Link className="link" to={`/single-post/${post.id}`}>
-                                <h1 className="post-title">{post.title}</h1>
-                            </Link>
-                            <p className="post-content">{post.content}</p>
-                            <Button className="read-button"
-                                    onClick={() => handleClick(`${post.id}`)}>Read More</Button>
-                        </div>
-                    </div>
-                ))}
-            </div>
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
 
-            <Pagination
-                totalPosts={fakePosts.length}
-                postsPerPage={postsPerPage}
-                setCurrentPage={setCurrentPage}
-                currentPage={currentPage}
-            />
+  return (
+    <div>
+      {posts.map((post) => (
+        <div key={post.id}>
+          {/* Render post data here */}
+          <h2>{post.title}</h2>
+          <p>{post.content}</p>
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
 export default Home;

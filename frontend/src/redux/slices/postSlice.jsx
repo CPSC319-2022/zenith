@@ -1,71 +1,49 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-//import apiName from
+// postSlice.jsx
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getPosts } from '../../api';
 
-const getAllPosts = createAsyncThunk(
-    'posts/getAll',
-    async (input, thunkAPI) => {
-        try {
-            //const res = await apiName.getAllPosts();
-            //return res.data;
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e);
-        }
+export const fetchPosts = createAsyncThunk(
+    'posts/fetchPosts',
+    async (params, { rejectWithValue }) => {
+      try {
+        const response = await getPosts(params);
+        return response;
+      } catch (err) {
+        return rejectWithValue(err.message);
+      }
     }
-);
+  );
+  
 
-const createPost = createAsyncThunk(
-    'posts/create',
-    async (input, thunkAPI) => {
-        try {
-            const { body } = input;
-            const title = body.get('title');
-            const text = body.get('body');
-            //formfile?
-            //const res = await apiName.createPost(title, text);
-            //return res.data;
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e);
-        }
-    }
-);
-
-const deletePostByID = createAsyncThunk(
-    'posts/deleteByID',
-    async (input, thunkAPI) => {
-        try {
-            const { _id } = input;
-            //const res = await apiName.deletePostByID(_id);
-            //return res.data;
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e);
-        }
-    }
-);
+const initialState = {
+  posts: [],
+  status: 'idle',
+  error: null,
+};
 
 const postSlice = createSlice({
-    name: 'postSlice',
-    initialState: {
-        posts: [],
-    },
-    reducers: {
-    },
-    extraReducers: (builder) => {
-        builder.addCase(getAllPosts.fulfilled, (state, action) => {
-            state.posts = action.payload;
-        });
-        builder.addCase(createPost.fulfilled, (state, action) => {
-            state.posts.push(action.payload);
-        });
-        builder.addCase(deletePostByID.fulfilled, (state, action) => {
-            state.posts = state.posts.filter((posts) => posts._id !== action.payload);
-        });
-    },
+  name: 'posts',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPosts.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.posts = action.payload;
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      });
+  },
 });
 
 export const postSliceActions = {
-    getAllPosts,
-    createPost,
-    deletePostByID,
-    ...postSlice.actions,
+  ...postSlice.actions,
+  fetchPosts,
 };
+
 export default postSlice.reducer;
