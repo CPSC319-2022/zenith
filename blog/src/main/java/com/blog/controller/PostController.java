@@ -199,10 +199,10 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "authorID": int,          // The author of the post.
-     *              "title":    String        // The title of the post.
-     *              "content":  String        // The content of the post.
-     *              "allowcomments": boolean  // Whether to allow comments
+     *              "authorID":      int,     // The author of the post.
+     *              "title":         String   // The title of the post.
+     *              "content":       String   // The content of the post.
+     *              "allowComments": boolean  // Whether to allow comments
      *              }
      * @throws BlogException
      */
@@ -276,7 +276,7 @@ public class PostController {
      *              "postID":        int,     // The post to edit.
      *              "title":         String   // The new title of the post.
      *              "content":       String   // The new content of the post.
-     *              "allowcomments": boolean  // Whether to allow comments
+     *              "allowComments": boolean  // Whether to allow comments
      *              }
      * @throws BlogException
      */
