@@ -59,6 +59,28 @@ public class UserController {
         }
     }
 
+    @PutMapping("/updateUserStatus")
+    @ResponseBody
+    public ResponseEntity<String> updateUserStatus(@RequestBody String input) {
+        try {
+            updateUserStatus(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/updateProfilePicture")
+    @ResponseBody
+    public ResponseEntity<String> updateProfilePicture(@RequestBody String input) {
+        try {
+            updateProfilePicture(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     //Returns a json containing the requested user
     public static JSONObject getUser(JSONObject input) throws BlogException {
         // Retrieve the user
