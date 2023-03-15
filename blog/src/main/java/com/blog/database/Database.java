@@ -4,6 +4,7 @@ import com.blog.model.Comment;
 import com.blog.model.Post;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
+import com.blog.model.UserStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -361,8 +362,17 @@ public class Database {
           } else {
                level = "false, false";
           }
+          int status = 0;
+          if (user.getUserStatus() == UserStatus.AWAY) {
+            status = 1;
+          } else if (user.getUserStatus() == UserStatus.BUSY) {
+            status = 2;
+          } else if (user.getUserStatus() == UserStatus.OFFLINE) {
+            status = 3;
+          }
+          String bio = user.getBio();
           return "INSERT INTO User VALUES(" + id + ", \"" + password + "\", \"" + user.getUsername() 
-          + "\", \"" + user.getCreationDate() + "\", \"" + user.getLastLogin() + "\", " + profile + ", " + level + ", " + user.isDeleted() + ")";
+          + "\", \"" + user.getCreationDate() + "\", \"" + user.getLastLogin() + "\", " + status + ", " + profile + ", \"" + bio + "\", " + level + ", " + user.isDeleted() + ")";
      }
 
      private static String formSQL(Post post, int id) {
