@@ -6,27 +6,32 @@
 --Create new item
 --
 
-INSERT INTO Users
-VALUES(user_ID, user_password, username, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+INSERT INTO User
+VALUES(user_ID, user_password, username, creationDate, creationDate, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 --System generate: user_ID(int)
 --User input: user_password(string), username(string)
+--Example: INSERT INTO User
+--         VALUES(1, 12345, "user1", "2023-03-01 01:02:03", "2023-3-1 01:02:03", DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 
 INSERT INTO Post
-VALUES(post_ID, user_ID, thumbnail, title, content, post_time, DEFAULT)
---System generate: post_ID(int), user_ID(int), post_time(Timestamp)
---User input: thumbnail(string)(url for image, use DEFAULT if user leaves it blank),
---            title(string), content(string) 
+VALUES(post_ID, user_ID, title, content, creationDate, creationDate, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+--System generate: post_ID(int), user_ID(int), creationDate(Timestamp)
+--User input: title(string), content(string) 
+--Example: INSERT INTO Post
+--         VALUES(1, 1, "title1", "content1", "2023-03-01 01:02:03", "2023-03-01 01:02:03", DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 
 INSERT INTO Comment
-VALUES(post_ID, comment_number, user_ID, content, post_time, DEFAULT)
---System generate: post_ID(int), comment_number(int), user_ID(int), post_time(Timestamp)
+VALUES(post_ID, comment_number, user_ID, content, creationDate, creationDate, DEFAULT, DEFAULT, DEFAULT)
+--System generate: post_ID(int), comment_number(int), user_ID(int), creationDate(Timestamp)
 --User input: content(string) 
+--Example: INSERT INTO Comment
+--         VALUES(1, 1, 1, "content1", "2023-03-01 01:02:03", "2023-03-01 01:02:03", DEFAULT, DEFAULT, DEFAULT)
 
 ------------------------------
 --Delete item from table
 --
 
-DELETE FROM Users WHERE user_ID = x
+DELETE FROM User WHERE user_ID = x
 -- x is an int, post and comment created by this user will be also deleted
 
 DELETE FROM Post WHERE post_ID = x
@@ -39,7 +44,7 @@ DELETE FROM Comment WHERE post_ID = x AND comment_number = y
 --Some use cases
 --
 
-SELECT username FROM Users WHERE contributor = true
+SELECT username FROM User WHERE contributor = true
 --Get username of all contributors
 
 SELECT Count(*) FROM Post

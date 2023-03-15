@@ -2,6 +2,7 @@ package com.blog.controller;
 
 import com.blog.database.Database;
 import com.blog.exception.BlogException;
+import com.blog.exception.InvalidPermissionException;
 import com.blog.model.Post;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
@@ -9,10 +10,106 @@ import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+@RestController
 public class PostController {
+    @GetMapping("/getPost")
+    @ResponseBody
+    public ResponseEntity<String> getPost(@RequestBody String input) {
+        try {
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getPosts")
+    @ResponseBody
+    public ResponseEntity<String> getPosts(@RequestBody String input) {
+        try {
+            return ResponseEntity.ok(getPosts(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/createPost")
+    @ResponseBody
+    public ResponseEntity<String> createPost(@RequestBody String input) {
+        try {
+            createPost(new JSONObject(input));
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/deletePost")
+    @ResponseBody
+    public ResponseEntity<String> deletePost(@RequestBody String input) {
+        try {
+            deletePost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/editPost")
+    @ResponseBody
+    public ResponseEntity<String> editPost(@RequestBody String input) {
+        try {
+            editPost(new JSONObject(input));
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/upvotePost")
+    @ResponseBody
+    public ResponseEntity<String> upvotePost(@RequestBody String input) {
+        try {
+            upvotePost(new JSONObject(input));
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/downvotePost")
+    @ResponseBody
+    public ResponseEntity<String> downvotePost(@RequestBody String input) {
+        try {
+            downvotePost(new JSONObject(input));
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/viewPost")
+    @ResponseBody
+    public ResponseEntity<String> viewPost(@RequestBody String input) {
+        try {
+            viewPost(new JSONObject(input));
+            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     /**
      * Returns a JSON containing the requested post.
      *
@@ -36,7 +133,7 @@ public class PostController {
      * }
      * @throws BlogException
      */
-    public static JSONObject getPost(JSONObject input) throws BlogException {
+    private static JSONObject getPost(JSONObject input) throws BlogException {
         // Retrieve the post
         Post post = retrievePost(input);
 
@@ -72,7 +169,7 @@ public class PostController {
      * ]
      * @throws BlogException
      */
-    public static JSONArray getPosts(JSONObject input) throws BlogException {
+    private static JSONArray getPosts(JSONObject input) throws BlogException {
         int postIDStart;
         int count;
         boolean reverse;
@@ -109,14 +206,14 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "authorID": int,          // The author of the post.
-     *              "title":    String        // The title of the post.
-     *              "content":  String        // The content of the post.
-     *              "allowcomments": boolean  // Whether to allow comments
+     *              "authorID":      int,     // The author of the post.
+     *              "title":         String   // The title of the post.
+     *              "content":       String   // The content of the post.
+     *              "allowComments": boolean  // Whether to allow comments
      *              }
      * @throws BlogException
      */
-    public static void createPost(JSONObject input) throws BlogException {
+    private static void createPost(JSONObject input) throws BlogException {
         int authorID;
         String title;
         String content;
@@ -134,8 +231,13 @@ public class PostController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
 
-        // Check whether author has permission to make a post
-        validatePermission(authorID);
+        // Retrieve the user
+        User user = new User(authorID);
+
+        // Check whether the user has permission to make a post. // TODO: change to MEMBER
+        if (UserLevel.READER.compareTo(user.getUserLevel()) < 0) {
+            throw new InvalidPermissionException("User does not have the necessary permission to make a post.");
+        }
 
         // Validate the data
         Post.validateTitle(title);
@@ -166,13 +268,22 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post to delete.
+     *              "postID": int,  // The post to delete.
+     *              "userID": int,  // The user attempting to delete.
      *              }
      * @throws BlogException
      */
-    public static void deletePost(JSONObject input) throws BlogException {
+    private static void deletePost(JSONObject input) throws BlogException {
         // Retrieve the post
         Post post = retrievePost(input);
+
+        // Retrieve the user
+        User user = UserController.retrieveUser(input);
+
+        // Check whether user has permission to delete post
+        if (post.getAuthorID() != user.getUserID() && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+            throw new InvalidPermissionException("User does not have the necessary permission to delete this post.");
+        }
 
         // Delete post in database
         Database.delete(post);
@@ -186,11 +297,12 @@ public class PostController {
      *              "postID":        int,     // The post to edit.
      *              "title":         String   // The new title of the post.
      *              "content":       String   // The new content of the post.
-     *              "allowcomments": boolean  // Whether to allow comments
+     *              "allowComments": boolean  // Whether to allow comments
+     *              "userID":        int,     // The user attempting to edit.
      *              }
      * @throws BlogException
      */
-    public static void editPost(JSONObject input) throws BlogException {
+    private static void editPost(JSONObject input) throws BlogException {
         String title;
         String content;
         boolean allowComments;
@@ -213,6 +325,14 @@ public class PostController {
         // Retrieve the post
         Post post = retrievePost(input);
 
+        // Retrieve the user
+        User user = UserController.retrieveUser(input);
+
+        // Check whether user has permission to delete post
+        if (post.getAuthorID() != user.getUserID() && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+            throw new InvalidPermissionException("User does not have the necessary permission to edit this post.");
+        }
+
         // Apply edit to post
         post.setTitle(title);
         post.setContent(content);
@@ -232,7 +352,7 @@ public class PostController {
      *              }
      * @throws BlogException
      */
-    public static void upvotePost(JSONObject input) throws BlogException {
+    private static void upvotePost(JSONObject input) throws BlogException {
         // Retrieve the comment
         Post post = retrievePost(input);
 
@@ -252,7 +372,7 @@ public class PostController {
      *              }
      * @throws BlogException
      */
-    public static void downvotePost(JSONObject input) throws BlogException {
+    private static void downvotePost(JSONObject input) throws BlogException {
         // Retrieve the post
         Post post = retrievePost(input);
 
@@ -272,7 +392,7 @@ public class PostController {
      *              }
      * @throws BlogException
      */
-    public static void viewPost(JSONObject input) throws BlogException {
+    private static void viewPost(JSONObject input) throws BlogException {
         // Retrieve the post
         Post post = retrievePost(input);
 
@@ -307,21 +427,5 @@ public class PostController {
 
         // Return the retrieved post
         return new Post(postID);
-    }
-
-    /**
-     * Validates whether the user has the necessary permissions to make a post.
-     *
-     * @param userID The user to validate.
-     * @throws BlogException
-     */
-    private static void validatePermission(int userID) throws BlogException {
-        // Retrieve the user
-        User user = new User(userID);
-
-        // Check whether the user has UserLevel of at least UserLevel.CONTRIBUTOR
-        if (UserLevel.CONTRIBUTOR.compareTo(user.getUserLevel()) < 0) {
-            throw new BlogException("User does not have the necessary permission to make a POST.");
-        }
     }
 }

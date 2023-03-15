@@ -1,17 +1,63 @@
 package com.blog.controller;
 
 import com.blog.database.Database;
+import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.model.*;
 import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-
+@RestController
 public class UserController {
+    @GetMapping("/getUser")
+    @ResponseBody
+    public ResponseEntity<String> getUser(@RequestBody String input) {
+        try {
+            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/createUser")
+    @ResponseBody
+    public ResponseEntity<String> createUser(@RequestBody String input) {
+        try {
+            createUser(new JSONObject(input));
+            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/deleteUser")
+    @ResponseBody
+    public ResponseEntity<String> deleteUser(@RequestBody String input) {
+        try {
+            deleteUser(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/updateUserLevel")
+    @ResponseBody
+    public ResponseEntity<String> updateUserLevel(@RequestBody String input) {
+        try {
+            updateUserLevel(new JSONObject(input));
+            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     //Returns a json containing the requested user
     public static JSONObject getUser(JSONObject input) throws BlogException {
@@ -165,7 +211,7 @@ public class UserController {
      * @return The retrieved User.
      * @throws BlogException
      */
-    private static User retrieveUser(JSONObject input) throws BlogException {
+    public static User retrieveUser(JSONObject input) throws BlogException {
         int userID;
 
         // Read data from JSON
@@ -193,18 +239,13 @@ public class UserController {
      */
     private static void updateUserStatus(JSONObject input) throws BlogException {
         User user;
-        String new_status;
+        String status;
 
         try {
             //userID = input.getInt("userID");
             user = retrieveUser(input);
-
-            new_status = input.getString("user_status");
-
-            if (new_status.toUpperCase() == "OFFLINE")
-                user.setLastLogin(Utility.getCurrentTime());
-
-            user.setUserStatus(UserStatus.valueOf(new_status));
+            status = input.getString("user_status");
+            user.setUserStatus(UserStatus.valueOf(status));
             Database.save(user);
         } catch (JSONException e) {
             throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
@@ -223,7 +264,7 @@ public class UserController {
      * @return Updates the profile picture and saves the changes in the database
      * @throws BlogException
      */
-    private static void updateProfilePicture(JSONObject input) throws BlogException {
+    public static void updateProfilePicture(JSONObject input) throws BlogException {
         User user;
         String profile_picture;
 
@@ -239,5 +280,22 @@ public class UserController {
         }
     }
 
+    /* TODO: DELETE?
+    private static void updateLastLogin(JSONObject input) throws BlogException {
+        User user;
+        String last_login;
+
+        try {
+            user = retrieveUser(input);
+            profile_picture = input.getString("profile_picture");
+            user.setProfilePicture(profile_picture);
+            Database.save(user);
+        } catch (JSONException e) {
+            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new BlogException("JSON object received is null. \n" + e.getMessage());
+        }
+    }*/
 }
+
 

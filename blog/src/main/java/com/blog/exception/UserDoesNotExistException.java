@@ -1,10 +1,7 @@
 package com.blog.exception;
 
-public class BlogException extends Exception {
-    public BlogException() {
-    }
-
-    public BlogException(String e) {
+public class UserDoesNotExistException extends Exception {
+    public UserDoesNotExistException(String e) {
         super(e);
     }
 
