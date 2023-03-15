@@ -1,12 +1,12 @@
 steps:
 # Containerize (includes testing)
   - name: 'grc.io/cloud-builder/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest', '-f', './blog', "."]
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest', '-f', './blog/Dockerfile', "./blog"]
     allowFailure: false
     timeout: 300s
 
   - name: 'grc.io/cloud-builder/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/frontend:latest', '-f', './frontend/frontend.dockerfile', "."]
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/frontend:latest', '-f', './frontend/frontend.dockerfile', "./frontend"]
     allowFailure: false
     timeout: 300s
 
