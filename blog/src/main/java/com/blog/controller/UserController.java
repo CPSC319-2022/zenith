@@ -193,13 +193,18 @@ public class UserController {
      */
     private static void updateUserStatus(JSONObject input) throws BlogException {
         User user;
-        String status;
+        String new_status;
 
         try {
             //userID = input.getInt("userID");
             user = retrieveUser(input);
-            status = input.getString("user_status");
-            user.setUserStatus(UserStatus.valueOf(status));
+
+            new_status = input.getString("user_status");
+
+            if (new_status.toUpperCase() == "OFFLINE")
+                user.setLastLogin(Utility.getCurrentTime());
+
+            user.setUserStatus(UserStatus.valueOf(new_status));
             Database.save(user);
         } catch (JSONException e) {
             throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
@@ -234,24 +239,5 @@ public class UserController {
         }
     }
 
-    private static void updateLastLogin(JSONObject input) throws BlogException {
-        User user;
-        String last_login;
-
-        try {
-            user = retrieveUser(input);
-            profile_picture = input.getString("profile_picture");
-            user.setProfilePicture(profile_picture);
-            Database.save(user);
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
-    }
-    }
-
-
 }
-
 
