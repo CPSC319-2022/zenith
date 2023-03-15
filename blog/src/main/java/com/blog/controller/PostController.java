@@ -38,7 +38,7 @@ public class PostController {
 
     @PostMapping("/createPost")
     @ResponseBody
-    public ResponseEntity<String> createPost(@RequestParam String input) {
+    public ResponseEntity<String> createPost(@RequestBody String input) {
         try {
             createPost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
@@ -49,7 +49,7 @@ public class PostController {
 
     @DeleteMapping("/deletePost")
     @ResponseBody
-    public ResponseEntity<String> deletePost(@RequestParam String input) {
+    public ResponseEntity<String> deletePost(@RequestBody String input) {
         try {
             deletePost(new JSONObject(input));
             return ResponseEntity.ok().build();
@@ -60,7 +60,7 @@ public class PostController {
 
     @PutMapping("/editPost")
     @ResponseBody
-    public ResponseEntity<String> editPost(@RequestParam String input) {
+    public ResponseEntity<String> editPost(@RequestBody String input) {
         try {
             editPost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
@@ -71,7 +71,7 @@ public class PostController {
 
     @PutMapping("/upvotePost")
     @ResponseBody
-    public ResponseEntity<String> upvotePost(@RequestParam String input) {
+    public ResponseEntity<String> upvotePost(@RequestBody String input) {
         try {
             upvotePost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
@@ -82,7 +82,7 @@ public class PostController {
 
     @PutMapping("/downvotePost")
     @ResponseBody
-    public ResponseEntity<String> downvotePost(@RequestParam String input) {
+    public ResponseEntity<String> downvotePost(@RequestBody String input) {
         try {
             downvotePost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
@@ -93,7 +93,7 @@ public class PostController {
 
     @PutMapping("/viewPost")
     @ResponseBody
-    public ResponseEntity<String> viewPost(@RequestParam String input) {
+    public ResponseEntity<String> viewPost(@RequestBody String input) {
         try {
             viewPost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());

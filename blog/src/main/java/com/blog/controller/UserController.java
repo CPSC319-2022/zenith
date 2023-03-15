@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping("/createUser")
     @ResponseBody
-    public ResponseEntity<String> createUser(@RequestParam String input) {
+    public ResponseEntity<String> createUser(@RequestBody String input) {
         try {
             createUser(new JSONObject(input));
             return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
@@ -38,7 +38,7 @@ public class UserController {
 
     @DeleteMapping("/deleteUser")
     @ResponseBody
-    public ResponseEntity<String> deleteUser(@RequestParam String input) {
+    public ResponseEntity<String> deleteUser(@RequestBody String input) {
         try {
             deleteUser(new JSONObject(input));
             return ResponseEntity.ok().build();
@@ -49,7 +49,7 @@ public class UserController {
 
     @PutMapping("/updateUserLevel")
     @ResponseBody
-    public ResponseEntity<String> updateUserLevel(@RequestParam String input) {
+    public ResponseEntity<String> updateUserLevel(@RequestBody String input) {
         try {
             updateUserLevel(new JSONObject(input));
             return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
