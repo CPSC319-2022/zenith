@@ -23,8 +23,10 @@ public class UserRowMapper implements RowMapper<User> {
 		} else {;
 			userLevel = UserLevel.READER;
 		}
-		String creationDate = rs.getString("creation_date");
-		String lastLogin = rs.getString("last_login");
+		// String creationDate = rs.getString("creation_date");
+		// String lastLogin = rs.getString("last_login");
+		String creationDate = "2023-03-15T06:00:00.861336Z";
+		String lastLogin = "2023-03-15T06:00:00.861336Z";
 		UserStatus userStatus = null;
 		int status = rs.getInt("user_status");
 		if (status == 0) {

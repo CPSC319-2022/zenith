@@ -356,19 +356,31 @@ public class Database {
             status = 3;
           }
           String bio = user.getBio();
+          // String creationDate = user.getCreationDate();
+          String creationDate = "2023-03-01 00:00:00";
+          // String lastLogin = user.getLastLogin();
+          String lastLogin = "2023-03-01 00:00:00";
           return "INSERT INTO User VALUES(" + id + ", \"" + password + "\", \"" + user.getUsername() 
-          + "\", \"" + user.getCreationDate() + "\", \"" + user.getLastLogin() + "\", " + status + ", " + profile + ", \"" + bio + "\", " + level + ", " + user.isDeleted() + ")";
+          + "\", \"" + creationDate + "\", \"" + lastLogin + "\", " + status + ", " + profile + ", \"" + bio + "\", " + level + ", " + user.isDeleted() + ")";
      }
 
      private static String formSQL(Post post, int id) {
+          // String creationDate = post.getCreationDate();
+          String creationDate = "2023-03-01 00:00:00";
+          // String lastModified = post.getLastModified();
+          String lastModified = "2023-03-01 00:00:00";
           return "INSERT INTO Post VALUES(" + id + ", " + post.getAuthorID() + ", \"" + post.getTitle() + "\", \"" + post.getContent() + "\", \"" 
-          + post.getCreationDate() + "\", \"" + post.getLastModified() + "\", " + post.getUpvotes() + ", " + post.getDownvotes() + ", " 
+          + creationDate + "\", \"" + lastModified + "\", " + post.getUpvotes() + ", " + post.getDownvotes() + ", " 
           + post.getViews() + ", " + post.isDeleted() + ", " + post.isAllowComments() + ")";
      }
 
      private static String formSQL(Comment comment, int id) {
+          // String creationDate = comment.getCreationDate();
+          String creationDate = "2023-03-01 00:00:00";
+          // String lastModified = comment.getLastModified();
+          String lastModified = "2023-03-01 00:00:00";
           return "INSERT INTO Comment VALUES(" + comment.getPostID() + ", " + id + ", " + comment.getAuthorID() + ", \"" + comment.getContent() + "\", \"" 
-          + comment.getCreationDate() + "\", \"" + comment.getLastModified() + "\", " + comment.getUpvotes() + ", " + comment.getDownvotes() + ", " 
+          + creationDate + "\", \"" + lastModified + "\", " + comment.getUpvotes() + ", " + comment.getDownvotes() + ", " 
           + comment.isDeleted() + ")";
      }
 }
