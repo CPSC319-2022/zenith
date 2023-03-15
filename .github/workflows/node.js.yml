@@ -3,7 +3,7 @@ name: Run FrontEnd Tests -Node.js CI
 on:
   push:
     branches:
-      - main
+      - "main"
 #job sequence  
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ~/zenith/frontend
+        working-directory: ./frontend
 
     strategy:
       matrix:
