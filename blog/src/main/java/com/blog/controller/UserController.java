@@ -211,7 +211,7 @@ public class UserController {
      * @return The retrieved User.
      * @throws BlogException
      */
-    private static User retrieveUser(JSONObject input) throws BlogException {
+    public static User retrieveUser(JSONObject input) throws BlogException {
         int userID;
 
         // Read data from JSON
@@ -264,7 +264,7 @@ public class UserController {
      * @return Updates the profile picture and saves the changes in the database
      * @throws BlogException
      */
-    private static void updateProfilePicture(JSONObject input) throws BlogException {
+    public static void updateProfilePicture(JSONObject input) throws BlogException {
         User user;
         String profile_picture;
 
