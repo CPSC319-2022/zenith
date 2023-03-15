@@ -39,7 +39,7 @@ public class CommentController {
 
     @PostMapping("/createComment")
     @ResponseBody
-    public ResponseEntity<String> createComment(@RequestParam String input) {
+    public ResponseEntity<String> createComment(@RequestBody String input) {
         try {
             createComment(new JSONObject(input));
             return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
@@ -50,7 +50,7 @@ public class CommentController {
 
     @DeleteMapping("/deleteComment")
     @ResponseBody
-    public ResponseEntity<String> deleteComment(@RequestParam String input) {
+    public ResponseEntity<String> deleteComment(@RequestBody String input) {
         try {
             deleteComment(new JSONObject(input));
             return ResponseEntity.ok().build();
@@ -61,7 +61,7 @@ public class CommentController {
 
     @PutMapping("/editComment")
     @ResponseBody
-    public ResponseEntity<String> editComment(@RequestParam String input) {
+    public ResponseEntity<String> editComment(@RequestBody String input) {
         try {
             editComment(new JSONObject(input));
             return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
@@ -72,7 +72,7 @@ public class CommentController {
 
     @PutMapping("/upvoteComment")
     @ResponseBody
-    public ResponseEntity<String> upvoteComment(@RequestParam String input) {
+    public ResponseEntity<String> upvoteComment(@RequestBody String input) {
         try {
             upvoteComment(new JSONObject(input));
             return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
@@ -83,7 +83,7 @@ public class CommentController {
 
     @PutMapping("/downvoteComment")
     @ResponseBody
-    public ResponseEntity<String> downvoteComment(@RequestParam String input) {
+    public ResponseEntity<String> downvoteComment(@RequestBody String input) {
         try {
             downvoteComment(new JSONObject(input));
             return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
