@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        context: ~/zenith/frontend
+        working-directory: ~/zenith/frontend
 
     strategy:
       matrix:

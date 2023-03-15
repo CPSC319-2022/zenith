@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        context: ~/zenith/blog
+        working-directory: ~/zenith/blog
 
     steps:
     - uses: actions/checkout@v3
