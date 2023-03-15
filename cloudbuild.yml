@@ -1,38 +1,43 @@
 steps:
-# Install
-  - name: 'gcr.io/cloud-builders/npm'
-    args: ['install']
-
-  - name: maven
-    entrypoint: mvn
-    args: ['install']
-# Test
-  - name: 'gcr.io/cloud-builders/npm'
-    args: ['run', 'test']
+# Containerize (includes testing)
+  - name: 'grc.io/cloud-builder/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest', '-f', './blog', "."]
     allowFailure: false
     timeout: 300s
-  
-  - name: maven
-    entrypoint: mvn
-    args: ['test']
+
+  - name: 'grc.io/cloud-builder/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/frontend:latest', '-f', './frontend/frontend.dockerfile', "."]
     allowFailure: false
     timeout: 300s
-  
-# Build -> May not need this step if dockerfile handles building 
-  # - name: npm
-  #   args: ['run', 'build']
 
-  # - name: maven
-  #   entrypoint: mvn
-  #   args: ['package','-Dmaven.test.skip=true']
-
-# Containerize
+# Push images to registery
   - name: 'grc.io/cloud-builder/docker'
-  - args: ['build', '-t', 'gcr.io/137046975675/backend', '-f', './blog', "."]
-  - images: ['build', '-t', 'gcr.io/137046975675/backend']
+    args: ['push', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest']
 
   - name: 'grc.io/cloud-builder/docker'
-  - args: ['build', '-t', 'gcr.io/137046975675/frontend:latest', '-f', './frontend/frontend.dockerfile', "."]
-  - images: ['build', '-t', 'gcr.io/137046975675/frontend:latest']
-  
+    args: ['push', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest']
+
 # Deploy
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+    - 'run'
+    - 'deploy'
+    - 'cloudrunservice'
+    - '--image'
+    - 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest'
+    - '--platform'
+    - 'managed'
+    - '--allow-authenticated'
+  
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+    - 'run'
+    - 'deploy'
+    - 'cloudrunservice'
+    - '--image'
+    - 'gcr.io/$PROJECT_ID/$BRANCH_NAME/frontend:latest'
+    - '--platform'
+    - 'managed'
+    - '--allow-autenticated'
