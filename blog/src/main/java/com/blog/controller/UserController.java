@@ -8,6 +8,7 @@ import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -31,8 +32,8 @@ public class UserController {
         try {
             createUser(new JSONObject(input));
             return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
-        } catch (BlogException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -42,8 +43,8 @@ public class UserController {
         try {
             deleteUser(new JSONObject(input));
             return ResponseEntity.ok().build();
-        } catch (BlogException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -53,8 +54,8 @@ public class UserController {
         try {
             updateUserLevel(new JSONObject(input));
             return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
-        } catch (BlogException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

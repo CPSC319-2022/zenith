@@ -9,6 +9,7 @@ import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class PostController {
         try {
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -32,7 +33,7 @@ public class PostController {
         try {
             return ResponseEntity.ok(getPosts(new JSONObject(input)).toString());
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -42,8 +43,8 @@ public class PostController {
         try {
             createPost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
-        } catch (BlogException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -53,8 +54,8 @@ public class PostController {
         try {
             deletePost(new JSONObject(input));
             return ResponseEntity.ok().build();
-        } catch (BlogException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -64,8 +65,8 @@ public class PostController {
         try {
             editPost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
-        } catch (BlogException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -75,8 +76,8 @@ public class PostController {
         try {
             upvotePost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
-        } catch (BlogException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -86,8 +87,8 @@ public class PostController {
         try {
             downvotePost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
-        } catch (BlogException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -97,8 +98,8 @@ public class PostController {
         try {
             viewPost(new JSONObject(input));
             return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
-        } catch (BlogException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
