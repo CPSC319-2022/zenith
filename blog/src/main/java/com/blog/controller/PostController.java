@@ -43,7 +43,7 @@ public class PostController {
     public ResponseEntity<String> createPost(@RequestBody String input) {
         try {
             createPost(new JSONObject(input));
-            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class PostController {
     public ResponseEntity<String> editPost(@RequestBody String input) {
         try {
             editPost(new JSONObject(input));
-            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class PostController {
     public ResponseEntity<String> upvotePost(@RequestBody String input) {
         try {
             upvotePost(new JSONObject(input));
-            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -93,7 +93,7 @@ public class PostController {
     public ResponseEntity<String> downvotePost(@RequestBody String input) {
         try {
             downvotePost(new JSONObject(input));
-            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -104,7 +104,7 @@ public class PostController {
     public ResponseEntity<String> viewPost(@RequestBody String input) {
         try {
             viewPost(new JSONObject(input));
-            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -31,7 +31,7 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody String input) {
         try {
             createUser(new JSONObject(input));
-            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -53,7 +53,7 @@ public class UserController {
     public ResponseEntity<String> updateUserLevel(@RequestBody String input) {
         try {
             updateUserLevel(new JSONObject(input));
-            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
