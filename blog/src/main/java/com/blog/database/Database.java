@@ -50,7 +50,6 @@ public class Database {
         try {
           Comment temp =  jdbcTemplate.queryForObject(sql, new CommentRowMapper());
           comment.copy(temp);
-          // TODO: what if the comment is deleted?
         } catch (EmptyResultDataAccessException e) {
           comment.setContent(null);
         }
@@ -74,7 +73,6 @@ public class Database {
         try {
           Post temp = jdbcTemplate.queryForObject(sql, new PostRowMapper());
           post.copy(temp);
-          // TODO: what if the post is deleted?
         } catch (EmptyResultDataAccessException e) {
           post.setContent(null);
         }
@@ -127,9 +125,9 @@ public class Database {
     public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count, boolean reverse) {
           String sql;
           if (reverse) {
-               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number <= " + commentIDStart + " AND is_deleted = false LIMIT " + count;
+               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number <= " + commentIDStart + " AND is_deleted = false ORDER BY post_ID DESC LIMIT " + count;
           } else {
-               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number >= " + commentIDStart + " AND is_deleted = false LIMIT " + count;
+               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number >= " + commentIDStart + " AND is_deleted = false ORDER BY post_ID ASC LIMIT " + count;
           }
           if (jdbcTemplate == null) {
                createTemplate();
@@ -152,9 +150,9 @@ public class Database {
     public static void retrieve(ArrayList<Post> posts, int postIDStart, int count, boolean reverse) {
           String sql;
           if (reverse) {
-               sql = "SELECT * FROM Post WHERE post_ID <= " + postIDStart + " AND is_deleted = false LIMIT " + count;
+               sql = "SELECT * FROM Post WHERE post_ID <= " + postIDStart + " AND is_deleted = false ORDER BY post_ID DESC LIMIT " + count;
           } else {
-               sql = "SELECT * FROM Post WHERE post_ID >= " + postIDStart + " AND is_deleted = false LIMIT " + count;
+               sql = "SELECT * FROM Post WHERE post_ID >= " + postIDStart + " AND is_deleted = false ORDER BY post_ID ASC LIMIT " + count;
           }
           if (jdbcTemplate == null) {
                createTemplate();
@@ -163,18 +161,6 @@ public class Database {
           for (Post p : temp) {
                posts.add(p);
           }
-
-        /*
-        SELECT *
-        FROM   posts
-        WHERE  postID <= postIDStart  -- <= if reverse, otherwise >=
-               AND
-               !isDeleted
-        LIMIT  count
-
-        for each record:
-            post.add(new Post(...))
-         */
     }
 
     /**
@@ -266,7 +252,6 @@ public class Database {
      * @return the userID
      */
     public static int save(User user) {
-        // TODO: Need to add user status to database.
         int userID = user.getUserID();
         String sql = "SELECT MAX(user_id) FROM User";
         if (jdbcTemplate == null) {
