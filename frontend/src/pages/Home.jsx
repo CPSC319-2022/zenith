@@ -1,53 +1,91 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {fakePosts} from '../data/fakePosts';
-import {Link} from "react-router-dom";
-import {Button} from "react-bootstrap";
-import "../styles/Home.css"
-import Pagination from "./Pagination";
+import { fetchPosts } from '../redux/slices/postSlice';
+import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import '../styles/Home.css';
+import Pagination from './Pagination';
 
 const Home = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage, setPostsPerPage] = useState(4);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(4);
 
-    const lastPostIndex = currentPage * postsPerPage;
-    const firstPostIndex = lastPostIndex - postsPerPage;
-    const currentPosts = fakePosts.slice(firstPostIndex, lastPostIndex);
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.posts.posts);
+  const status = useSelector((state) => state.posts.status);
+  const error = useSelector((state) => state.posts.error);
 
-    const navigate = useNavigate();
-    function handleClick(id) {
-        navigate(`/single-post/${id}`);
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchPosts({ postIDStart: 20, count: 20, reverse: true }));
     }
+  }, [status, dispatch]);
 
-    return (
-        <div className="home">
-            <div className="posts">
-                {currentPosts.map(post => (
-                    <div className="post" key={post.id}>
-                        <div className="img">
-                            <img src={post.img} alt=""/>
-                        </div>
+  const lastPostIndex = currentPage * postsPerPage;
+  const firstPostIndex = lastPostIndex - postsPerPage;
+  const currentPosts = posts.slice(firstPostIndex, lastPostIndex);
 
-                        <div className="content">
-                            <Link className="link" to={`/single-post/${post.id}`}>
-                                <h1 className="post-title">{post.title}</h1>
-                            </Link>
-                            <p className="post-content">{post.content}</p>
-                            <Button className="read-button"
-                                    onClick={() => handleClick(`${post.id}`)}>Read More</Button>
-                        </div>
-                    </div>
-                ))}
+  const navigate = useNavigate();
+
+  function handleClick(post) {
+   // console.log('post:', post);
+    const postID = post.post.postID;
+    console.log('postID:', postID);
+    //pass the entire post object to the single post page and use it to display the post
+    navigate(`/single-post/${postID}`);
+
+    
+
+  }
+  
+  
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
+  
+
+
+  return (
+    <div className="home">
+      <div className="posts">
+      {console.log(currentPosts)}
+
+        {currentPosts.map((post) => (
+          <div className="post" key={post.id}>
+        
+            <div className="img">
+              <img src={post.img} alt="" />
             </div>
 
-            <Pagination
-                totalPosts={fakePosts.length}
-                postsPerPage={postsPerPage}
-                setCurrentPage={setCurrentPage}
-                currentPage={currentPage}
-            />
-        </div>
-    );
+            <div className="content">
+              <Link className="link" to={`/single-post/${post.postID}`}>
+                <h1 className="post-title">{post.title}</h1>
+                {console.log(post.title)}
+              </Link>
+              <p className="post-content">{<div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+}</p>
+              <Button className="read-button" onClick={() => handleClick({post})}>
+                Read More
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Pagination
+        totalPosts={posts.length}
+        postsPerPage={postsPerPage}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+      />
+    </div>
+  );
 };
 
 export default Home;

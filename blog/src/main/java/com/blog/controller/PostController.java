@@ -18,25 +18,33 @@ import java.util.ArrayList;
 
 @RestController
 public class PostController {
-    @GetMapping("/getPost")
-    @ResponseBody
-    public ResponseEntity<String> getPost(@RequestBody String input) {
-        try {
-            return ResponseEntity.ok(getPost(new JSONObject(input)).toString());
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+  // Replace the getPost method
+@GetMapping("/getPost")
+@ResponseBody
+public ResponseEntity<String> getPost(@RequestParam("postID") int postID) {
+    try {
+        JSONObject input = new JSONObject();
+        input.put("postID", postID);
+        return ResponseEntity.ok(getPost(input).toString());
+    } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
+}
 
-    @GetMapping("/getPosts")
-    @ResponseBody
-    public ResponseEntity<String> getPosts(@RequestBody String input) {
-        try {
-            return ResponseEntity.ok(getPosts(new JSONObject(input)).toString());
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+// Replace the getPosts method
+@GetMapping("/getPosts")
+@ResponseBody
+public ResponseEntity<String> getPosts(@RequestParam("postIDStart") int postIDStart, @RequestParam("count") int count, @RequestParam("reverse") boolean reverse) {
+    try {
+        JSONObject input = new JSONObject();
+        input.put("postIDStart", postIDStart);
+        input.put("count", count);
+        input.put("reverse", reverse);
+        return ResponseEntity.ok(getPosts(input).toString());
+    } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
+}
 
     @PostMapping("/createPost")
     @ResponseBody
