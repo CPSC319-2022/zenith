@@ -24,3 +24,14 @@ export const getPost = async ({postID}) => {
     return response.data;
   };
   
+// api.js
+export const createPost = async ({ authorID, title, content, allowComments }) => {
+    const response = await axios.post('http://localhost:8080/createPost', {
+      authorID,
+      title,
+      content,
+      allowComments,
+    });
+    return response.data;
+  };
+  

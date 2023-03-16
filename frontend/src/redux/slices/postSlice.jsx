@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getPosts, getPost } from '../../api';
+import { getPosts, getPost, createPost as createPostAPI } from '../../api';
 
 export const fetchPosts = createAsyncThunk(
   'posts/fetchPosts',
@@ -19,6 +19,18 @@ export const fetchPost = createAsyncThunk(
     try {
       const response = await getPost(id);
       return response;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const createPost = createAsyncThunk(
+  'posts/createPost',
+  async (postData, { rejectWithValue }) => {
+    try {
+      await createPostAPI(postData);
+      return 'Post created successfully';
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -59,6 +71,16 @@ const postSlice = createSlice({
       .addCase(fetchPost.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      .addCase(createPost.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(createPost.fulfilled, (state) => {
+        state.status = 'succeeded';
+      })
+      .addCase(createPost.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });
@@ -67,6 +89,7 @@ export const postSliceActions = {
   ...postSlice.actions,
   fetchPosts,
   fetchPost,
+  createPost,
 };
 
 export default postSlice.reducer;

@@ -34,7 +34,7 @@ const Home = () => {
     console.log('postID:', postID);
     //pass the entire post object to the single post page and use it to display the post
     navigate(`/single-post/${postID}`);
-    
+
     
 
   }
@@ -68,7 +68,8 @@ const Home = () => {
                 <h1 className="post-title">{post.title}</h1>
                 {console.log(post.title)}
               </Link>
-              <p className="post-content">{post.content}</p>
+              <p className="post-content">{<div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+}</p>
               <Button className="read-button" onClick={() => handleClick({post})}>
                 Read More
               </Button>

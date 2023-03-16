@@ -27,7 +27,8 @@ const SinglePost = () => {
       {post && (
         <>
           <h1 className="post-title">{post.title}</h1>
-          <p className="post-content">{post.content}</p>
+          <p className="post-content">{<div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+}</p>
         </>
       )}
     </div>
