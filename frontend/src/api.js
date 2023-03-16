@@ -15,3 +15,12 @@ export const getPosts = async ({ postIDStart, count, reverse }) => {
     throw new Error(error.message);
   }
 };
+
+export const getPost = async ({postID}) => {
+    console.log("getReq: ", postID);
+    const response = await axios.get('http://localhost:8080/getPost', {
+      params: { postID },
+    });
+    return response.data;
+  };
+  
