@@ -34,9 +34,12 @@ jobs:
         with: 
           fetch-depth: 0
           
+      - name: Fetch remote changes
+        run: git fetch -a
+
       - name: Change working branch to qa
-        run: git checkout origin/qa
+        run: git checkout qa
 
       - name: marge dev to qa
-        run: git merge origin/dev
+        run: git merge dev
     
