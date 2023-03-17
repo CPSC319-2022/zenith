@@ -27,17 +27,17 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
-    @PostMapping("/createUser")
-    @ResponseBody
-    public ResponseEntity<String> createUser(@RequestBody String input) {
-        try {
-            createUser(new JSONObject(input));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
+//
+//    @PostMapping("/createUser")
+//    @ResponseBody
+//    public ResponseEntity<String> createUser(@RequestBody String input) {
+//        try {
+//            createUser(new JSONObject(input));
+//            return ResponseEntity.ok().build();
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     @DeleteMapping("/deleteUser")
     @ResponseBody
@@ -93,48 +93,77 @@ public class UserController {
 
 
 
-    /**
-     * Creates a user in the database
-     *
-     * @param input JSONObject would contain the following key-value pairs:
-     *              {
-     *                  "username": username for the new user,
-     *                  "profilepicture": URL for the profile picture (if any)
-     *              }
-     * @throws BlogException
-     */
-    public static void createUser(JSONObject input) throws BlogException {
-        String username;
-        UserLevel ul;
-        String profile_picture;
-        String bio;
+//    /**
+//     * Creates a user in the database
+//     *
+//     * @param input JSONObject would contain the following key-value pairs:
+//     *              {
+//     *                  "username": username for the new user,
+//     *                  "profilepicture": URL for the profile picture (if any)
+//     *              }
+//     * @throws BlogException
+//     */
+//    public static void createUser(JSONObject input) throws BlogException {
+//        String username;
+//        UserLevel ul;
+//        String profile_picture;
+//        String bio;
+//
+//        try {
+//            username = input.getString("username");
+//            ul = UserLevel.READER;
+//            profile_picture = input.getString("profilepicture");
+//            String currenttime = Utility.getCurrentTime();
+//            bio = "";
+//            // todo for bio
+//
+//            validateUser(username);
+//
+//            User user = new User(User.NEW_USER_ID,
+//                    username,
+//                    ul,
+//                    currenttime,
+//                    currenttime,
+//                    UserStatus.ONLINE,
+//                    profile_picture,
+//                    bio,
+//                    false);
+//
+//            Database.save(user);
+//        } catch (JSONException e) {
+//            throw new BlogException("Failed to read data from json: " + e.getMessage());
+//        } catch (NullPointerException e) {
+//            throw new BlogException("JSON object received is null. \n" + e.getMessage());
+//        }
+//    }
 
-        try {
-            username = input.getString("username");
-            ul = UserLevel.READER;
-            profile_picture = input.getString("profilepicture");
+    /**
+     *
+     * @param name Username passed from Google OAUTH2 token
+     * @param profile_picture profile_picture url passed from Google OAUTH2 token
+     * @param userId A string with max length of 48 that is unique for each user
+     * @return User object
+     * @throws BlogException when validate user failed or Database has an error
+     */
+
+    public static User createUser(String name, String profile_picture,String userId) throws BlogException {
             String currenttime = Utility.getCurrentTime();
-            bio = "";
             // todo for bio
 
-            validateUser(username);
+            validateUser(name);
 
-            User user = new User(User.NEW_USER_ID,
-                    username,
-                    ul,
+            User user = new User(userId,
+                    name,
+                    UserLevel.READER,
                     currenttime,
                     currenttime,
                     UserStatus.ONLINE,
                     profile_picture,
-                    bio,
+                    "",
                     false);
 
             Database.save(user);
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from json: " + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
+            return user;
     }
 
     //helper method
@@ -173,13 +202,19 @@ public class UserController {
      * @throws BlogException
      */
     public void updateUserLevel(JSONObject input) throws BlogException {
-        int promoterID;
-        int promoteeID;
+        String promoterID;
+        String promoteeID;
         String new_level;
         //READ DATA FROM JSON
         try {
-            promoterID = input.getInt("promoterID");
-            promoteeID = input.getInt("promoteeID");
+            promoterID = input.getString("promoterID");
+            promoteeID = input.getString("promoteeID");
+
+        } catch (JSONException e) {
+            throw new BlogException("Failed to read data from json. \n" + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new BlogException("JSON object received is null. \n" + e.getMessage());
+        }
 
             //retrieves info about the user from the database
             User promoter = new User(promoterID);
@@ -190,13 +225,7 @@ public class UserController {
 
             new_level = input.getString("new_level");
             promotee.setUserLevel(UserLevel.valueOf(new_level)); //converting string to enum
-            //promotee.UserLevel = UserLevel.valueOf(new_level);
 
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from json. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
     }
 
 
@@ -205,17 +234,19 @@ public class UserController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "userID":    int,  // The user to retrieve.
+     *              "userID":    string,  // The user to retrieve.
      *              }
      * @return The retrieved User.
      * @throws BlogException
      */
+
+    //todo: change this part
     public static User retrieveUser(JSONObject input) throws BlogException {
-        int userID;
+        String userID;
 
         // Read data from JSON
         try {
-            userID = input.getInt("userID");
+            userID = input.getString("userID");
         } catch (JSONException e) {
             throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
         } catch (NullPointerException e) {

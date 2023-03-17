@@ -32,8 +32,9 @@ import org.json.JSONObject;
  */
 public class User extends Record {
     public static final int NEW_USER_ID = 0;
-    
-    private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
+
+    //Todo: change int to string
+    private final String userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
     private String creationDate;
@@ -46,7 +47,7 @@ public class User extends Record {
      * Default guest user constructor.
      */
     public User() {
-        this.userID = 0;
+        this.userID = "";
         this.userLevel = UserLevel.GUEST;
         creationDate = null;  // TODO: change to current time
     }
@@ -56,18 +57,12 @@ public class User extends Record {
      *
      * @param userID The unique user identifier.
      */
-    public User(int userID) {
+    public User(String userID) throws UserIsDeletedException, UserDoesNotExistException {
         this.userID = userID;
-        try {
-            Database.retrieve(this);
-        } catch (UserDoesNotExistException e) {
-            // todo
-        } catch (UserIsDeletedException e) {
-            // todo
-        }
+        Database.retrieve(this);
     }
 
-    public User(int userID,
+    public User(String userID,
                 String username,
                 UserLevel userLevel,
                 String creationDate,
@@ -120,7 +115,7 @@ public class User extends Record {
         lastLogin = Utility.getCurrentTime();
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 

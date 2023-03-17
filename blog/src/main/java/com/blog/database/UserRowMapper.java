@@ -20,7 +20,7 @@ public class UserRowMapper implements RowMapper<User> {
 			userLevel = UserLevel.ADMIN;
 		} else if (rs.getBoolean("contributor")) {
 			userLevel = UserLevel.CONTRIBUTOR;
-		} else {;
+		} else {
 			userLevel = UserLevel.READER;
 		}
 		// String creationDate = rs.getString("creation_date");
