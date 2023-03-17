@@ -45,5 +45,35 @@
     <orderEntry type="library" name="springframework.boot.spring" level="project" />
     <orderEntry type="library" name="springframework.boot.spring.autoconfigure" level="project" />
     <orderEntry type="library" name="springframework.spring.web" level="project" />
+    <orderEntry type="module-library">
+      <library name="spring-boot-starter-jdbc">
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-starter-jdbc/3.0.4/spring-boot-starter-jdbc-3.0.4.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-starter/3.0.4/spring-boot-starter-3.0.4.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/3.0.4/spring-boot-3.0.4.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/6.0.6/spring-context-6.0.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-aop/6.0.6/spring-aop-6.0.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-expression/6.0.6/spring-expression-6.0.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-autoconfigure/3.0.4/spring-boot-autoconfigure-3.0.4.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-starter-logging/3.0.4/spring-boot-starter-logging-3.0.4.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/ch/qos/logback/logback-classic/1.4.5/logback-classic-1.4.5.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/ch/qos/logback/logback-core/1.4.5/logback-core-1.4.5.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-to-slf4j/2.19.0/log4j-to-slf4j-2.19.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-api/2.19.0/log4j-api-2.19.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/jul-to-slf4j/2.0.6/jul-to-slf4j-2.0.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/6.0.6/spring-core-6.0.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jcl/6.0.6/spring-jcl-6.0.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/yaml/snakeyaml/1.33/snakeyaml-1.33.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/zaxxer/HikariCP/5.0.1/HikariCP-5.0.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/2.0.0-alpha1/slf4j-api-2.0.0-alpha1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/6.0.6/spring-jdbc-6.0.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/6.0.6/spring-beans-6.0.6.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/6.0.6/spring-tx-6.0.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

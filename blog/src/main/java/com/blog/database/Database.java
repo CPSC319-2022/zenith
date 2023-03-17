@@ -90,7 +90,7 @@ public class Database {
      * @throws UserIsDeletedException
      */
     public static void retrieve(User user) throws UserDoesNotExistException, UserIsDeletedException {
-        int userID = user.getUserID();
+        String userID = user.getUserID();
         String sql = "SELECT * FROM User WHERE user_ID = " + userID;
         if (jdbcTemplate == null) {
           createTemplate();
@@ -251,26 +251,27 @@ public class Database {
      *
      * @return the userID
      */
-    public static int save(User user) {
-        int userID = user.getUserID();
+    public static String save(User user) {
+        String userID = user.getUserID();
         String sql = "SELECT MAX(user_id) FROM User";
         if (jdbcTemplate == null) {
           createTemplate();
         }
-        int maxID;
+        String maxID; //Changed type from int to String
         try {
-          maxID = jdbcTemplate.queryForObject(sql, Integer.class);
+          maxID = jdbcTemplate.queryForObject(sql, Integer.class); //IS THIS OKAY???
         } catch (Exception e) {
-          maxID = 0;
+          maxID = String.valueOf(0);
         }
-        if (maxID != 0 && userID > maxID) {
+        if (!maxID.equalsIgnoreCase("0") && userID.compareTo(maxID) > 0) {
           throw new Error("Invalid user ID.");
         }
-        if (userID != 0) {
+        if (!userID.equalsIgnoreCase("0")) {
           sql = "DELETE FROM User WHERE user_ID = " + userID;
           jdbcTemplate.update(sql);
         } else {
-          userID = maxID + 1;
+          //userID = maxID + 1;
+          userID = String.valueOf(Integer.parseInt(maxID) + 1);
         }
         sql = formSQL(user, userID);
         jdbcTemplate.update(sql);
@@ -321,7 +322,7 @@ public class Database {
      * @param user  The <code>User</code> object to save. Contains the <code>userID</code>.
      */
     public static void delete(User user) {
-        int userID = user.getUserID();
+        String userID = user.getUserID();
         String sql = "UPDATE User SET is_deleted = true WHERE user_ID = " + userID;
         if (jdbcTemplate == null) {
           createTemplate();
