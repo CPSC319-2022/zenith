@@ -68,3 +68,61 @@ export const createComment = async ({ postID, authorID, content }) => {
     });
     return response.data;
 };
+
+export const upvotePost = async ({postID}) => {
+  console.log("upvotePost: ", postID);
+  try {
+    const response = await axios.put('http://localhost:8080/upvotePost', JSON.stringify({ postID }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const downvotePost = async ( {postID} ) => {
+  try {
+    const response = await axios.put('http://localhost:8080/downvotePost', JSON.stringify({ postID: postID }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const upvoteComment = async ({ postID, commentID }) => {
+  try {
+    console.log("upvoteComment: ", postID, commentID);
+    const response = await axios.put('http://localhost:8080/upvoteComment', JSON.stringify({ postID: postID, commentID: commentID }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const downvoteComment = async ({ postID, commentID }) => {
+  try {
+    const response = await axios.put('http://localhost:8080/downvoteComment', JSON.stringify({ postID: postID, commentID: commentID }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

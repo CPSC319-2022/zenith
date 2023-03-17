@@ -8,7 +8,7 @@ const getRandomEmoji = () => {
   return emojis[Math.floor(Math.random() * emojis.length)];
 };
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, onUpvote, onDownvote }) => {
   const [emoji] = useState(getRandomEmoji());
 
   return (
@@ -24,11 +24,12 @@ const Comment = ({ comment }) => {
           </Card.Subtitle>
         </div>
         <Card.Text dangerouslySetInnerHTML={{ __html: comment.content }}></Card.Text>
+
         <div className="d-flex justify-content-between">
-          <Button variant="outline-primary">
+          <Button variant="outline-primary" onClick={onUpvote}>
             <AiFillLike /> {comment.upvotes}
           </Button>
-          <Button variant="outline-danger">
+          <Button variant="outline-danger" onClick={onDownvote}>
             <AiFillDislike /> {comment.downvotes}
           </Button>
         </div>

@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getComments, getComment, createComment as createCommentAPI } from '../../api';
+import { upvoteComment as upvoteCommentApi, downvoteComment as downvoteCommentApi } from '../../api';
+
 
 export const fetchComments = createAsyncThunk(
   'comments/fetchComments',
@@ -36,6 +38,36 @@ export const createComment = createAsyncThunk(
     }
   }
 );
+
+// Async thunk for upvoting a comment
+export const upvoteComment = createAsyncThunk(
+  'comments/upvote',
+  async ({ postID, commentID }, { rejectWithValue }) => {
+    console.log('postID:', postID);
+    console.log('commentID:', commentID);
+    try {
+      await upvoteCommentApi({ postID, commentID });
+      return { postID, commentID };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Async thunk for downvoting a comment
+export const downvoteComment = createAsyncThunk(
+  'comments/downvote',
+  async ({ postID, commentID }, { rejectWithValue }) => {
+    try {
+      await downvoteCommentApi({ postID, commentID });
+      return { postID, commentID };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
 
 const initialState = {
   comments: [],
