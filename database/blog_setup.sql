@@ -4,7 +4,7 @@
 --Create tables:
 --for user status 0:online, 1:away, 2:busy, 3:offline
 CREATE TABLE User(
-    user_ID INTEGER,
+    user_ID VARCHAR(25),
     user_password CHAR(32) NOT NULL,
     username CHAR(32) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE User(
 
 CREATE TABLE Post(
     post_ID INTEGER,
-    user_ID INTEGER,
+    user_ID VARCHAR(25),
     title VARCHAR(200) NOT NULL,
     content VARCHAR(20000) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE Post(
 CREATE TABLE Comment(
     post_ID INTEGER,
     comment_number INTEGER,
-    user_ID INTEGER,
+    user_ID VARCHAR(25),
     content VARCHAR(10000) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     last_modified TIMESTAMP NOT NULL,
