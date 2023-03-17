@@ -20,9 +20,12 @@ import java.util.ArrayList;
 public class CommentController {
     @GetMapping("/getComment")
     @ResponseBody
-    public ResponseEntity<String> getComment(@RequestBody String input) {
+    public ResponseEntity<String> getComment(@RequestParam("postID") int postID, @RequestParam("commentID") int commentID) {
         try {
-            return ResponseEntity.ok(getComment(new JSONObject(input)).toString());
+            JSONObject input = new JSONObject();
+            input.put("postID", postID);
+            input.put("commentID", commentID);
+            return ResponseEntity.ok(getComment(input).toString());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -30,9 +33,14 @@ public class CommentController {
 
     @GetMapping("/getComments")
     @ResponseBody
-    public ResponseEntity<String> getComments(@RequestBody String input) {
+    public ResponseEntity<String> getComments(@RequestParam("postID") int postID, @RequestParam("commentIDStart") int commentIDStart, @RequestParam("count") int count, @RequestParam("reverse") boolean reverse) {
         try {
-            return ResponseEntity.ok(getComments(new JSONObject(input)).toString());
+            JSONObject input = new JSONObject();
+            input.put("postID", postID);
+            input.put("commentIDStart", commentIDStart);
+            input.put("count", count);
+            input.put("reverse", reverse);
+            return ResponseEntity.ok(getComments(input).toString());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
