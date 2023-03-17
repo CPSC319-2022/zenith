@@ -301,7 +301,7 @@ public class Database {
     }
 
     /**
-     * TODO
+     * 
      *
      * @param post
      */
@@ -333,8 +333,6 @@ public class Database {
     }
 
     private static String formSQL(User user, int id) {
-          // TODO: no password for now
-          String password = "abc";
           String profile = "DEFAULT";
           if (user.getProfilePicture() != null) {
               profile = "\"" + user.getProfilePicture() + "\"";
@@ -360,7 +358,7 @@ public class Database {
           String creationDate = "2023-03-01 00:00:00";
           // String lastLogin = user.getLastLogin();
           String lastLogin = "2023-03-01 00:00:00";
-          return "INSERT INTO User VALUES(" + id + ", \"" + password + "\", \"" + user.getUsername() 
+          return "INSERT INTO User VALUES(" + id + ", \"" + user.getUsername() 
           + "\", \"" + creationDate + "\", \"" + lastLogin + "\", " + status + ", " + profile + ", \"" + bio + "\", " + level + ", " + user.isDeleted() + ")";
      }
 
