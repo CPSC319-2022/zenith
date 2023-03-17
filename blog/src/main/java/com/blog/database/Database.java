@@ -125,9 +125,9 @@ public class Database {
     public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count, boolean reverse) {
           String sql;
           if (reverse) {
-               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number <= " + commentIDStart + " AND is_deleted = false ORDER BY post_ID DESC LIMIT " + count;
+               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number <= " + commentIDStart + " AND is_deleted = false ORDER BY comment_number DESC LIMIT " + count;
           } else {
-               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number >= " + commentIDStart + " AND is_deleted = false ORDER BY post_ID ASC LIMIT " + count;
+               sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number >= " + commentIDStart + " AND is_deleted = false ORDER BY comment_number ASC LIMIT " + count;
           }
           if (jdbcTemplate == null) {
                createTemplate();
