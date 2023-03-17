@@ -18,9 +18,11 @@ import java.util.ArrayList;
 public class UserController {
     @GetMapping("/getUser")
     @ResponseBody
-    public ResponseEntity<String> getUser(@RequestBody String input) {
+    public ResponseEntity<String> getUser(@RequestParam("userID") int userID) {
         try {
-            return ResponseEntity.ok(getUser(new JSONObject(input)).toString());
+            JSONObject input = new JSONObject();
+            input.put("userID", userID);
+            return ResponseEntity.ok(getUser(input).toString());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
