@@ -187,12 +187,11 @@ public class Database {
           throw new Error("Invalid comment ID.");
         }
         if (commentID != 0) {
-          sql = "DELETE FROM Comment WHERE post_ID = " + postID + " AND comment_number = " + commentID;
-          jdbcTemplate.update(sql);
+          sql = formUpdate(comment, commentID);
         } else {
           commentID = maxID + 1;
+          sql = formInsert(comment, commentID);
         }
-        sql = formSQL(comment, commentID);
         jdbcTemplate.update(sql);
         return postID;
         /*
@@ -227,12 +226,11 @@ public class Database {
           throw new Error("Invalid post ID.");
         }
         if (postID != 0) {
-          sql = "DELETE FROM Post WHERE post_ID = " + postID;
-          jdbcTemplate.update(sql);
+          sql = formUpdate(post, postID);
         } else {
           postID = maxID + 1;
+          sql = formInsert(post, postID);
         }
-        sql = formSQL(post, postID);
         jdbcTemplate.update(sql);
         return postID;
 
@@ -267,12 +265,11 @@ public class Database {
           throw new Error("Invalid user ID.");
         }
         if (userID != 0) {
-          sql = "DELETE FROM User WHERE user_ID = " + userID;
-          jdbcTemplate.update(sql);
+          sql = formUpdate(user, userID);
         } else {
           userID = maxID + 1;
+          sql = formInsert(user, userID);
         }
-        sql = formSQL(user, userID);
         jdbcTemplate.update(sql);
         return userID;
         // Note that since user ID is final, you will have to create a new user later for further use.
@@ -332,7 +329,7 @@ public class Database {
         // Note that there is no warning even if the user does not exist.
     }
 
-    private static String formSQL(User user, int id) {
+    private static String formInsert(User user, int id) {
           String profile = "DEFAULT";
           if (user.getProfilePicture() != null) {
               profile = "\"" + user.getProfilePicture() + "\"";
@@ -362,7 +359,42 @@ public class Database {
           + "\", \"" + creationDate + "\", \"" + lastLogin + "\", " + status + ", " + profile + ", \"" + bio + "\", " + level + ", " + user.isDeleted() + ")";
      }
 
-     private static String formSQL(Post post, int id) {
+     private static String formUpdate(User user, int id) {
+          String profile = "NULL";
+          if (user.getProfilePicture() != null) {
+              profile = "\"" + user.getProfilePicture() + "\"";
+          }
+          String bio = "NULL";
+          if (user.getBio() != null) {
+              bio = "\"" + user.getBio() + "\"";
+          }
+          String level = "";
+          if (user.getUserLevel() == UserLevel.ADMIN) {
+              level = "contributor = false, administrator = true";
+          } else if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
+              level = "contributor = true, administrator = false";
+          } else {
+              level = "contributor = false, administrator = false";
+          }
+          int status = 0;
+          if (user.getUserStatus() == UserStatus.AWAY) {
+              status = 1;
+          } else if (user.getUserStatus() == UserStatus.BUSY) {
+              status = 2;
+          } else if (user.getUserStatus() == UserStatus.OFFLINE) {
+              status = 3;
+          }
+          // String creationDate = post.getCreationDate();
+          String creationDate = "2023-03-01 00:00:00";
+          // String lastLogin = user.getLastLogin();
+          String lastLogin = "2023-03-01 00:00:00";
+          
+          return "UPDATE User SET username = \"" + user.getUsername() + "\", creation_date = \"" + creationDate + "\", last_login = \"" + lastLogin 
+          + "\", user_status = " + status + ", profile_picture = " + profile + ", bio = " + bio + ", " + level + ", is_deleted = " + user.isDeleted() 
+          + " WHERE user_ID = " + id;
+    }
+
+     private static String formInsert(Post post, int id) {
           // String creationDate = post.getCreationDate();
           String creationDate = "2023-03-01 00:00:00";
           // String lastModified = post.getLastModified();
@@ -372,7 +404,17 @@ public class Database {
           + post.getViews() + ", " + post.isDeleted() + ", " + post.isAllowComments() + ")";
      }
 
-     private static String formSQL(Comment comment, int id) {
+     private static String formUpdate(Post post, int id) {
+          // String creationDate = comment.getCreationDate();
+          String creationDate = "2023-03-01 00:00:00";
+          // String lastModified = comment.getLastModified();
+          String lastModified = "2023-03-01 00:00:00";
+          return "UPDATE Post SET user_ID = " + post.getAuthorID() + ", title = \"" + post.getTitle() + "\", content = \"" + post.getContent() + "\", creation_date = \"" + creationDate 
+          + "\", last_modified = \"" + lastModified + "\", upvotes = " + post.getUpvotes() + ", downvotes = " + post.getDownvotes() + ", views = " + post.getViews() + ", is_deleted = " 
+          + post.isDeleted() + ", allow_comments = " + post.isAllowComments() + " WHERE post_ID = " + id;
+    }
+
+     private static String formInsert(Comment comment, int id) {
           // String creationDate = comment.getCreationDate();
           String creationDate = "2023-03-01 00:00:00";
           // String lastModified = comment.getLastModified();
@@ -381,4 +423,14 @@ public class Database {
           + creationDate + "\", \"" + lastModified + "\", " + comment.getUpvotes() + ", " + comment.getDownvotes() + ", " 
           + comment.isDeleted() + ")";
      }
+
+     private static String formUpdate(Comment comment, int id) {
+          // String creationDate = comment.getCreationDate();
+          String creationDate = "2023-03-01 00:00:00";
+          // String lastModified = comment.getLastModified();
+          String lastModified = "2023-03-01 00:00:00";
+          return "UPDATE Comment SET user_ID = " + comment.getAuthorID() + ", content = \"" + comment.getContent() + "\", creation_date = \"" + creationDate 
+          + "\", last_modified = \"" + lastModified + "\", upvotes = " + comment.getUpvotes() + ", downvotes = " + comment.getDownvotes() + ", is_deleted = " 
+          + comment.isDeleted() + " WHERE post_ID = " +  comment.getPostID() + " AND comment_number = " + id;
+    }
 }

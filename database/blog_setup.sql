@@ -30,7 +30,7 @@ CREATE TABLE Post(
     is_deleted BOOLEAN NOT NULL DEFAULT false,
     allow_comments BOOLEAN NOT NULL DEFAULT true,
     PRIMARY KEY(post_ID),
-    FOREIGN KEY(user_ID) REFERENCES User(user_ID)
+    FOREIGN KEY(user_ID) REFERENCES User(user_ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Comment(
@@ -44,8 +44,8 @@ CREATE TABLE Comment(
     downvotes INTEGER NOT NULL DEFAULT 0,
     is_deleted BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY(post_ID, comment_number),
-    FOREIGN KEY(post_ID) REFERENCES Post(post_ID),
-    FOREIGN KEY(user_ID) REFERENCES User(user_ID)
+    FOREIGN KEY(post_ID) REFERENCES Post(post_ID) ON DELETE CASCADE,
+    FOREIGN KEY(user_ID) REFERENCES User(user_ID) ON DELETE CASCADE
 );
 
 --Delete tables:

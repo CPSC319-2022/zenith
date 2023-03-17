@@ -110,6 +110,7 @@ public class User extends Record {
         this.setProfilePicture(u.getProfilePicture());
         this.setUserLevel(u.getUserLevel());
         this.setDeleted(u.isDeleted());
+        this.setBio(u.getBio());
     }
 
 
