@@ -1,69 +1,95 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-//import apiName from
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getComments, getComment, createComment as createCommentAPI } from '../../api';
 
-const getAllComments = createAsyncThunk(
-    'comments/getAll',
-    async (input, thunkAPI) => {
-        try {
-            //const res = await apiName.getAllComments();
-            //return res.data;
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e);
-        }
+export const fetchComments = createAsyncThunk(
+  'comments/fetchComments',
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await getComments(params);
+      return response;
+    } catch (err) {
+      return rejectWithValue(err.message);
     }
+  }
 );
 
-const createComment = createAsyncThunk(
-    'comments/create',
-    async (input, thunkAPI) => {
-        try {
-            const { body } = input;
-            const text = body.get('body');
-            //const res = await apiName.createComment(text);
-            //return res.data;
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e);
-        }
+export const fetchComment = createAsyncThunk(
+  'comments/fetchComment',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await getComment(id);
+      return response;
+    } catch (err) {
+      return rejectWithValue(err.message);
     }
+  }
 );
 
-const deleteCommentByID = createAsyncThunk(
-    'comments/deleteByID',
-    async (input, thunkAPI) => {
-        try {
-            const { _id } = input;
-            //const res = await apiName.deleteCommentByID(_id);
-            //return res.data;
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e);
-        }
+export const createComment = createAsyncThunk(
+  'comments/createComment',
+  async (commentData, { rejectWithValue }) => {
+    try {
+      await createCommentAPI(commentData);
+      return 'Comment created successfully';
+    } catch (err) {
+      return rejectWithValue(err.message);
     }
+  }
 );
+
+const initialState = {
+  comments: [],
+  comment: null,
+  status: 'idle',
+  error: null,
+};
 
 const commentSlice = createSlice({
-    name: 'commentSlice',
-    initialState: {
-        comments: [],
-    },
-    reducers: {
-    },
-    extraReducers: (builder) => {
-        builder.addCase(getAllComments.fulfilled, (state, action) => {
-            state.comments = action.payload;
-        });
-        builder.addCase(createComment.fulfilled, (state, action) => {
-            state.comments.push(action.payload);
-        });
-        builder.addCase(deleteCommentByID.fulfilled, (state, action) => {
-            state.comments = state.comments.filter((comments) => comments._id !== action.payload);
-        });
-    },
+  name: 'comments',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchComments.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchComments.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.comments = action.payload;
+      })
+      .addCase(fetchComments.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(fetchComment.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchComment.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.comment = action.payload;
+      })
+      .addCase(fetchComment.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(createComment.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(createComment.fulfilled, (state) => {
+        state.status = 'succeeded';
+      })
+      .addCase(createComment.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      });
+  },
 });
 
 export const commentSliceActions = {
-    getAllComments,
-    createComment,
-    deleteCommentByID,
-    ...commentSlice.actions,
+  ...commentSlice.actions,
+  fetchComments,
+  fetchComment,
+  createComment,
 };
+
 export default commentSlice.reducer;
