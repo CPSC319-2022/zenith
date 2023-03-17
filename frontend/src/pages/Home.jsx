@@ -57,7 +57,7 @@ const Home = () => {
       {console.log(currentPosts)}
 
         {currentPosts.map((post) => (
-          <div className="post" key={post.id}>
+          <div className="post" key={post.postID}>
         
             <div className="img">
               <img src={post.img} alt="" />
@@ -68,8 +68,8 @@ const Home = () => {
                 <h1 className="post-title">{post.title}</h1>
                 {console.log(post.title)}
               </Link>
-              <p className="post-content">{<div dangerouslySetInnerHTML={{ __html: post.content }}></div>
-}</p>
+              <div className="post-content"><div dangerouslySetInnerHTML={{ __html: post.content }}></div></div>
+
               <Button className="read-button" onClick={() => handleClick({post})}>
                 Read More
               </Button>
