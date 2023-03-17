@@ -13,7 +13,7 @@ public class UserRowMapper implements RowMapper<User> {
  
 	@Override
 	public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-		int userId = rs.getInt("user_ID");
+		String userId = rs.getString("user_ID");
 		String username = rs.getString("username");
 		UserLevel userLevel = null;
 		if (rs.getBoolean("administrator")) {
