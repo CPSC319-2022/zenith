@@ -2,8 +2,11 @@ import React from 'react';
 import { Container, Nav, Navbar } from "react-bootstrap";
 import blogImg from '../images/icon.png'
 import '../styles/Header.css';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
     return (
         <Navbar className='nav-bar' expand="lg">
             <Container>
@@ -23,8 +26,11 @@ const Header = () => {
                         <Nav.Link href="/create">CREATE</Nav.Link>
                         {/* <Nav.Link href="/profile">PROFILE</Nav.Link> */}
                         <Nav.Link href="/wip">WIP</Nav.Link>
-                        <Nav.Link href="/login">LOGOUT</Nav.Link>
-
+                        {
+                            isAuthenticated ?
+                            <Nav.Link href="/login">LOGOUT</Nav.Link> :
+                            <Nav.Link href="/login">LOGIN</Nav.Link>
+                        }
                     </Nav>
                 </Navbar.Collapse>
             </Container>
