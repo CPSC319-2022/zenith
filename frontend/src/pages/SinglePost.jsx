@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import { fetchComments, upvoteComment, downvoteComment } from '../redux/slices/commentSlice';
+import { fetchComments, upvoteComment, downvoteComment, deleteComment } from '../redux/slices/commentSlice';
 import { fetchPost, upvotePost, downvotePost } from '../redux/slices/postSlice';
 import { commentSliceActions } from '../redux/slices/commentSlice';
 import ReactQuill from 'react-quill';
@@ -58,11 +58,11 @@ const SinglePost = () => {
   };
 
   const handleEditComment = async (postID, commentID) => {
-
+    // TODO
   };
 
   const handleDeleteComment = async (postID, commentID) => {
-
+      await dispatch(deleteComment({ postID, commentID }));
   };
 
 
@@ -149,11 +149,9 @@ const SinglePost = () => {
                   onUpvote={() => handleUpvoteComment(comment.postID, comment.commentID)}
                   onDownvote={() => handleDownvoteComment(comment.postID, comment.commentID)}
                   onEdit={() => handleEditComment()}
-                  onDelete={() => handleDeleteComment}
+                  onDelete={() => handleDeleteComment(comment.postID, comment.commentID)}
                 />
               ))}
-            {console.log('Comments count:', comments.length)}
-{console.log('Comments:', JSON.stringify(comments, null, 2))}
 
           </div>
         </Col>

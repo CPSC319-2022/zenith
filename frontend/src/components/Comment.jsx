@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
-import { AiFillLike, AiFillDislike } from 'react-icons/ai';
+import {AiFillLike, AiFillDislike, AiOutlineDelete, AiOutlineEdit} from 'react-icons/ai';
 
 const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇'];
 
@@ -8,8 +8,21 @@ const getRandomEmoji = () => {
   return emojis[Math.floor(Math.random() * emojis.length)];
 };
 
-const Comment = ({ comment, onUpvote, onDownvote }) => {
+const Comment = ({ comment, onUpvote, onDownvote, onEdit, onDelete }) => {
   const [emoji] = useState(getRandomEmoji());
+
+  // # this is what a comment looks like
+  // Comments: [
+  //     {    "isDeleted": false,
+  //       "upvotes": 1,
+  //       "commentID": 2,
+  //       "lastModified": "2023-03-15T06:00:00.861336Z",
+  //       "postID": 2,
+  //       "authorID": 1,
+  //       "creationDate": "2023-03-15T06:00:00.861336Z",
+  //       "downvotes": 1,
+  //       "content": "<p>hello2</p>"
+  //     }
 
   return (
     <Card className="mb-4">
@@ -32,11 +45,11 @@ const Comment = ({ comment, onUpvote, onDownvote }) => {
           <Button variant="outline-danger" onClick={onDownvote}>
             <AiFillDislike /> {comment.downvotes}
           </Button>
-          <Button variant="info">
-            Edit Comment
+          <Button variant="info" onClick={onEdit}>
+            <AiOutlineEdit />
           </Button>
-          <Button variant="danger">
-            Delete Comment
+          <Button variant="danger" onClick={onDelete}>
+            <AiOutlineDelete /> {comment.isDeleted === true}
           </Button>
         </div>
       </Card.Body>
