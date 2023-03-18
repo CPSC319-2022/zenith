@@ -54,7 +54,7 @@ public class Post extends Content {
     }
 
     public Post(int postID,
-                int authorID,
+                String authorID,
                 String title,
                 String content,
                 String creationDate,

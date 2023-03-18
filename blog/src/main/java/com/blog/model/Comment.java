@@ -49,7 +49,7 @@ public class Comment extends Content {
 
     public Comment(int postID,
                    int commentID,
-                   int authorID,
+                   String authorID,
                    String content,
                    String creationDate,
                    String lastModified,

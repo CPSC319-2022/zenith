@@ -11,13 +11,13 @@ import java.util.ArrayList;
 class DatabaseTest {
     @Test
     void testSaveUser() {
-        User guest = new User(2, "testname", UserLevel.ADMIN, "2023-03-01 01:02:03", "2023-03-01 01:02:03", UserStatus.ONLINE, null, "hello", false);
+        User guest = new User("1", "testname", UserLevel.CONTRIBUTOR, "2023-03-01 01:02:03", "2023-03-01 01:02:03", UserStatus.ONLINE, null, "hello", false);
         try {
-            int num = Database.save(guest);
+            String num = Database.save(guest);
             assertEquals(2, num);
             assertEquals("2023-03-01 01:02:03", guest.getCreationDate());
             assertEquals("2023-03-01 01:02:03", guest.getLastLogin());
-            assertEquals(UserLevel.ADMIN, guest.getUserLevel());
+            assertEquals(UserLevel.CONTRIBUTOR, guest.getUserLevel());
             assertEquals("testname", guest.getUsername());
             assertEquals(false, guest.isDeleted());
         } catch (Exception e) {
@@ -27,7 +27,7 @@ class DatabaseTest {
 
     @Test
     void testSavePost() {
-        Post post = new Post(1, 1, "testtitle", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false, 3, true);
+        Post post = new Post(1, "1", "testtitle", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false, 3, true);
         try {
             int num = Database.save(post);
             assertEquals(1, num);
@@ -47,7 +47,7 @@ class DatabaseTest {
 
     @Test
     void testSaveComment() {
-        Comment comment = new Comment(1, 1, 1, "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false);
+        Comment comment = new Comment(1, 1, "1", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false);
         try {
             int num = Database.save(comment);
             assertEquals(1, num);
@@ -65,7 +65,7 @@ class DatabaseTest {
 
     @Test
     void testRetrieveUser() {
-        User guest = new User(1);
+        User guest = new User("1");
         assertEquals(1, guest.getUserID());
         assertEquals("2023-03-01 01:02:03", guest.getCreationDate());
         assertEquals("2023-03-01 01:02:03", guest.getLastLogin());
@@ -117,7 +117,7 @@ class DatabaseTest {
 
     @Test
     void testDeleteUser() {
-        User guest = new User(2);
+        User guest = new User("1");
         try {
             Database.delete(guest);
             Database.retrieve(guest);
