@@ -9,6 +9,10 @@ import static com.blog.model.UserLevel.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.skyscreamer.jsonassert.JSONAssert;
+
 class UnitTests {
     private User guest;
     private Comment comment;
@@ -332,6 +336,32 @@ class UnitTests {
         assertEquals("2023-03-16T16:30:00.861336Z", comment.getLastModified());
     }
 
+    @Test
+    void commentAsJSONObject(){
+        JSONObject expectedJson = new JSONObject()
+                .put("postID", 10)
+                .put("commentID", 11);
+
+        Comment comment1 = new Comment(
+                10,
+                11,
+                12,
+                "Happy New Year!",
+                "2022-01-01T00:00:00.861336Z",
+                "2022-01-02T06:00:00.861336Z",
+                18,
+                1,
+                true
+        );
+        JSONObject actualJson = comment1.asJSONObject();
+
+        try {
+            JSONAssert.assertEquals(expectedJson, actualJson, false);
+        } catch (JSONException je) {
+            fail("JSON type is not the same.");
+        }
+    }
+
     /**
      * Tests for Post
      */
@@ -605,4 +635,33 @@ class UnitTests {
         assertEquals("2023-03-16T16:30:00.861336Z", post.getLastModified());
     }
 
+    @Test
+    void postAsJSONObject(){
+        JSONObject expectedJson = new JSONObject()
+                .put("postID", 1874)
+                .put("title", "Happy New Year")
+                .put("views", 201)
+                .put("allowComments", true);
+
+        Post post1 = new Post(
+                10,
+                11,
+                "Happy New Year!",
+                "I wish everyone is having fun in Christmas and wish all of us a happy new year!",
+                "2022-01-01T00:00:00.861336Z",
+                "2022-01-02T06:00:00.861336Z",
+                18,
+                1,
+                true,
+                200,
+                false
+        );
+        JSONObject actualJson = post1.asJSONObject();
+
+        try {
+            JSONAssert.assertEquals(expectedJson, actualJson, false);
+        } catch (JSONException je) {
+            fail("JSON type is not the same.");
+        }
+    }
 }

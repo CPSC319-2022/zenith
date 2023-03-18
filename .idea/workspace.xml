@@ -4,15 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents half-way">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/fr_opensagres_xdocreport_springframework_web_servlet_view.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_roo_addon_jdbc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_roo_addon_jdbc1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_roo_annotations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/zaxxer_HikariCP.xml" afterDir="false" />
+    <list default="true" id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents + post finished">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/anc_json_compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/eduworks_json_ld.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/skyscreamer_jsonassert.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_spring.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Zenith-.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Zenith-.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" afterDir="false" />
     </list>
@@ -42,7 +39,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
+    "project.structure.side.proportion": "0.31990233",
     "settings.editor.selected.configurable": "build.tools"
   }
 }]]></component>
@@ -76,7 +73,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679043117165</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="contents + post finished">
+      <created>1679099469122</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1679099469122</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -92,6 +96,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="contents half-way" />
-    <option name="LAST_COMMIT_MESSAGE" value="contents half-way" />
+    <MESSAGE value="contents + post finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="contents + post finished" />
   </component>
 </project>

@@ -1,0 +1,59 @@
+<component name="libraryTable">
+  <library name="anc.json.compiler" type="repository">
+    <properties maven-id="org.anc.json:compiler:1.3.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/anc/json/compiler/1.3.1/compiler-1.3.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.9.6/jackson-core-2.9.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.9.6/jackson-databind-2.9.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.9.0/jackson-annotations-2.9.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.9.6/jackson-dataformat-yaml-2.9.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/yaml/snakeyaml/1.18/snakeyaml-1.18.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar!/" />
+      <root url="file://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-all/2.5.3/groovy-all-2.5.3.pom" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy/2.5.3/groovy-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-ant/2.5.3/groovy-ant-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/ant/ant/1.9.13/ant-1.9.13.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/ant/ant-junit/1.9.13/ant-junit-1.9.13.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/ant/ant-launcher/1.9.13/ant-launcher-1.9.13.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/ant/ant-antlr/1.9.13/ant-antlr-1.9.13.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-cli-commons/2.5.3/groovy-cli-commons-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-cli/commons-cli/1.4/commons-cli-1.4.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-cli-picocli/2.5.3/groovy-cli-picocli-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/info/picocli/picocli/3.6.0/picocli-3.6.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-console/2.5.3/groovy-console-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-datetime/2.5.3/groovy-datetime-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-docgenerator/2.5.3/groovy-docgenerator-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/thoughtworks/qdox/qdox/1.12.1/qdox-1.12.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-groovydoc/2.5.3/groovy-groovydoc-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-groovysh/2.5.3/groovy-groovysh-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/jline/jline/2.14.6/jline-2.14.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-jmx/2.5.3/groovy-jmx-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-json/2.5.3/groovy-json-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-jsr223/2.5.3/groovy-jsr223-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-macro/2.5.3/groovy-macro-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-nio/2.5.3/groovy-nio-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-servlet/2.5.3/groovy-servlet-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-sql/2.5.3/groovy-sql-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-swing/2.5.3/groovy-swing-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-templates/2.5.3/groovy-templates-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-test/2.5.3/groovy-test-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-test-junit5/2.5.3/groovy-test-junit5-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-launcher/1.3.1/junit-platform-launcher-1.3.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-engine/1.3.1/junit-platform-engine-1.3.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-commons/1.3.1/junit-platform-commons-1.3.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-engine/5.3.1/junit-jupiter-engine-5.3.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-api/5.3.1/junit-jupiter-api-5.3.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-testng/2.5.3/groovy-testng-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/6.13.1/testng-6.13.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/beust/jcommander/1.72/jcommander-1.72.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/groovy/groovy-xml/2.5.3/groovy-xml-2.5.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/ivy/ivy/2.4.0/ivy-2.4.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

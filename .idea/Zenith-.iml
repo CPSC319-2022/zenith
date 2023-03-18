@@ -70,5 +70,8 @@
     <orderEntry type="library" name="springframework.roo.addon.jdbc1" level="project" />
     <orderEntry type="library" name="fr.opensagres.xdocreport.springframework.web.servlet.view" level="project" />
     <orderEntry type="library" name="springframework.spring" level="project" />
+    <orderEntry type="library" name="eduworks.json.ld" level="project" />
+    <orderEntry type="library" name="skyscreamer.jsonassert" level="project" />
+    <orderEntry type="library" name="anc.json.compiler" level="project" />
   </component>
 </module>
