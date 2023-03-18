@@ -25,6 +25,7 @@ export const getPost = async ({postID}) => {
 };
 
 export const createPost = async ({ authorID, title, content, allowComments }) => {
+  console.log("createPost: ", content );
     const response = await axios.post('http://localhost:8080/createPost', {
       authorID,
       title,

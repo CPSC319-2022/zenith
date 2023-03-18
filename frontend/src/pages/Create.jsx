@@ -66,7 +66,6 @@ export default function CreatePost() {
             <Form.Group controlId="formFile">
               <Form.Control type="file" />
             </Form.Group>
-            <Button variant="outline-warning">Save Draft</Button>{' '}
             <Button variant="outline-success">Update</Button>{' '}
           </div>
         </div>
