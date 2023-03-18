@@ -120,9 +120,10 @@ public class PostController {
      *              "content":       String,   // The content of the post.
      *              "allowComments": boolean,  // Whether to allow comments
      *              }
+     * @return The JSON string representing the created post
      * @throws BlogException
      */
-    private static void createPost(JSONObject input) throws BlogException {
+    private static String createPost(JSONObject input) throws BlogException {
         String authorID;
         String title;
         String content;
@@ -169,10 +170,13 @@ public class PostController {
         );
 
         // Save post to database
-        Database.save(post);
+        int postID = Database.save(post);
 
         // Indicate that the user is a contributor
         userIsContributor(user);
+
+        // Return the created post
+        return Post.retrieve(postID).asJSONString();
     }
 
     /**
@@ -260,7 +264,7 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post to upvote.
+     *              "postID": int,  // The post to upvote.
      *              }
      * @throws BlogException
      */
@@ -280,7 +284,7 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post to downvote.
+     *              "postID": int,  // The post to downvote.
      *              }
      * @throws BlogException
      */
@@ -300,7 +304,7 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post to increment view counter.
+     *              "postID": int,  // The post to increment view counter.
      *              }
      * @throws BlogException
      */
@@ -395,8 +399,7 @@ public class PostController {
     @ResponseBody
     public ResponseEntity<String> createPost(@RequestBody String input) {
         try {
-            createPost(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(createPost(new JSONObject(input)));
         } catch (InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {

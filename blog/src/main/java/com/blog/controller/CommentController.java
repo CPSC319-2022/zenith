@@ -119,9 +119,10 @@ public class CommentController {
      *              "authorID": String,  // The author of the comment.
      *              "content":  String   // The content of the comment.
      *              }
+     * @return The JSON string representing the created comment
      * @throws BlogException
      */
-    private static void createComment(JSONObject input) throws BlogException {
+    private static String createComment(JSONObject input) throws BlogException {
         int postID;
         String authorID;
         String content;
@@ -163,7 +164,10 @@ public class CommentController {
         );
 
         // Save comment to database
-        Database.save(comment);
+        int commentID = Database.save(comment);
+
+        // Return the created comment
+        return Comment.retrieve(postID, commentID).asJSONString();
     }
 
     /**
@@ -346,8 +350,7 @@ public class CommentController {
     @ResponseBody
     public ResponseEntity<String> createComment(@RequestBody String input) {
         try {
-            createComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(createComment(new JSONObject(input)));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

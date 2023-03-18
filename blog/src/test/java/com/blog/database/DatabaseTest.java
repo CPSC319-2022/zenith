@@ -97,7 +97,12 @@ class DatabaseTest {
 
     @Test
     void testRetrieveComment() {
-        Comment comment = Comment.retrieve(1, 1);
+        Comment comment = null;
+        try {
+            comment = Comment.retrieve(1, 1);
+        } catch (DoesNotExistException e) {
+            e.printStackTrace();
+        }
         assertEquals(1, comment.getPostID());
         assertEquals(1, comment.getCommentID());
         assertEquals(1, comment.getAuthorID());
@@ -153,7 +158,12 @@ class DatabaseTest {
 
     @Test
     void testDeleteComment() {
-        Comment comment = Comment.retrieve(1, 2);
+        Comment comment = null;
+        try {
+            comment = Comment.retrieve(1, 2);
+        } catch (DoesNotExistException e) {
+            e.printStackTrace();
+        }
         try {
             Database.delete(comment);
             Database.retrieve(comment);
