@@ -1,5 +1,7 @@
 package com.blog.model;
 
+import com.blog.exception.UserDoesNotExistException;
+import com.blog.exception.UserIsDeletedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +13,13 @@ class UnitTests {
 
     @BeforeEach
     void beforeEach() {
-        guest = new User(1);
+        try {
+            guest = new User("1");
+        } catch (UserIsDeletedException e) {
+            throw new RuntimeException(e);
+        } catch (UserDoesNotExistException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

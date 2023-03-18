@@ -8,9 +8,10 @@ import org.springframework.jdbc.core.RowMapper;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
 import com.blog.model.UserStatus;
- 
+
+
 public class UserRowMapper implements RowMapper<User> {
- 
+
 	@Override
 	public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 		String userId = rs.getString("user_ID");

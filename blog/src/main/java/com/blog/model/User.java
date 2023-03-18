@@ -32,7 +32,7 @@ import org.json.JSONObject;
  */
 public class User extends Record {
     public static final int NEW_USER_ID = 0;
-    
+
     private final String userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
@@ -56,15 +56,9 @@ public class User extends Record {
      *
      * @param userID The unique user identifier.
      */
-    public User(String userID) {
+    public User(String userID) throws UserIsDeletedException, UserDoesNotExistException {
         this.userID = userID;
-        try {
-            Database.retrieve(this);
-        } catch (UserDoesNotExistException e) {
-            // todo
-        } catch (UserIsDeletedException e) {
-            // todo
-        }
+        Database.retrieve(this);
     }
 
     public User(String userID,

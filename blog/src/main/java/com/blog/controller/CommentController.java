@@ -205,13 +205,13 @@ public class CommentController {
      */
     private static void createComment(JSONObject input) throws BlogException {
         int postID;
-        int authorID;
+        String authorID;
         String content;
 
         // Read data from JSON
         try {
             postID = input.getInt("postID");
-            authorID = input.getInt("authorID");
+            authorID = input.getString("authorID");
             content = input.getString("content");
         } catch (JSONException e) {
             throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
@@ -375,7 +375,7 @@ public class CommentController {
      * @param userID The user to validate.
      * @throws BlogException
      */
-    private static void validatePermission(int userID) throws BlogException {
+    private static void validatePermission(String userID) throws BlogException {
         // Retrieve the user
         User user = new User(userID);
 

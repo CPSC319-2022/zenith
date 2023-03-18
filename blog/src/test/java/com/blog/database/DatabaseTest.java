@@ -1,5 +1,7 @@
 package com.blog.database;
 
+import com.blog.exception.UserDoesNotExistException;
+import com.blog.exception.UserIsDeletedException;
 import org.junit.jupiter.api.Test;
 
 import com.blog.model.*;
@@ -65,7 +67,14 @@ class DatabaseTest {
 
     @Test
     void testRetrieveUser() {
-        User guest = new User("1");
+        User guest = null;
+        try {
+            guest = new User("1");
+        } catch (UserIsDeletedException e) {
+            throw new RuntimeException(e);
+        } catch (UserDoesNotExistException e) {
+            throw new RuntimeException(e);
+        }
         assertEquals(1, guest.getUserID());
         assertEquals("2023-03-01 01:02:03", guest.getCreationDate());
         assertEquals("2023-03-01 01:02:03", guest.getLastLogin());
@@ -117,7 +126,14 @@ class DatabaseTest {
 
     @Test
     void testDeleteUser() {
-        User guest = new User("1");
+        User guest = null;
+        try {
+            guest = new User("1");
+        } catch (UserIsDeletedException e) {
+            throw new RuntimeException(e);
+        } catch (UserDoesNotExistException e) {
+            throw new RuntimeException(e);
+        }
         try {
             Database.delete(guest);
             Database.retrieve(guest);

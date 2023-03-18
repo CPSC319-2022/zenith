@@ -222,14 +222,14 @@ public ResponseEntity<String> getPosts(@RequestParam("postIDStart") int postIDSt
      * @throws BlogException
      */
     private static void createPost(JSONObject input) throws BlogException {
-        int authorID;
+        String authorID;
         String title;
         String content;
         boolean allowComments;
 
         // Read data from JSON
         try {
-            authorID = input.getInt("authorID");
+            authorID = input.getString("authorID");
             title = input.getString("title");
             content = input.getString("content");
             allowComments = input.getBoolean("allowComments");

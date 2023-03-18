@@ -136,7 +136,6 @@ public class Database {
           for (Comment c : temp) {
                comments.add(c);
           }
-
     }
 
     /**
@@ -307,6 +306,8 @@ public class Database {
      *
      * @param user  The <code>User</code> object to save. Contains the <code>userID</code>.
      */
+
+    //todo:need to change as the user id is different now
     public static void delete(User user) {
         String userID = user.getUserID();
         String sql = "UPDATE User SET is_deleted = true WHERE user_ID = \"" + userID + "\"";
