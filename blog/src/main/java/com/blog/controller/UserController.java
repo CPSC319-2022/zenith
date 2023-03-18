@@ -237,7 +237,33 @@ public class UserController {
 
         new_level = input.getString("new_level");
         promotee.setUserLevel(UserLevel.valueOf(new_level)); //converting string to enum
+    }
 
+    /**
+     * @param input A JSON containing the following key-value pairs:
+     *              {
+     *              "userID": int,    // The user to update.
+     *              "bio":    String  // The content of the user bio.
+     *              }
+     * @return Updates the bio of the user and saves the changes in the database
+     * @throws BlogException
+     */
+    public static void updateBio(JSONObject input) throws BlogException {
+        String bio;
+
+        try {
+            bio = input.getString("bio");
+        } catch (JSONException e) {
+            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new BlogException("JSON object received is null. \n" + e.getMessage());
+        }
+
+        User user = retrieveUser(input);
+
+        user.setBio(bio);
+
+        Database.save(user);
     }
 
     @GetMapping("/getUser")
@@ -290,6 +316,17 @@ public class UserController {
     public ResponseEntity<String> updateProfilePicture(@RequestBody String input) {
         try {
             updateProfilePicture(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/updateBio")
+    @ResponseBody
+    public ResponseEntity<String> updateBio(@RequestBody String input) {
+        try {
+            updateBio(new JSONObject(input));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

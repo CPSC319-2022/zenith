@@ -6,21 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/CommentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/CommentController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/LoginController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/PostController.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/PostController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/database/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/database/Database.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/exception/UserDoesNotExistException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/exception/UserIsDeletedException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/Comment.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/Comment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/Post.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/Post.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/test/blog/com/blog/database/DatabaseTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/test/blog/com/blog/database/DatabaseTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/test/blog/com/blog/model/UnitTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/test/blog/com/blog/model/UnitTests.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/PostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/PostController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/database/DatabaseTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/database/DatabaseTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
