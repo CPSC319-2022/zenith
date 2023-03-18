@@ -21,6 +21,12 @@ export const authSlice = createSlice({
   },
 });
 
+export const getAccessToken = () => {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    return auth ? auth.accessToken : null;
+  };
+  
+
 export const { setAuthenticated, setUser } = authSlice.actions;
 
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;

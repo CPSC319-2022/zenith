@@ -1,5 +1,14 @@
 // api.js
 import axios from 'axios';
+import { getAccessToken } from './redux/slices/auth';
+
+const getAuthHeader = () => {
+  const accessToken = localStorage.getItem('accessToken');
+  if (accessToken) {
+    return { Authorization: `Bearer ${accessToken}` };
+  }
+  return {};
+};
 
 export const getPosts = async ({ postIDStart, count, reverse }) => {
   try {
@@ -24,16 +33,21 @@ export const getPost = async ({postID}) => {
     return response.data;
 };
 
-export const createPost = async ({ authorID, title, content, allowComments }) => {
-  console.log("createPost: ", content );
-    const response = await axios.post('http://localhost:8080/createPost', {
-      authorID,
-      title,
-      content,
-      allowComments,
-    });
-    return response.data;
+
+export const createPost = async ({ title, content, allowComments }) => {
+  const token = getAccessToken();
+  const response = await axios.post('http://localhost:8080/createPost', {
+    title,
+    content,
+    allowComments,
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
 };
+
 
 //Comments
 export const getComments = async ({ postID, commentIDStart, count, reverse }) => {

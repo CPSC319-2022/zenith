@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -19,7 +18,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .oauth2Login()
                 .and()
-            .csrf().disable();
+            .csrf().disable()
+            .headers().addHeaderWriter((request, response) -> {
+                response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+                response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+                response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+                response.setHeader("Access-Control-Allow-Credentials", "true");
+            });
     }
-
 }

@@ -11,9 +11,13 @@ const Login = () => {
 
   const handleSuccess = (credentialResponse) => {
     console.log('Login Success', credentialResponse);
+    localStorage.setItem('accessToken', credentialResponse.accessToken);
     dispatch(setAuthenticated(true));
     dispatch(setUser(credentialResponse.profileObj));
+    // Redirect to main page
+     window.location.href = '/';
   };
+  
 
   const handleFailure = (response) => {
     console.log('Login Failed', response);
