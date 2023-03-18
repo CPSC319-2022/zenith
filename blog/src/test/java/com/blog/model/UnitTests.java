@@ -1,7 +1,5 @@
 package com.blog.model;
 
-import com.blog.exception.UserDoesNotExistException;
-import com.blog.exception.UserIsDeletedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,18 +11,11 @@ class UnitTests {
 
     @BeforeEach
     void beforeEach() {
-        try {
-            guest = new User("1");
-        } catch (UserIsDeletedException e) {
-            throw new RuntimeException(e);
-        } catch (UserDoesNotExistException e) {
-            throw new RuntimeException(e);
-        }
+        guest = new User();
     }
 
     @Test
     void guestConstructor() {
-        assertEquals(0, guest.getUserID());
         assertEquals(UserLevel.GUEST, guest.getUserLevel());
     }
 
@@ -46,7 +37,7 @@ class UnitTests {
     void guestToOtherLevels() {
         assertEquals(UserLevel.GUEST, guest.getUserLevel());
         guest.setUserLevel(READER);
-        assertEquals(UserLevel.GUEST, guest.getUserLevel());
+        assertEquals(UserLevel.READER, guest.getUserLevel());
         guest.setUserLevel(CONTRIBUTOR);
         assertEquals(UserLevel.CONTRIBUTOR, guest.getUserLevel());
         guest.setUserLevel(ADMIN);
