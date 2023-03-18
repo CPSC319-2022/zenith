@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import { fetchComments, upvoteComment, downvoteComment, deleteComment } from '../redux/slices/commentSlice';
+import { fetchComments, upvoteComment, downvoteComment, editComment, deleteComment} from '../redux/slices/commentSlice';
 import { fetchPost, upvotePost, downvotePost } from '../redux/slices/postSlice';
 import { commentSliceActions } from '../redux/slices/commentSlice';
 import ReactQuill from 'react-quill';
@@ -57,9 +57,26 @@ const SinglePost = () => {
     setUpdateComments(!updateComments);
   };
 
-  const handleEditComment = async (postID, commentID) => {
-    // TODO
-  };
+  // const handleEditComment = async (postID, commentID, content) => {
+  //   console.log('whats going to action', postID, commentID, content);
+  //   const [editedContent, setEditedContent] = useState(content);
+  //
+  //   const handleChange = (value) => {
+  //     console.log('value', value);
+  //     setEditedContent(value);
+  //   };
+  //
+  //   const handleSubmit = () => {
+  //     console.log('whats going to action', editedContent)
+  //     dispatch(editComment({ postID, commentID, editedContent }));
+  //   };
+  //   return (
+  //       <div>
+  //         <ReactQuill value={editedContent} onChange={handleChange} />
+  //         <button onClick={handleSubmit}>Save Changes</button>
+  //       </div>
+  //   );
+  // };
 
   const handleDeleteComment = async (postID, commentID) => {
       await dispatch(deleteComment({ postID, commentID }));
@@ -148,7 +165,8 @@ const SinglePost = () => {
                   comment={comment}
                   onUpvote={() => handleUpvoteComment(comment.postID, comment.commentID)}
                   onDownvote={() => handleDownvoteComment(comment.postID, comment.commentID)}
-                  onEdit={() => handleEditComment()}
+                  // open edit box on click to write new content and pass it
+                  onEdit={() => handleEditComment(comment.postID, comment.commentID, comment.content)}
                   onDelete={() => handleDeleteComment(comment.postID, comment.commentID)}
                 />
               ))}

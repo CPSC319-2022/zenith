@@ -144,3 +144,22 @@ export const deleteComment = async ({ postID, commentID }) => {
     throw new Error(error.message);
   }
 };
+
+export const editComment = async ({ postID, commentID, content }) => {
+  console.log('within api', postID, commentID, content);
+  try {
+    const body = JSON.stringify({ postID, commentID, content });
+    const response = await axios.put('http://localhost:8080/editComment', {
+      data: body,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

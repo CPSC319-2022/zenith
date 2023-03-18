@@ -3,7 +3,8 @@ import { getComments, getComment, createComment as createCommentAPI } from '../.
 import {
     upvoteComment as upvoteCommentApi,
     downvoteComment as downvoteCommentApi,
-    deleteComment as deleteCommentApi
+    deleteComment as deleteCommentApi,
+    editComment as editCommentApi
 } from '../../api';
 
 
@@ -77,6 +78,20 @@ export const deleteComment = createAsyncThunk(
     async ({ postID, commentID }, { rejectWithValue }) => {
         try {
             await deleteCommentApi({ postID, commentID });
+            return { postID, commentID };
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+// Async thunk for editing a comment
+export const editComment = createAsyncThunk(
+    'comment/edit',
+    async ({ postID, commentID, content }, { rejectWithValue }) => {
+        console.log('within thunk', postID, commentID, content);
+        try {
+            await editCommentApi({ postID, commentID, content });
             return { postID, commentID };
         } catch (error) {
             return rejectWithValue(error.message);

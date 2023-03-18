@@ -10,19 +10,7 @@ const getRandomEmoji = () => {
 
 const Comment = ({ comment, onUpvote, onDownvote, onEdit, onDelete }) => {
   const [emoji] = useState(getRandomEmoji());
-
-  // # this is what a comment looks like
-  // Comments: [
-  //     {    "isDeleted": false,
-  //       "upvotes": 1,
-  //       "commentID": 2,
-  //       "lastModified": "2023-03-15T06:00:00.861336Z",
-  //       "postID": 2,
-  //       "authorID": 1,
-  //       "creationDate": "2023-03-15T06:00:00.861336Z",
-  //       "downvotes": 1,
-  //       "content": "<p>hello2</p>"
-  //     }
+  const [showEditCommentForm, setShowEditCommentForm] = useState(false);
 
   return (
     <Card className="mb-4">
@@ -49,7 +37,7 @@ const Comment = ({ comment, onUpvote, onDownvote, onEdit, onDelete }) => {
             <AiOutlineEdit />
           </Button>
           <Button variant="danger" onClick={onDelete}>
-            <AiOutlineDelete /> {comment.isDeleted === true}
+            <AiOutlineDelete />
           </Button>
         </div>
       </Card.Body>
