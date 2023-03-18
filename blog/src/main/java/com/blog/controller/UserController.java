@@ -1,18 +1,16 @@
 package com.blog.controller;
 
 import com.blog.database.Database;
-import com.blog.database.Database;
 import com.blog.exception.BlogException;
-import com.blog.model.*;
+import com.blog.model.User;
+import com.blog.model.UserLevel;
+import com.blog.model.UserStatus;
 import com.blog.utils.Utility;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 
 @RestController
 public class UserController {
@@ -277,7 +275,7 @@ public class UserController {
             status = input.getString("user_status");
 
             if (status.toUpperCase() == "OFFLINE")
-                user.setLastLogin(Utility.getCurrentTime());
+                user.setLastLoginNow();
 
             user.setUserStatus(UserStatus.valueOf(status));
             Database.save(user);
