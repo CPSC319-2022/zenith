@@ -2,8 +2,9 @@ package com.blog.controller;
 
 import com.blog.database.Database;
 import com.blog.exception.BlogException;
+import com.blog.exception.DoesNotExistException;
+import com.blog.exception.InvalidPermissionException;
 import com.blog.model.Comment;
-import com.blog.model.Content;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
 import com.blog.utils.Utility;
@@ -18,89 +19,6 @@ import java.util.ArrayList;
 
 @RestController
 public class CommentController {
-    @GetMapping("/getComment")
-    @ResponseBody
-    public ResponseEntity<String> getComment(@RequestParam("postID") int postID, @RequestParam("commentID") int commentID) {
-        try {
-            JSONObject input = new JSONObject();
-            input.put("postID", postID);
-            input.put("commentID", commentID);
-            return ResponseEntity.ok(getComment(input).toString());
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/getComments")
-    @ResponseBody
-    public ResponseEntity<String> getComments(@RequestParam("postID") int postID, @RequestParam("commentIDStart") int commentIDStart, @RequestParam("count") int count, @RequestParam("reverse") boolean reverse) {
-        try {
-            JSONObject input = new JSONObject();
-            input.put("postID", postID);
-            input.put("commentIDStart", commentIDStart);
-            input.put("count", count);
-            input.put("reverse", reverse);
-            return ResponseEntity.ok(getComments(input).toString());
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/createComment")
-    @ResponseBody
-    public ResponseEntity<String> createComment(@RequestBody String input) {
-        try {
-            createComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @DeleteMapping("/deleteComment")
-    @ResponseBody
-    public ResponseEntity<String> deleteComment(@RequestBody String input) {
-        try {
-            deleteComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/editComment")
-    @ResponseBody
-    public ResponseEntity<String> editComment(@RequestBody String input) {
-        try {
-            editComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/upvoteComment")
-    @ResponseBody
-    public ResponseEntity<String> upvoteComment(@RequestBody String input) {
-        try {
-            upvoteComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/downvoteComment")
-    @ResponseBody
-    public ResponseEntity<String> downvoteComment(@RequestBody String input) {
-        try {
-            downvoteComment(new JSONObject(input));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     /**
      * Returns a JSON containing the requested comment.
      *
@@ -109,11 +27,11 @@ public class CommentController {
      *              "postID":    int,  // The post containing the requested comment.
      *              "commentID": int   // The requested comment.
      *              }
-     * @return The JSON representing the comment using the following syntax:
+     * @return The JSON string representing the comment using the following syntax:
      * {
      * "postID":       int,
      * "commentID":    int,
-     * "authorID":     int,
+     * "authorID":     String,
      * "content":      String,
      * "creationDate": String,
      * "lastModified": String,
@@ -123,12 +41,12 @@ public class CommentController {
      * }
      * @throws BlogException
      */
-    private static JSONObject getComment(JSONObject input) throws BlogException {
+    private static String getComment(JSONObject input) throws BlogException {
         // Retrieve the comment
         Comment comment = retrieveComment(input);
 
         // Return the JSON response
-        return comment.asJSONObject();
+        return comment.asJSONString();
     }
 
     /**
@@ -141,12 +59,12 @@ public class CommentController {
      *              "count":          int,     // The number of requested comments.
      *              "reverse":        boolean  // Whether to get comments incrementally or decrementally.
      *              }
-     * @return The JSON representing the comments using the following syntax:
+     * @return The JSON string representing the comments using the following syntax:
      * [
      * {                          //
      * "postID":       int,       //
      * "commentID":    int,       //
-     * "authorID":     int,       //
+     * "authorID":     String,    //
      * "content":      String,    //
      * "creationDate": String,    // <--- This represents one comment!
      * "lastModified": String,    //
@@ -158,7 +76,7 @@ public class CommentController {
      * ]
      * @throws BlogException
      */
-    private static JSONArray getComments(JSONObject input) throws BlogException {
+    private static String getComments(JSONObject input) throws BlogException {
         int postID;
         int commentIDStart;
         int count;
@@ -189,7 +107,7 @@ public class CommentController {
         }
 
         // Return the JSON response
-        return response;
+        return response.toString();
     }
 
     /**
@@ -197,9 +115,9 @@ public class CommentController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":   int,    // The post to create the comment in.
-     *              "authorID": int,    // The author of the comment.
-     *              "content":  String  // The content of the comment.
+     *              "postID":   int,     // The post to create the comment in.
+     *              "authorID": String,  // The author of the comment.
+     *              "content":  String   // The content of the comment.
      *              }
      * @throws BlogException
      */
@@ -219,8 +137,13 @@ public class CommentController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
 
-        // Check whether author has permission to comment
-        validatePermission(authorID);
+        // Retrieve the user
+        User user = User.retrieve(authorID);
+
+        // Check whether the user has UserLevel of at least UserLevel.READER
+        if (user.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
+            throw new BlogException("User does not have the necessary permission to make a comment.");
+        }
 
         // Validate the data
         Comment.validateContent(content);
@@ -248,14 +171,23 @@ public class CommentController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post containing the comment to delete.
-     *              "commentID": int   // The comment to delete.
+     *              "postID":    int,    // The post containing the comment to delete.
+     *              "commentID": int,    // The comment to delete.
+     *              "userID":    String  // The user attempting to delete.
      *              }
      * @throws BlogException
      */
     private static void deleteComment(JSONObject input) throws BlogException {
         // Retrieve the comment
         Comment comment = retrieveComment(input);
+
+        // Retrieve the user
+        User user = UserController.retrieveUser(input);
+
+        // Check whether user has permission to delete comment
+        if (comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+            throw new InvalidPermissionException("User does not have the necessary permission to delete this comment.");
+        }
 
         // Delete comment in database
         Database.delete(comment);
@@ -266,9 +198,10 @@ public class CommentController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,    // The post containing the comment to edit.
-     *              "commentID": int,    // The comment to edit.
-     *              "content":   String  // The new content of the comment.
+     *              "postID":    int,     // The post containing the comment to edit.
+     *              "commentID": int,     // The comment to edit.
+     *              "content":   String,  // The new content of the comment.
+     *              "userID":    String   // The user attempting to edit.
      *              }
      * @throws BlogException
      */
@@ -289,6 +222,14 @@ public class CommentController {
 
         // Retrieve the comment
         Comment comment = retrieveComment(input);
+
+        // Retrieve the user
+        User user = UserController.retrieveUser(input);
+
+        // Check whether user has permission to delete post
+        if (comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+            throw new InvalidPermissionException("User does not have the necessary permission to edit this comment.");
+        }
 
         // Apply edit to comment
         comment.setContent(content);
@@ -366,22 +307,93 @@ public class CommentController {
         }
 
         // Return the retrieved comment
-        return new Comment(postID, commentID);
+        return Comment.retrieve(postID, commentID);
     }
 
-    /**
-     * Validates whether the user has the necessary permissions to make a comment.
-     *
-     * @param userID The user to validate.
-     * @throws BlogException
-     */
-    private static void validatePermission(String userID) throws BlogException {
-        // Retrieve the user
-        User user = new User(userID);
+    @GetMapping("/getComment")
+    @ResponseBody
+    public ResponseEntity<String> getComment(@RequestParam("postID") int postID, @RequestParam("commentID") int commentID) {
+        try {
+            JSONObject input = new JSONObject()
+                    .put("postID", postID)
+                    .put("commentID", commentID);
+            return ResponseEntity.ok(getComment(input));
+        } catch (DoesNotExistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
-        // Check whether the user has UserLevel of at least UserLevel.READER
-        if (UserLevel.READER.compareTo(user.getUserLevel()) < 0) {
-            throw new BlogException("User does not have the necessary permission to make a comment.");
+    @GetMapping("/getComments")
+    @ResponseBody
+    public ResponseEntity<String> getComments(@RequestParam("postID") int postID, @RequestParam("commentIDStart") int commentIDStart, @RequestParam("count") int count, @RequestParam("reverse") boolean reverse) {
+        try {
+            JSONObject input = new JSONObject()
+                    .put("postID", postID)
+                    .put("commentIDStart", commentIDStart)
+                    .put("count", count)
+                    .put("reverse", reverse);
+            return ResponseEntity.ok(getComments(input));
+        } catch (DoesNotExistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/createComment")
+    @ResponseBody
+    public ResponseEntity<String> createComment(@RequestBody String input) {
+        try {
+            createComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/deleteComment")
+    @ResponseBody
+    public ResponseEntity<String> deleteComment(@RequestBody String input) {
+        try {
+            deleteComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/editComment")
+    @ResponseBody
+    public ResponseEntity<String> editComment(@RequestBody String input) {
+        try {
+            editComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/upvoteComment")
+    @ResponseBody
+    public ResponseEntity<String> upvoteComment(@RequestBody String input) {
+        try {
+            upvoteComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/downvoteComment")
+    @ResponseBody
+    public ResponseEntity<String> downvoteComment(@RequestBody String input) {
+        try {
+            downvoteComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

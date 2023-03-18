@@ -1,14 +1,12 @@
 package com.blog.database;
 
-import com.blog.exception.UserDoesNotExistException;
-import com.blog.exception.UserIsDeletedException;
+import com.blog.exception.DoesNotExistException;
+import com.blog.model.*;
 import org.junit.jupiter.api.Test;
 
-import com.blog.model.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DatabaseTest {
     @Test
@@ -67,14 +65,8 @@ class DatabaseTest {
 
     @Test
     void testRetrieveUser() {
-        User guest = null;
-        try {
-            guest = new User("1");
-        } catch (UserIsDeletedException e) {
-            throw new RuntimeException(e);
-        } catch (UserDoesNotExistException e) {
-            throw new RuntimeException(e);
-        }
+        User guest = new User("1");
+
         assertEquals(1, guest.getUserID());
         assertEquals("2023-03-01 01:02:03", guest.getCreationDate());
         assertEquals("2023-03-01 01:02:03", guest.getLastLogin());
@@ -85,7 +77,12 @@ class DatabaseTest {
 
     @Test
     void testRetrievePost() {
-        Post post = new Post(1);
+        Post post = null;
+        try {
+            post = Post.retrieve(1);
+        } catch (DoesNotExistException e) {
+            e.printStackTrace();
+        }
         assertEquals(1, post.getPostID());
         assertEquals(1, post.getAuthorID());
         assertEquals("2023-03-01 01:02:03", post.getCreationDate());
@@ -100,7 +97,7 @@ class DatabaseTest {
 
     @Test
     void testRetrieveComment() {
-        Comment comment = new Comment(1, 1);
+        Comment comment = Comment.retrieve(1, 1);
         assertEquals(1, comment.getPostID());
         assertEquals(1, comment.getCommentID());
         assertEquals(1, comment.getAuthorID());
@@ -126,14 +123,8 @@ class DatabaseTest {
 
     @Test
     void testDeleteUser() {
-        User guest = null;
-        try {
-            guest = new User("1");
-        } catch (UserIsDeletedException e) {
-            throw new RuntimeException(e);
-        } catch (UserDoesNotExistException e) {
-            throw new RuntimeException(e);
-        }
+        User guest = new User("1");
+
         try {
             Database.delete(guest);
             Database.retrieve(guest);
@@ -145,7 +136,12 @@ class DatabaseTest {
 
     @Test
     void testDeletePost() {
-        Post post = new Post(3);
+        Post post = null;
+        try {
+            post = Post.retrieve(3);
+        } catch (DoesNotExistException e) {
+            e.printStackTrace();
+        }
         try {
             Database.delete(post);
             Database.retrieve(post);
@@ -157,7 +153,7 @@ class DatabaseTest {
 
     @Test
     void testDeleteComment() {
-        Comment comment = new Comment(1, 2);
+        Comment comment = Comment.retrieve(1, 2);
         try {
             Database.delete(comment);
             Database.retrieve(comment);
