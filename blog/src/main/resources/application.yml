@@ -6,3 +6,11 @@ spring:
           google:
             client-id:  137046975675-86mneph4bv1sfafa1788famgv2ot695r.apps.googleusercontent.com 
             client-secret:  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
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          google:
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
