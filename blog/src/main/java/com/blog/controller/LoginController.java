@@ -64,7 +64,7 @@ public class LoginController {
 
 
         try {
-            User user = new User(userId);
+            User user = User.retrieve(userId);
             return ResponseEntity.ok(user.getUserID());
         } catch (BlogException e) {
             //ignored

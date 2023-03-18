@@ -1,25 +1,14 @@
 package com.blog.database;
 
-import com.blog.model.Comment;
-import com.blog.model.Post;
-import com.blog.model.User;
-import com.blog.model.UserLevel;
-import com.blog.model.UserStatus;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.blog.exception.DoesNotExistException;
+import com.blog.exception.IsDeletedException;
+import com.blog.model.*;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import javax.sql.DataSource;
-
-import com.blog.database.*;
-import com.blog.exception.UserDoesNotExistException;
-import com.blog.exception.UserIsDeletedException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class handles all calls to the database related to the blog application.
@@ -40,7 +29,7 @@ public class Database {
      *
      * @param comment
      */
-    public static void retrieve(Comment comment) {
+    public static void retrieve(Comment comment) throws DoesNotExistException {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
         String sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number = " + commentID;
@@ -51,12 +40,8 @@ public class Database {
           Comment temp =  jdbcTemplate.queryForObject(sql, new CommentRowMapper());
           comment.copy(temp);
         } catch (EmptyResultDataAccessException e) {
-          comment.setContent(null);
+            throw new DoesNotExistException("Comment with postID " + postID + " and commentID " + commentID + " does not exist.");
         }
-
-        /*
-        if comment does not exist, return without error. but make sure that you do comment.setContent(null) first.
-         */
     }
 
     /**
@@ -64,7 +49,7 @@ public class Database {
      *
      * @param post
      */
-    public static void retrieve(Post post) {
+    public static void retrieve(Post post) throws DoesNotExistException {
         int postID = post.getPostID();
         String sql = "SELECT * FROM Post WHERE post_ID = " + postID;
         if (jdbcTemplate == null) {
@@ -74,11 +59,8 @@ public class Database {
           Post temp = jdbcTemplate.queryForObject(sql, new PostRowMapper());
           post.copy(temp);
         } catch (EmptyResultDataAccessException e) {
-          post.setContent(null);
+          throw new DoesNotExistException("Post with postID " + postID + " does not exist.");
         }
-        /*
-        if post does not exist, return without error. but make sure that you do post.setContent(null) first.
-         */
     }
 
     /**
@@ -86,10 +68,10 @@ public class Database {
      * by the given <code>User</code> object and updates its fields.
      *
      * @param user  The <code>User</code> object to update. Contains the <code>userID</code>.
-     * @throws UserDoesNotExistException
-     * @throws UserIsDeletedException
+     * @throws DoesNotExistException
+     * @throws IsDeletedException
      */
-    public static void retrieve(User user) throws UserDoesNotExistException, UserIsDeletedException {
+    public static void retrieve(User user) throws DoesNotExistException, IsDeletedException {
         String userID = user.getUserID();
         String sql = "SELECT * FROM User WHERE user_ID = " + userID;
         if (jdbcTemplate == null) {
@@ -99,10 +81,10 @@ public class Database {
           User temp = jdbcTemplate.queryForObject(sql, new UserRowMapper());
           user.copy(temp);
           if (temp.isDeleted()) {
-               throw new UserIsDeletedException("User with ID " + userID + " is deleted.");
+               throw new IsDeletedException("User with ID " + userID + " is deleted.");
           }
         } catch (EmptyResultDataAccessException e) {
-          throw new UserDoesNotExistException("User with ID " + userID + " does not exist.");
+          throw new DoesNotExistException("User with ID " + userID + " does not exist.");
         }
 	   
         /*

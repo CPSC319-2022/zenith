@@ -1,5 +1,6 @@
 package com.blog.model;
 
+import com.blog.utils.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,17 @@ class UnitTests {
 
     @BeforeEach
     void beforeEach() {
-        guest = new User();
+        guest = new User(
+                "",
+                "Guest Username",
+                GUEST,
+                Utility.getCurrentTime(),
+                Utility.getCurrentTime(),
+                UserStatus.ONLINE,
+                "url to profile picture",
+                "Guest bio",
+                false
+        );
     }
 
     @Test
