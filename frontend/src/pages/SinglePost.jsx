@@ -57,6 +57,14 @@ const SinglePost = () => {
     setUpdateComments(!updateComments);
   };
 
+  const handleEditComment = async (postID, commentID) => {
+
+  };
+
+  const handleDeleteComment = async (postID, commentID) => {
+
+  };
+
 
   if (status === 'loading') {
     return <div>Loading...</div>;
@@ -140,6 +148,8 @@ const SinglePost = () => {
                   comment={comment}
                   onUpvote={() => handleUpvoteComment(comment.postID, comment.commentID)}
                   onDownvote={() => handleDownvoteComment(comment.postID, comment.commentID)}
+                  onEdit={() => handleEditComment()}
+                  onDelete={() => handleDeleteComment}
                 />
               ))}
             {console.log('Comments count:', comments.length)}

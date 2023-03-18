@@ -32,6 +32,12 @@ const Comment = ({ comment, onUpvote, onDownvote }) => {
           <Button variant="outline-danger" onClick={onDownvote}>
             <AiFillDislike /> {comment.downvotes}
           </Button>
+          <Button variant="info">
+            Edit Comment
+          </Button>
+          <Button variant="danger">
+            Delete Comment
+          </Button>
         </div>
       </Card.Body>
     </Card>
