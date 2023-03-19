@@ -6,11 +6,16 @@ import '../styles/Create.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { postSliceActions } from '../redux/slices/postSlice';
+import { setClientId } from '../redux/slices/auth';
+
 import { Link } from 'react-router-dom';
 
 const CreatePost = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  console.log('isAuthenticated:', isAuthenticated);
+  const clientID = useSelector((state) => state.auth.user?.clientId);
+  console.log('clientIDCreate:', clientID);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
@@ -19,13 +24,14 @@ const CreatePost = () => {
     if (!isAuthenticated) {
       return alert('Please login to create a post.');
     }
+   
 
-    const authorID = 1; // Replace this line with the authorID of the currently logged-in user
+    // Replace authorID with the clientID of the currently logged-in user
     const allowComments = true; // You can change this according to your requirements
 
     dispatch(
       postSliceActions.createPost({
-        authorID,
+        authorID: clientID,
         title,
         content: body,
         allowComments,
@@ -59,7 +65,7 @@ const CreatePost = () => {
               <Form.Group controlId="formFile">
                 <Form.Control type="file" />
               </Form.Group>
-              <Button variant="outline-success">Update</Button>{' '}
+              <Button variant="outline-success">Update</Button>{''}
             </div>
           </div>
         </form>

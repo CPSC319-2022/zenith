@@ -3,22 +3,25 @@ import { Card, Button } from 'react-bootstrap';
 import '../styles/Auth.css';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAuthenticated, setUser } from '../redux/slices/auth';
+import { setAuthenticated, setUser, setClientId } from '../redux/slices/auth';
 
 const Login = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const handleSuccess = (credentialResponse) => {
+    console.log('typeof credentialResponse:', typeof credentialResponse);
     console.log('Login Success', credentialResponse);
-    localStorage.setItem('accessToken', credentialResponse.accessToken);
+    localStorage.setItem('accessToken', credentialResponse.credential);
+    localStorage.setItem('auth', JSON.stringify(credentialResponse));
     dispatch(setAuthenticated(true));
     dispatch(setUser(credentialResponse.profileObj));
+    dispatch(setClientId(credentialResponse.clientId)); // update the clientId in the store
     // Redirect to main page
-     window.location.href = '/';
+    window.location.href = '/';
   };
   
-
+  
   const handleFailure = (response) => {
     console.log('Login Failed', response);
   };
@@ -26,6 +29,7 @@ const Login = () => {
   const handleSignOut = () => {
     dispatch(setAuthenticated(false));
     dispatch(setUser(null));
+    dispatch(setClientId(null)); // reset the clientId in the store
   };
 
   return (

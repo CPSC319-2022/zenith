@@ -4,7 +4,9 @@ const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
 
 const initialState = {
   isAuthenticated,
-  user: null,
+  user: {
+    clientId: null,
+  },
 };
 
 export const authSlice = createSlice({
@@ -18,16 +20,20 @@ export const authSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    setClientId: (state, action) => {
+      state.user.clientId = action.payload;
+      console.log('clientID:', state.user.clientId);
+    },
   },
 });
 
 export const getAccessToken = () => {
-    const auth = JSON.parse(localStorage.getItem('auth'));
-    return auth ? auth.accessToken : null;
-  };
-  
+  const auth = JSON.parse(localStorage.getItem('auth'));
+  console.log('authAccTok:', auth);
+  return auth ? auth : null;
+};
 
-export const { setAuthenticated, setUser } = authSlice.actions;
+export const { setAuthenticated, setUser, setClientId } = authSlice.actions;
 
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 export const selectUser = (state) => state.auth.user;
