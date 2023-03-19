@@ -208,6 +208,11 @@ public class CommentController {
         int authorID;
         String content;
 
+        // Check if input is null
+    if (input == null) {
+        throw new BlogException("JSON object received is null.");
+    }
+
         // Read data from JSON
         try {
             postID = input.getInt("postID");
@@ -219,8 +224,8 @@ public class CommentController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
 
-        // Check whether author has permission to comment
-        validatePermission(authorID);
+        // // Check whether author has permission to comment
+        // validatePermission(authorID);
 
         // Validate the data
         Comment.validateContent(content);
