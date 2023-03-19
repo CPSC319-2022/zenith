@@ -3,25 +3,24 @@
 
 --Create tables:
 --for user status 0:online, 1:away, 2:busy, 3:offline
+--for user level: 0:reader, 1: contributor, 2: admin
 CREATE TABLE User(
-    user_ID INTEGER,
-    user_password CHAR(32) NOT NULL,
-    username CHAR(32) NOT NULL,
+    user_ID VARCHAR(255),
+    username VARCHAR(255) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     last_login TIMESTAMP NOT NULL,
     user_status TINYINT NOT NULL DEFAULT 0,
-    profile_picture VARCHAR(250) DEFAULT NULL,
+    profile_picture VARCHAR(255) DEFAULT NULL,
     bio VARCHAR(1000) DEFAULT NULL,
-    contributor BOOLEAN NOT NULL DEFAULT false,
-    administrator BOOLEAN NOT NULL DEFAULT false,
+    user_level TINYINT NOT NULL DEFAULT 0,
     is_deleted BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY(user_ID)
 );
 
 CREATE TABLE Post(
     post_ID INTEGER,
-    user_ID INTEGER,
-    title VARCHAR(200) NOT NULL,
+    user_ID VARCHAR(255),
+    title VARCHAR(255) NOT NULL,
     content VARCHAR(20000) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     last_modified TIMESTAMP NOT NULL,
@@ -37,7 +36,7 @@ CREATE TABLE Post(
 CREATE TABLE Comment(
     post_ID INTEGER,
     comment_number INTEGER,
-    user_ID INTEGER,
+    user_ID VARCHAR(255),
     content VARCHAR(10000) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     last_modified TIMESTAMP NOT NULL,

@@ -12,7 +12,7 @@ public class PostRowMapper implements RowMapper<Post> {
 	@Override
 	public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
 		int postID = rs.getInt("post_ID");
-		int authorID = rs.getInt("user_ID");
+		String authorID = rs.getString("user_ID");
 		String title = rs.getString("title");
 		String content = rs.getString("content");
 		//String creationDate = rs.getString("creation_date");

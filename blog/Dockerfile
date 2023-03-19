@@ -17,6 +17,7 @@ RUN ./mvnw package -Dmaven.test.skip=true
 FROM eclipse-temurin:17-jre-jammy as production
 COPY --from=build /backend/target/backend.jar ./
 CMD ["java", "-jar", "backend.jar"]
-EXPOSE 8080
+EXPOSE 8080 
+
 
 

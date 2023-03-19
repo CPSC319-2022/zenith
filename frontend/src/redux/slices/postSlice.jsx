@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getPosts, getPost, createPost as createPostAPI } from '../../api';
+import { upvotePost as upvotePostApi, downvotePost as downvotePostApi } from '../../api';
+
 
 export const fetchPosts = createAsyncThunk(
   'posts/fetchPosts',
@@ -37,6 +39,31 @@ export const createPost = createAsyncThunk(
   }
 );
 
+// Async thunk for upvoting a post
+export const upvotePost = createAsyncThunk(
+  'posts/upvote',
+  async (postID, { rejectWithValue }) => {
+    try {
+      await upvotePostApi({ postID });
+      return { postID };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Async thunk for downvoting a post
+export const downvotePost = createAsyncThunk(
+  'posts/downvote',
+  async (postID, { rejectWithValue }) => {
+    try {
+      await downvotePostApi({ postID });
+      return { postID };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 const initialState = {
   posts: [],
   post: null,
@@ -90,6 +117,8 @@ export const postSliceActions = {
   fetchPosts,
   fetchPost,
   createPost,
+  upvotePost,
+  downvotePost,
 };
 
 export default postSlice.reducer;
