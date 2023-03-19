@@ -32,7 +32,7 @@ import org.json.JSONObject;
 public abstract class Content extends Record {
     static final int MIN_CONTENT_LENGTH = 1;
 
-    private int authorID;
+    private String authorID;
     private String content;
     private String creationDate;
     private String lastModified;
@@ -42,7 +42,7 @@ public abstract class Content extends Record {
     public Content() {
     }
 
-    public Content(int     authorID,
+    public Content(String  authorID,
                    String  content,
                    String  creationDate,
                    String  lastModified,
@@ -115,11 +115,11 @@ public abstract class Content extends Record {
         downvotes++;
     }
 
-    public int getAuthorID() {
+    public String getAuthorID() {
         return authorID;
     }
 
-    public void setAuthorID(int authorID) {
+    public void setAuthorID(String authorID) {
         this.authorID = authorID;
     }
 
