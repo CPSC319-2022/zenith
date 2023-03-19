@@ -4,27 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents + post finished">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/anc_json_compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/eduworks_json_ld.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/skyscreamer_jsonassert.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_spring.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Zenith-.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Zenith-.iml" afterDir="false" />
+    <list default="true" id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="added JSON test">
+      <change afterPath="$PROJECT_DIR$/Zenith/Zenith.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Zenith/src/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/Controller/ControllerTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/zenith.iml" beforeDir="false" afterPath="$PROJECT_DIR$/zenith.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
     </option>
+  </component>
+  <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2NDDE9j4dywyFLFoUYl62y7mEMK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -32,78 +39,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="Downloaded.Files.Path.Enabled" value="false" />
-    <property name="Repository.Attach.Annotations" value="false" />
-    <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="Repository.Attach.Sources" value="false" />
-    <property name="RequestMappingsPanelOrder0" value="0" />
-    <property name="RequestMappingsPanelOrder1" value="1" />
-    <property name="RequestMappingsPanelWidth0" value="75" />
-    <property name="RequestMappingsPanelWidth1" value="75" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="TODO_SCOPE" value="All Places" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
-    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
-    <property name="jdk.selected.JAVA_MODULE" value="1.8" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Libraries" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.28735632" />
-    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.runner" />
-  </component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/frontend/src/images" />
-      <recent name="$PROJECT_DIR$/frontend/src" />
-      <recent name="$PROJECT_DIR$/frontend/public/images" />
-      <recent name="$PROJECT_DIR$/frontend/public" />
-    </key>
-    <key name="CreateTestDialog.Recents.Supers">
-      <recent name="" />
-    </key>
-    <key name="CreateTestDialog.RecentsKey">
-      <recent name="com.blog.model" />
-    </key>
-  </component>
-  <component name="RunManager" selected="JUnit.DatabaseTest">
-    <configuration name="DatabaseTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="blog" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.blog.database.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.blog.database" />
-      <option name="MAIN_CLASS_NAME" value="com.blog.database.DatabaseTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UnitTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="blog" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.blog.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="18" />
-      <option name="PACKAGE_NAME" value="com.blog.model" />
-      <option name="MAIN_CLASS_NAME" value="com.blog.model.UnitTests" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "jdk.selected.JAVA_MODULE": "18",
+    "last_opened_file_path": "/Users/sherlock/Desktop/zenith",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.31990233"
+  }
+}]]></component>
+  <component name="RunManager">
     <configuration name="UnitTests.guestConstructor" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="blog" />
       <extension name="coverage">
@@ -112,8 +64,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="18" />
       <option name="PACKAGE_NAME" value="com.blog.model" />
       <option name="MAIN_CLASS_NAME" value="com.blog.model.UnitTests" />
       <option name="METHOD_NAME" value="guestConstructor" />
@@ -122,60 +72,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Zenith-" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.blog.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.blog.model" />
-      <option name="MAIN_CLASS_NAME" value="com.blog.model.UserTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BlogApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="blog" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.blog.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.blog.BlogApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.DatabaseTest" />
-        <item itemvalue="JUnit.UnitTests" />
-        <item itemvalue="Spring Boot.BlogApplication" />
         <item itemvalue="JUnit.UnitTests.guestConstructor" />
-        <item itemvalue="JUnit.UserTest" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task id="LOCAL-00001" summary="contents half-way">
-      <created>1679043117165</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1679043117165</updated>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="added JSON test" />
+      <created>1679189644816</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679189644816</updated>
     </task>
-    <task id="LOCAL-00002" summary="contents + post finished">
-      <created>1679099469122</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1679099469122</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -183,16 +94,22 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="contents half-way" />
-    <MESSAGE value="contents + post finished" />
-    <option name="LAST_COMMIT_MESSAGE" value="contents + post finished" />
   </component>
 </project>

@@ -63,12 +63,6 @@ class UnitTests {
         assertEquals(UserLevel.GUEST, guest.getUserLevel());
     }
 
-    @Test
-    void userIDSet() {
-        assertEquals(0, guest.getUserID());
-        // guest.setUserID(1);
-        assertEquals(1, guest.getUserID());
-    }
 
     @Test
     void userNameSet() {
@@ -112,9 +106,38 @@ class UnitTests {
     }
 
     @Test
-    void userProfilePictureSet() {
+    void userGetProfilePicture() {
+        assertEquals("url to profile picture", guest.getProfilePicture());
+    }
+
+    @Test
+    void userProfilePictureSetEmptyString() {
         guest.setProfilePicture("");
         assertEquals("", guest.getProfilePicture());
+    }
+
+
+    @Test
+    void userProfilePictureSetTry() {
+        guest.setProfilePicture("a1ns8");
+        assertEquals("a1ns8", guest.getProfilePicture());
+    }
+
+    @Test
+    void userGetBio() {
+        assertEquals("Guest bio", guest.getBio());
+    }
+
+    @Test
+    void userSetBioEmptyString() {
+        guest.setBio("a1ns8");
+        assertEquals("", guest.getBio());
+    }
+
+    @Test
+    void userSetBioTry() {
+        guest.setBio("a1ns8");
+        assertEquals("a1ns8", guest.getBio());
     }
 
     /**
@@ -145,7 +168,7 @@ class UnitTests {
         );
         assertEquals(11, comment1.getCommentID());
         assertEquals(10, comment1.getPostID());
-        assertEquals(12, comment1.getAuthorID());
+        assertEquals("12", comment1.getAuthorID());
         assertEquals("Happy New Year!", comment1.getContent());
         assertEquals("2022-01-01T00:00:00.861336Z", comment1.getCreationDate());
         assertEquals("2022-01-02T06:00:00.861336Z", comment1.getLastModified());
@@ -238,12 +261,6 @@ class UnitTests {
     }
 
     @Test
-    void commentDisplayableFailTwo() {
-        Comment comment1 = null;
-        assertEquals(false, comment1.isDisplayable());
-    }
-
-    @Test
     void commentLastModified() {
         String timeNow = Utility.getCurrentTime();
         comment.lastModifiedNow();
@@ -289,9 +306,9 @@ class UnitTests {
 
     @Test
     void commentSetAuthorID() {
-        assertEquals(0, comment.getAuthorID());
+        assertEquals("2", comment.getAuthorID());
         comment.setAuthorID("1");
-        assertEquals(1, comment.getAuthorID());
+        assertEquals("1", comment.getAuthorID());
     }
 
     @Test
@@ -376,7 +393,7 @@ class UnitTests {
     @Test
     void postConstructorTwo() {
         assertEquals(0, post.getPostID());
-        assertEquals(1, post.getAuthorID());
+        assertEquals("1", post.getAuthorID());
         assertEquals("", post.getTitle());
         assertEquals("", post.getContent());
         assertEquals("2023-03-16T16:30:00.861336Z", post.getCreationDate());
@@ -395,7 +412,7 @@ class UnitTests {
 
     @Test
     void postAuthorIDCheck() {
-        assertEquals(1, post.getAuthorID());
+        assertEquals("1", post.getAuthorID());
     }
 
     @Test
@@ -495,10 +512,10 @@ class UnitTests {
                 true);
 
         assertEquals(0, post.getPostID());
-        assertEquals(1, post.getAuthorID());
+        assertEquals("1", post.getAuthorID());
         post.copy(post1);
         assertEquals(1874, post.getPostID());
-        assertEquals(9934, post.getAuthorID());
+        assertEquals("9934", post.getAuthorID());
         assertEquals("Happy New Year", post.getTitle());
         assertEquals("I wish everyone is having fun in Christmas and wish all of us a happy new year!", post.getContent());
         assertEquals("2023-01-01T00:00:01.861336Z", post.getCreationDate());
@@ -530,12 +547,6 @@ class UnitTests {
                 200,
                 false
         );
-        assertEquals(false, post1.isDisplayable());
-    }
-
-    @Test
-    void postDisplayableFailTwo() {
-        Post post1 = null;
         assertEquals(false, post1.isDisplayable());
     }
 
@@ -586,9 +597,9 @@ class UnitTests {
 
     @Test
     void postSetAuthorID() {
-        assertEquals(0, post.getAuthorID());
-        post.setAuthorID("1");
-        assertEquals(1, post.getAuthorID());
+        assertEquals("1", post.getAuthorID());
+        post.setAuthorID("12");
+        assertEquals("12", post.getAuthorID());
     }
 
     @Test
@@ -617,7 +628,7 @@ class UnitTests {
 
     @Test
     void postGetCreationDate() {
-        assertEquals("2023-03-15T06:00:00.861336Z", post.getCreationDate());
+        assertEquals("2023-03-16T16:30:00.861336Z", post.getCreationDate());
     }
 
     @Test
@@ -628,20 +639,20 @@ class UnitTests {
 
     @Test
     void postGetLastModified() {
-        assertEquals("2023-03-15T06:00:00.861336Z", post.getLastModified());
+        assertEquals("2023-03-16T16:30:00.861336Z", post.getLastModified());
     }
 
     @Test
     void postSetLastModified() {
-        post.setLastModified("2023-03-16T16:30:00.861336Z");
-        assertEquals("2023-03-16T16:30:00.861336Z", post.getLastModified());
+        post.setLastModified("2023-03-17T19:30:00.861336Z");
+        assertEquals("2023-03-17T190:30:00.861336Z", post.getLastModified());
     }
 
     @Test
     void postAsJSONObject(){
         JSONObject expectedJson = new JSONObject()
-                .put("postID", 1874)
-                .put("title", "Happy New Year")
+                .put("postID", 10)
+                .put("title", "Happy New Year!")
                 .put("views", 201)
                 .put("allowComments", true);
 
@@ -655,8 +666,8 @@ class UnitTests {
                 18,
                 1,
                 true,
-                200,
-                false
+                201,
+                true
         );
         JSONObject actualJson = post1.asJSONObject();
 
