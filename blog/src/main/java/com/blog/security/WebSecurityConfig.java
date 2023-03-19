@@ -13,6 +13,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+
                 .addFilterAfter(new CustomUserDetailsFilter(), OAuth2LoginAuthenticationFilter.class)
                 .cors().and()
                 .authorizeRequests()
@@ -30,3 +31,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 });
     }
 }
+

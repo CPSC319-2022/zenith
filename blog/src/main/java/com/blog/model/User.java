@@ -56,10 +56,10 @@ public class User extends Record {
         super(isDeleted);
         this.userID = userID;
         this.username = username;
-        this.userLevel = userLevel;
+        // this.userLevel = userLevel;
         this.creationDate = creationDate;
         this.lastLogin = lastLogin;
-        this.userStatus = userStatus;
+        //this.userStatus = userStatus;
         this.profilePicture = profilePicture;
         this.bio = bio;
     }
@@ -87,9 +87,10 @@ public class User extends Record {
         return super.asJSONObject()
                 .put("userID", userID)
                 .put("username", username)
-                .put("userLevel", userLevel.ordinal())
+                // .put("userLevel", userLevel.ordinal())
                 .put("creationDate", creationDate)
                 .put("lastLogin", lastLogin)
+
                 .put("userStatus", userStatus.ordinal())
                 .put("profilePicture", profilePicture)
                 .put("bio", bio);
@@ -101,6 +102,7 @@ public class User extends Record {
      */
     public String asJSONString() {
         return asJSONObject().toString();
+
     }
 
     public void copy(User u) {

@@ -1,5 +1,21 @@
 // api.js
+
+
 import axios from 'axios';
+import { getAccessToken } from './redux/slices/auth';
+
+
+// const accessToken = getAccessToken();
+// console.log("accessToken: ", accessToken);
+
+// const getAuthHeader = () => {
+//   const accessToken = localStorage.getItem('accessToken');
+//   if (accessToken) {
+//     return { Authorization: `Bearer ${accessToken}` };
+//   }
+//   return {};
+// };
+
 
 export const getPosts = async ({ postIDStart, count, reverse }) => {
   try {
@@ -24,15 +40,29 @@ export const getPost = async ({postID}) => {
     return response.data;
 };
 
-export const createPost = async ({ authorID, title, content, allowComments }) => {
-    const response = await axios.post('http://localhost:8080/createPost', {
-      authorID,
-      title,
-      content,
-      allowComments,
-    });
-    return response.data;
+
+export const createPost = async ({ title, content, allowComments }) => {
+  const token = getAccessToken();
+  console.log("createPost token: ", token);
+  console.log("typeof token.credential: ", typeof token.credential);
+  // const cred = (token.credential);
+  // console.log("createPost credential: ", cred);
+  const response = await axios.post('http://localhost:8080/createPost', {
+    title,
+    content,
+    allowComments,
+  }, {
+    headers: {
+      Authorization: `Bearer ${token.credential}`,
+      'X-Oauth-Provider': 'google',
+      'X-Oauth-Credential': JSON.stringify(token.credential),
+    },
+  });
+  return response.data;
 };
+
+
+
 
 //Comments
 export const getComments = async ({ postID, commentIDStart, count, reverse }) => {
@@ -60,7 +90,6 @@ export const getComment = async ({postID, commentID}) => {
 };
 
 export const createComment = async ({ postID, authorID, content }) => {
-    console.log("createComment: ", postID, authorID, content);
     const response = await axios.post('http://localhost:8080/createComment', {
       postID,
       authorID,
@@ -116,6 +145,38 @@ export const upvoteComment = async ({ postID, commentID }) => {
 export const downvoteComment = async ({ postID, commentID }) => {
   try {
     const response = await axios.put('http://localhost:8080/downvoteComment', JSON.stringify({ postID: postID, commentID: commentID }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const deleteComment = async ({ postID, commentID }) => {
+  try {
+    const body = JSON.stringify({ postID, commentID });
+    const response = await axios.delete('http://localhost:8080/deleteComment', {
+      data: body,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const editComment = async ({ postID, commentID, content }) => {
+  try {
+    const response = await axios.put('http://localhost:8080/editComment', JSON.stringify({ postID: postID, commentID: commentID, content: content }), {
       headers: { 'Content-Type': 'application/json' },
     });
     if (response.status !== 200) {

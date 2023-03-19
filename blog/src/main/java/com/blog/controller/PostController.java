@@ -4,7 +4,20 @@ import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.exception.DoesNotExistException;
 import com.blog.exception.InvalidPermissionException;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import java.util.Collections;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.blog.exception.LoginFailedException;
+
 import com.blog.model.Post;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
@@ -20,6 +33,144 @@ import java.util.ArrayList;
 
 @RestController
 public class PostController {
+
+  // Replace the getPost method
+@GetMapping("/getPost")
+@ResponseBody
+public ResponseEntity<String> getPost(@RequestParam("postID") int postID) {
+    try {
+        JSONObject input = new JSONObject();
+        input.put("postID", postID);
+        return ResponseEntity.ok(getPost(input).toString());
+    } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+}
+
+// Replace the getPosts method
+@GetMapping("/getPosts")
+@ResponseBody
+public ResponseEntity<String> getPosts(@RequestParam("postIDStart") int postIDStart, @RequestParam("count") int count, @RequestParam("reverse") boolean reverse) {
+    try {
+        JSONObject input = new JSONObject();
+        input.put("postIDStart", postIDStart);
+        input.put("count", count);
+        input.put("reverse", reverse);
+        return ResponseEntity.ok(getPosts(input).toString());
+    } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+}
+// @PostMapping("/testMessage")
+// public String testMessage(@RequestBody String content, @AuthenticationPrincipal OAuth2User principal) {
+//     String userName = principal.getAttribute("name");
+//     return content + " " + userName;
+// }
+
+@PostMapping("/createPost")
+@ResponseBody
+public ResponseEntity<String> createPost(@RequestBody String input, @RequestHeader("Authorization") String accessToken) {
+    try {
+        // Remove the "Bearer " prefix from the access token
+        if (accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring("Bearer ".length());
+        }
+        //System.out.println(accessToken);
+
+        // Verify the Google OAuth access token and extract the authorID
+        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(GoogleNetHttpTransport.newTrustedTransport(), jsonFactory)
+                .setAudience(Collections.singletonList("137046975675-86mneph4bv1sfafa1788famgv2ot695r.apps.googleusercontent.com")) // NEED TO HIDE IT
+                .build();
+
+        GoogleIdToken idToken = verifier.verify(accessToken);
+        //System.out.println(idToken);
+        if (idToken == null) {
+            System.out.println("Invalid access token");
+            return new ResponseEntity<>("Invalid access token", HttpStatus.UNAUTHORIZED);
+        }
+        //System.out.println(idToken.getPayload());
+        String subject = idToken.getPayload().get("sub").toString();
+        //System.out.println("Subject: " + subject);
+       
+        // int authorID = Integer.parseInt(idToken.getPayload().getSubject());
+        // System.out.println(idToken.getPayload());
+
+        JSONObject inputJson = new JSONObject(input);
+        // int authorID = Integer.parseInt(subject);
+        // System.out.println(authorID);
+        inputJson.put("authorID", subject);
+       System.out.println(inputJson);
+      
+        createPost(inputJson);
+        return ResponseEntity.ok().build();
+    } catch (InvalidPermissionException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+}
+
+    @DeleteMapping("/deletePost")
+    @ResponseBody
+    public ResponseEntity<String> deletePost(@RequestBody String input) {
+        try {
+            deletePost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/editPost")
+    @ResponseBody
+    public ResponseEntity<String> editPost(@RequestBody String input) {
+        try {
+            editPost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/upvotePost")
+    @ResponseBody
+    public ResponseEntity<String> upvotePost(@RequestBody String input) {
+        try {
+            upvotePost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/downvotePost")
+    @ResponseBody
+    public ResponseEntity<String> downvotePost(@RequestBody String input) {
+        try {
+            downvotePost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/viewPost")
+    @ResponseBody
+    public ResponseEntity<String> viewPost(@RequestBody String input) {
+        try {
+            viewPost(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
     /**
      * Returns a JSON containing the requested post.
      *
@@ -132,6 +283,7 @@ public class PostController {
 
         // Read data from JSON
         try {
+
             authorID = input.getString("authorID");
             title = input.getString("title");
             content = input.getString("content");
