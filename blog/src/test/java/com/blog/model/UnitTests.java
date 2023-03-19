@@ -33,7 +33,7 @@ class UnitTests {
         comment = new Comment(
                 0,
                 1,
-                2,
+                "2",
                 "",
                 "2023-03-15T06:00:00.861336Z",
                 "2023-03-15T06:00:00.861336Z",
@@ -43,7 +43,7 @@ class UnitTests {
         );
         post = new Post(
                 0,
-                1,
+                "1",
                 "",
                 "",
                 "2023-03-16T16:30:00.861336Z",
@@ -120,12 +120,6 @@ class UnitTests {
     /**
      * Tests for Comment
      */
-    @Test
-    void commentConstructorOne() {
-        Comment comment1 = new Comment();
-        assertEquals(0, comment1.getPostID());
-        assertEquals(0, comment1.getCommentID());
-    }
 
     @Test
     void commentConstructorTwo() {
@@ -141,7 +135,7 @@ class UnitTests {
         Comment comment1 = new Comment(
                 10,
                 11,
-                12,
+                "12",
                 "Happy New Year!",
                 "2022-01-01T00:00:00.861336Z",
                 "2022-01-02T06:00:00.861336Z",
@@ -182,7 +176,7 @@ class UnitTests {
         Comment comment1 = new Comment(
                 10,
                 11,
-                12,
+                "12",
                 "Happy New Year!",
                 "2022-01-01T00:00:00.861336Z",
                 "2022-01-02T06:00:00.861336Z",
@@ -232,7 +226,7 @@ class UnitTests {
         Comment comment1 = new Comment(
                 10,
                 11,
-                12,
+                "12",
                 "Happy New Year!",
                 "2022-01-01T00:00:00.861336Z",
                 "2022-01-02T06:00:00.861336Z",
@@ -296,7 +290,7 @@ class UnitTests {
     @Test
     void commentSetAuthorID() {
         assertEquals(0, comment.getAuthorID());
-        comment.setAuthorID(1);
+        comment.setAuthorID("1");
         assertEquals(1, comment.getAuthorID());
     }
 
@@ -305,7 +299,7 @@ class UnitTests {
         Comment comment1 = new Comment(
                 10,
                 11,
-                12,
+                "12",
                 "Happy New Year!",
                 "2022-01-01T00:00:00.861336Z",
                 "2022-01-02T06:00:00.861336Z",
@@ -353,7 +347,7 @@ class UnitTests {
         Comment comment1 = new Comment(
                 10,
                 11,
-                12,
+                "12",
                 "Happy New Year!",
                 "2022-01-01T00:00:00.861336Z",
                 "2022-01-02T06:00:00.861336Z",
@@ -489,7 +483,7 @@ class UnitTests {
     void postCopy() {
         Post post1 = new Post(
                 1874,
-                9934,
+                "9934",
                 "Happy New Year",
                 "I wish everyone is having fun in Christmas and wish all of us a happy new year!",
                 "2023-01-01T00:00:01.861336Z",
@@ -525,7 +519,7 @@ class UnitTests {
     void postDisplayableFailOne() {
         Post post1 = new Post(
                 10,
-                11,
+                "11",
                 "Happy New Year!",
                 "I wish everyone is having fun in Christmas and wish all of us a happy new year!",
                 "2022-01-01T00:00:00.861336Z",
@@ -593,7 +587,7 @@ class UnitTests {
     @Test
     void postSetAuthorID() {
         assertEquals(0, post.getAuthorID());
-        post.setAuthorID(1);
+        post.setAuthorID("1");
         assertEquals(1, post.getAuthorID());
     }
 
@@ -601,7 +595,7 @@ class UnitTests {
     void postGetContent() {
         Post post1 = new Post(
                 10,
-                11,
+                "11",
                 "Happy New Year!",
                 "I wish everyone is having fun in Christmas and wish all of us a happy new year!",
                 "2022-01-01T00:00:00.861336Z",
@@ -653,7 +647,7 @@ class UnitTests {
 
         Post post1 = new Post(
                 10,
-                11,
+                "11",
                 "Happy New Year!",
                 "I wish everyone is having fun in Christmas and wish all of us a happy new year!",
                 "2022-01-01T00:00:00.861336Z",
