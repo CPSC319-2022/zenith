@@ -41,9 +41,19 @@ const CreatePost = () => {
     setTitle('');
     setBody('');
   };
+  if (!isAuthenticated) {
+    return (
+      <div className="login-button">
+        <Link to="/login">
+          <Button variant="primary">Login to Create a Post</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <>
+      <h1 className="create-title">Create a Post</h1>
       <div className="create">
         <form id="new_post" onSubmit={handleCreatePost}>
           <div className="content">
@@ -62,10 +72,10 @@ const CreatePost = () => {
           <div className="menu">
             <div className="menu-item col-md-auto">
               <Button as="input" type="submit" value="Publish" variant="primary" size="lg" />{' '}
-              <Form.Group controlId="formFile">
+              {/* <Form.Group controlId="formFile">
                 <Form.Control type="file" />
-              </Form.Group>
-              <Button variant="outline-success">Update</Button>{''}
+              </Form.Group> */}
+              {/* <Button variant="outline-success">Update</Button>{''} */}
             </div>
           </div>
         </form>
