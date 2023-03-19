@@ -5,34 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents + post finished">
-      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/loginController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/redux/slices/auth.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/slack-bot/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/slack-bot/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/slack-bot/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/slack-bot/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/devCI.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/devCI.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/CorsConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/CorsConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/CustomUserDetailsFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/CustomUserDetailsFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloudbuild.yml" beforeDir="false" afterPath="$PROJECT_DIR$/cloudbuild.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/common components/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/common components/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Comment.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Comment.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Create.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Create.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/SinglePost.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/SinglePost.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/redux/slices/commentSlice.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/slices/commentSlice.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/redux/store.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/store.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Create.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/Create.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
