@@ -2,6 +2,7 @@ package com.blog.model;
 
 import com.blog.database.Database;
 import com.blog.exception.BlogException;
+import com.blog.exception.DoesNotExistException;
 import org.json.JSONObject;
 
 /**
@@ -50,11 +51,10 @@ public class Post extends Content {
 
     public Post(int postID) {
         this.postID = postID;
-        Database.retrieve(this);
     }
 
     public Post(int postID,
-                int authorID,
+                String authorID,
                 String title,
                 String content,
                 String creationDate,
@@ -72,6 +72,18 @@ public class Post extends Content {
     }
 
     /**
+     * Factory method to retrieve the post with the given postID.
+     *
+     * @param postID The post to retrieve.
+     * @return The post with the given postID.
+     */
+    public static Post retrieve(int postID) throws DoesNotExistException {
+        Post post = new Post(postID);
+        Database.retrieve(post);
+        return post;
+    }
+
+    /**
      * Returns the JSON representation of this object.
      *
      * @return JSONObject
@@ -82,6 +94,14 @@ public class Post extends Content {
                 .put("title", title)
                 .put("views", views)
                 .put("allowComments", allowComments);
+    }
+
+    /**
+     * Returns the JSON string of this object
+     * @return String
+     */
+    public String asJSONString() {
+        return asJSONObject().toString();
     }
 
     /**

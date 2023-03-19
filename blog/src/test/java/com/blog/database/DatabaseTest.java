@@ -1,23 +1,23 @@
 package com.blog.database;
 
+import com.blog.exception.DoesNotExistException;
+import com.blog.model.*;
 import org.junit.jupiter.api.Test;
 
-import com.blog.model.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DatabaseTest {
     @Test
     void testSaveUser() {
-        User guest = new User(2, "testname", UserLevel.ADMIN, "2023-03-01 01:02:03", "2023-03-01 01:02:03", UserStatus.ONLINE, null, "hello", false);
+        User guest = new User("1", "testname", UserLevel.CONTRIBUTOR, "2023-03-01 01:02:03", "2023-03-01 01:02:03", UserStatus.ONLINE, null, "hello", false);
         try {
-            int num = Database.save(guest);
+            String num = Database.save(guest);
             assertEquals(2, num);
             assertEquals("2023-03-01 01:02:03", guest.getCreationDate());
             assertEquals("2023-03-01 01:02:03", guest.getLastLogin());
-            assertEquals(UserLevel.ADMIN, guest.getUserLevel());
+            assertEquals(UserLevel.CONTRIBUTOR, guest.getUserLevel());
             assertEquals("testname", guest.getUsername());
             assertEquals(false, guest.isDeleted());
         } catch (Exception e) {
@@ -27,7 +27,7 @@ class DatabaseTest {
 
     @Test
     void testSavePost() {
-        Post post = new Post(1, 1, "testtitle", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false, 3, true);
+        Post post = new Post(1, "1", "testtitle", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false, 3, true);
         try {
             int num = Database.save(post);
             assertEquals(1, num);
@@ -47,7 +47,7 @@ class DatabaseTest {
 
     @Test
     void testSaveComment() {
-        Comment comment = new Comment(1, 1, 1, "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false);
+        Comment comment = new Comment(1, 1, "1", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false);
         try {
             int num = Database.save(comment);
             assertEquals(1, num);
@@ -65,7 +65,8 @@ class DatabaseTest {
 
     @Test
     void testRetrieveUser() {
-        User guest = new User(1);
+        User guest = new User("1");
+
         assertEquals(1, guest.getUserID());
         assertEquals("2023-03-01 01:02:03", guest.getCreationDate());
         assertEquals("2023-03-01 01:02:03", guest.getLastLogin());
@@ -76,7 +77,12 @@ class DatabaseTest {
 
     @Test
     void testRetrievePost() {
-        Post post = new Post(1);
+        Post post = null;
+        try {
+            post = Post.retrieve(1);
+        } catch (DoesNotExistException e) {
+            e.printStackTrace();
+        }
         assertEquals(1, post.getPostID());
         assertEquals(1, post.getAuthorID());
         assertEquals("2023-03-01 01:02:03", post.getCreationDate());
@@ -91,7 +97,12 @@ class DatabaseTest {
 
     @Test
     void testRetrieveComment() {
-        Comment comment = new Comment(1, 1);
+        Comment comment = null;
+        try {
+            comment = Comment.retrieve(1, 1);
+        } catch (DoesNotExistException e) {
+            e.printStackTrace();
+        }
         assertEquals(1, comment.getPostID());
         assertEquals(1, comment.getCommentID());
         assertEquals(1, comment.getAuthorID());
@@ -117,7 +128,8 @@ class DatabaseTest {
 
     @Test
     void testDeleteUser() {
-        User guest = new User(2);
+        User guest = new User("1");
+
         try {
             Database.delete(guest);
             Database.retrieve(guest);
@@ -129,7 +141,12 @@ class DatabaseTest {
 
     @Test
     void testDeletePost() {
-        Post post = new Post(3);
+        Post post = null;
+        try {
+            post = Post.retrieve(3);
+        } catch (DoesNotExistException e) {
+            e.printStackTrace();
+        }
         try {
             Database.delete(post);
             Database.retrieve(post);
@@ -141,7 +158,12 @@ class DatabaseTest {
 
     @Test
     void testDeleteComment() {
-        Comment comment = new Comment(1, 2);
+        Comment comment = null;
+        try {
+            comment = Comment.retrieve(1, 2);
+        } catch (DoesNotExistException e) {
+            e.printStackTrace();
+        }
         try {
             Database.delete(comment);
             Database.retrieve(comment);

@@ -1,6 +1,7 @@
 package com.blog.model;
 
 import com.blog.database.Database;
+import com.blog.exception.DoesNotExistException;
 import org.json.JSONObject;
 
 /**
@@ -36,20 +37,14 @@ public class Comment extends Content {
     private final int postID;
     private int commentID;
 
-    public Comment() {
-        this.postID = 0;
-        this.commentID = 0;
-    }
-
     public Comment(int postID, int commentID) {
         this.postID = postID;
         this.commentID = commentID;
-        Database.retrieve(this);
     }
 
     public Comment(int postID,
                    int commentID,
-                   int authorID,
+                   String authorID,
                    String content,
                    String creationDate,
                    String lastModified,
@@ -62,6 +57,19 @@ public class Comment extends Content {
     }
 
     /**
+     * Factory method to retrieve the comment with the given postID and commentID.
+     *
+     * @param postID The post to retrieve the comment from.
+     * @param commentID The comment to retrieve.
+     * @return The comment with the given postID and commentID.
+     */
+    public static Comment retrieve(int postID, int commentID) throws DoesNotExistException {
+        Comment comment = new Comment(postID, commentID);
+        Database.retrieve(comment);
+        return comment;
+    }
+
+    /**
      * Returns the JSON representation of this object.
      *
      * @return JSONObject
@@ -70,6 +78,14 @@ public class Comment extends Content {
         return super.asJSONObject()
                 .put("postID", postID)
                 .put("commentID", commentID);
+    }
+
+    /**
+     * Returns the JSON string of this object
+     * @return String
+     */
+    public String asJSONString() {
+        return asJSONObject().toString();
     }
 
     public void copy(Comment c) {

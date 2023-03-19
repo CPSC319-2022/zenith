@@ -1,5 +1,4 @@
 package com.blog.model;
-
 import com.blog.exception.BlogException;
 import com.blog.utils.Utility;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +19,17 @@ class UnitTests {
 
     @BeforeEach
     void beforeEach() {
-        guest = new User(1);
+        guest = new User(
+                "",
+                "Guest Username",
+                GUEST,
+                Utility.getCurrentTime(),
+                Utility.getCurrentTime(),
+                UserStatus.ONLINE,
+                "url to profile picture",
+                "Guest bio",
+                false
+        );
         comment = new Comment(
                 0,
                 1,
@@ -51,7 +60,6 @@ class UnitTests {
      */
     @Test
     void guestConstructor() {
-        assertEquals(0, guest.getUserID());
         assertEquals(UserLevel.GUEST, guest.getUserLevel());
     }
 
@@ -72,7 +80,7 @@ class UnitTests {
     void guestToOtherLevels() {
         assertEquals(UserLevel.GUEST, guest.getUserLevel());
         guest.setUserLevel(READER);
-        assertEquals(UserLevel.GUEST, guest.getUserLevel());
+        assertEquals(UserLevel.READER, guest.getUserLevel());
         guest.setUserLevel(CONTRIBUTOR);
         assertEquals(UserLevel.CONTRIBUTOR, guest.getUserLevel());
         guest.setUserLevel(ADMIN);
