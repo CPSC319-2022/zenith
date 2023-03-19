@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents + post finished">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/javax_servlet_api.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_security_spring_config.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_security_spring_oauth2_client.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/exception/InitializationException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/CustomUserDetailsFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/CorsConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/CorsConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/PostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/PostController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/resources/application.yml" afterDir="false" />
-    </list>
+    <list default="true" id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents + post finished" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
