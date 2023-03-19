@@ -130,7 +130,7 @@ class UnitTests {
 
     @Test
     void userSetBioEmptyString() {
-        guest.setBio("a1ns8");
+        guest.setBio("");
         assertEquals("", guest.getBio());
     }
 
@@ -179,7 +179,7 @@ class UnitTests {
 
     @Test
     void commentPostIDCheck() {
-        assertEquals(1, comment.getPostID());
+        assertEquals(0, comment.getPostID());
     }
 
     @Test
@@ -645,7 +645,7 @@ class UnitTests {
     @Test
     void postSetLastModified() {
         post.setLastModified("2023-03-17T19:30:00.861336Z");
-        assertEquals("2023-03-17T190:30:00.861336Z", post.getLastModified());
+        assertEquals("2023-03-17T19:30:00.861336Z", post.getLastModified());
     }
 
     @Test

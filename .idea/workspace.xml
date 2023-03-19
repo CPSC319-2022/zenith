@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="added JSON test">
-      <change afterPath="$PROJECT_DIR$/Zenith/Zenith.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Zenith/src/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/Controller/ControllerTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="Unit Tests fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/Controller/ControllerTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/Controller/ControllerTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zenith.iml" beforeDir="false" afterPath="$PROJECT_DIR$/zenith.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +22,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="qa" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -87,6 +88,14 @@
       <option name="presentableId" value="Default" />
       <updated>1679189644816</updated>
     </task>
+    <task id="LOCAL-00001" summary="Unit Tests fixes">
+      <created>1679259709343</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1679259709343</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -100,7 +109,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="qa" />
                       </list>
                     </value>
                   </entry>
@@ -111,5 +120,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Unit Tests fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Unit Tests fixes" />
   </component>
 </project>
