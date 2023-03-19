@@ -3,6 +3,20 @@ package com.blog.controller;
 import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.exception.InvalidPermissionException;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import java.util.Collections;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
 import com.blog.model.Post;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
@@ -45,19 +59,55 @@ public ResponseEntity<String> getPosts(@RequestParam("postIDStart") int postIDSt
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
+// @PostMapping("/testMessage")
+// public String testMessage(@RequestBody String content, @AuthenticationPrincipal OAuth2User principal) {
+//     String userName = principal.getAttribute("name");
+//     return content + " " + userName;
+// }
 
-    @PostMapping("/createPost")
-    @ResponseBody
-    public ResponseEntity<String> createPost(@RequestBody String input) {
-        try {
-            createPost(new JSONObject(input));
-            return ResponseEntity.ok().build();
-        } catch (InvalidPermissionException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+@PostMapping("/createPost")
+@ResponseBody
+public ResponseEntity<String> createPost(@RequestBody String input, @RequestHeader("Authorization") String accessToken) {
+    try {
+        // Remove the "Bearer " prefix from the access token
+        if (accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring("Bearer ".length());
         }
+        //System.out.println(accessToken);
+
+        // Verify the Google OAuth access token and extract the authorID
+        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(GoogleNetHttpTransport.newTrustedTransport(), jsonFactory)
+                .setAudience(Collections.singletonList("137046975675-86mneph4bv1sfafa1788famgv2ot695r.apps.googleusercontent.com")) // NEED TO HIDE IT
+                .build();
+
+        GoogleIdToken idToken = verifier.verify(accessToken);
+        //System.out.println(idToken);
+        if (idToken == null) {
+            System.out.println("Invalid access token");
+            return new ResponseEntity<>("Invalid access token", HttpStatus.UNAUTHORIZED);
+        }
+        //System.out.println(idToken.getPayload());
+        String subject = idToken.getPayload().get("sub").toString();
+        //System.out.println("Subject: " + subject);
+       
+        // int authorID = Integer.parseInt(idToken.getPayload().getSubject());
+        // System.out.println(idToken.getPayload());
+
+        JSONObject inputJson = new JSONObject(input);
+        // int authorID = Integer.parseInt(subject);
+        // System.out.println(authorID);
+        inputJson.put("authorID", subject);
+       System.out.println(inputJson);
+      
+        createPost(inputJson);
+        return ResponseEntity.ok().build();
+    } catch (InvalidPermissionException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+}
 
     @DeleteMapping("/deletePost")
     @ResponseBody
@@ -229,6 +279,8 @@ public ResponseEntity<String> getPosts(@RequestParam("postIDStart") int postIDSt
 
         // Read data from JSON
         try {
+            System.out.println(input);
+            authorID = input.getInt("authorID");
             authorID = input.getInt("authorID");
             title = input.getString("title");
             content = input.getString("content");
