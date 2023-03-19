@@ -116,22 +116,20 @@ public class CommentController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":   int,     // The post to create the comment in.
-     *              "authorID": String,  // The author of the comment.
-     *              "content":  String   // The content of the comment.
+     *              "postID":      int,     // The post to create the comment in.
+     *              "accessToken": String,  // The access token of the author of the comment.
+     *              "content":     String   // The content of the comment.
      *              }
      * @return The JSON string representing the created comment
      * @throws BlogException
      */
     private static String createComment(JSONObject input) throws BlogException {
         int postID;
-        String authorID;
         String content;
 
         // Read data from JSON
         try {
             postID = input.getInt("postID");
-            authorID = input.getString("authorID");
             content = input.getString("content");
         } catch (JSONException e) {
             throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
@@ -139,11 +137,11 @@ public class CommentController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
 
-        // Retrieve the user
-        User user = User.retrieve(authorID);
+        // Retrieve the author
+        User author = UserController.retrieveUserByAccessToken(input);
 
-        // Check whether the user has UserLevel of at least UserLevel.READER
-        if (user.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
+        // Check whether the author has UserLevel of at least UserLevel.READER
+        if (author.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
             throw new InvalidPermissionException("User does not have the necessary permission to make a comment.");
         }
 
@@ -155,7 +153,7 @@ public class CommentController {
         Comment comment = new Comment(
                 postID,
                 Comment.NEW_COMMENT_ID,
-                authorID,
+                author.getUserID(),
                 content,
                 currentTime,
                 currentTime,
@@ -176,9 +174,9 @@ public class CommentController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,    // The post containing the comment to delete.
-     *              "commentID": int,    // The comment to delete.
-     *              "userID":    String  // The user attempting to delete.
+     *              "postID":      int,    // The post containing the comment to delete.
+     *              "commentID":   int,    // The comment to delete.
+     *              "accessToken": String  // The access token of the user attempting to delete.
      *              }
      * @throws BlogException
      */
@@ -187,7 +185,7 @@ public class CommentController {
         Comment comment = retrieveComment(input);
 
         // Retrieve the user
-        User user = UserController.retrieveUser(input);
+        User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to delete comment
         if (comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
@@ -203,10 +201,10 @@ public class CommentController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,     // The post containing the comment to edit.
-     *              "commentID": int,     // The comment to edit.
-     *              "content":   String,  // The new content of the comment.
-     *              "userID":    String   // The user attempting to edit.
+     *              "postID":      int,     // The post containing the comment to edit.
+     *              "commentID":   int,     // The comment to edit.
+     *              "content":     String,  // The new content of the comment.
+     *              "accessToken": String   // The access token of the user attempting to edit.
      *              }
      * @throws BlogException
      */
@@ -229,7 +227,7 @@ public class CommentController {
         Comment comment = retrieveComment(input);
 
         // Retrieve the user
-        User user = UserController.retrieveUser(input);
+        User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to delete post
         if (comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
@@ -357,7 +355,7 @@ public class CommentController {
                                                 @RequestBody String body) {
         try {
             JSONObject input = new JSONObject(body)
-                    .put("authorID", LoginController.getUserID(accessToken));
+                    .put("accessToken", accessToken);
             return ResponseEntity.ok(createComment(input));
         } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
@@ -374,7 +372,7 @@ public class CommentController {
                                                 @RequestBody String body) {
         try {
             JSONObject input = new JSONObject(body)
-                    .put("userID", LoginController.getUserID(accessToken));
+                    .put("accessToken", accessToken);
             deleteComment(input);
             return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {
@@ -390,7 +388,7 @@ public class CommentController {
                                               @RequestBody String body) {
         try {
             JSONObject input = new JSONObject(body)
-                    .put("userID", LoginController.getUserID(accessToken));
+                    .put("accessToken", accessToken);
             editComment(input);
             return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {

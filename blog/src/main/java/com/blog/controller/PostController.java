@@ -116,7 +116,7 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "authorID":      String,   // The author of the post.
+     *              "accessToken":   String,   // The access token of the author of the post.
      *              "title":         String,   // The title of the post.
      *              "content":       String,   // The content of the post.
      *              "allowComments": boolean,  // Whether to allow comments
@@ -125,14 +125,12 @@ public class PostController {
      * @throws BlogException
      */
     private static String createPost(JSONObject input) throws BlogException {
-        String authorID;
         String title;
         String content;
         boolean allowComments;
 
         // Read data from JSON
         try {
-            authorID = input.getString("authorID");
             title = input.getString("title");
             content = input.getString("content");
             allowComments = input.getBoolean("allowComments");
@@ -142,11 +140,11 @@ public class PostController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
 
-        // Retrieve the user
-        User user = User.retrieve(authorID);
+        // Retrieve the author
+        User author = UserController.retrieveUserByAccessToken(input);
 
-        // Check whether the user has permission to make a post.
-        if (user.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
+        // Check whether the author has permission to make a post.
+        if (author.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
             throw new InvalidPermissionException("User does not have the necessary permission to make a post.");
         }
 
@@ -158,7 +156,7 @@ public class PostController {
         String currentTime = Utility.getCurrentTime();
         Post post = new Post(
                 Post.NEW_POST_ID,
-                authorID,
+                author.getUserID(),
                 title,
                 content,
                 currentTime,
@@ -173,8 +171,8 @@ public class PostController {
         // Save post to database
         int postID = Database.save(post);
 
-        // Indicate that the user is a contributor
-        userIsContributor(user);
+        // Indicate that the author is a contributor
+        userIsContributor(author);
 
         // Return the created post
         return Post.retrieve(postID).asJSONString();
@@ -185,8 +183,8 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID": int,     // The post to delete.
-     *              "userID": String,  // The user attempting to delete.
+     *              "postID":      int,     // The post to delete.
+     *              "accessToken": String,  // The access token of the user attempting to delete.
      *              }
      * @throws BlogException
      */
@@ -195,7 +193,7 @@ public class PostController {
         Post post = retrievePost(input);
 
         // Retrieve the user
-        User user = UserController.retrieveUser(input);
+        User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to delete post
         if (post.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
@@ -215,7 +213,7 @@ public class PostController {
      *              "title":         String   // The new title of the post.
      *              "content":       String   // The new content of the post.
      *              "allowComments": boolean  // Whether to allow comments.
-     *              "userID":        String,  // The user attempting to edit.
+     *              "accessToken":   String,  // The access token of the user attempting to edit.
      *              }
      * @throws BlogException
      */
@@ -243,7 +241,7 @@ public class PostController {
         Post post = retrievePost(input);
 
         // Retrieve the user
-        User user = UserController.retrieveUser(input);
+        User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to edit post
         if (post.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
@@ -402,7 +400,7 @@ public class PostController {
                                              @RequestBody String body) {
         try {
             JSONObject input = new JSONObject(body)
-                    .put("authorID", LoginController.getUserID(accessToken));
+                    .put("accessToken", accessToken);
             return ResponseEntity.ok(createPost(input));
         } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
@@ -419,7 +417,7 @@ public class PostController {
                                              @RequestBody String body) {
         try {
             JSONObject input = new JSONObject(body)
-                    .put("userID", LoginController.getUserID(accessToken));
+                    .put("accessToken", accessToken);
             deletePost(input);
             return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {
@@ -435,7 +433,7 @@ public class PostController {
                                            @RequestBody String body) {
         try {
             JSONObject input = new JSONObject(body)
-                    .put("userID", LoginController.getUserID(accessToken));
+                    .put("accessToken", accessToken);
             editPost(input);
             return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {
