@@ -1,10 +1,12 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getComments, getComment, createComment as createCommentAPI } from '../../api';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {
-    upvoteComment as upvoteCommentApi,
-    downvoteComment as downvoteCommentApi,
+    createComment as createCommentAPI,
     deleteComment as deleteCommentApi,
-    editComment as editCommentApi
+    downvoteComment as downvoteCommentApi,
+    editComment as editCommentApi,
+    getComment,
+    getComments,
+    upvoteComment as upvoteCommentApi
 } from '../../api';
 
 
@@ -88,11 +90,16 @@ export const deleteComment = createAsyncThunk(
 // Async thunk for editing a comment
 export const editComment = createAsyncThunk(
     'comment/edit',
-    async ({ postID, commentID, content }, { rejectWithValue }) => {
-        console.log('within thunk', postID, commentID, content);
+    async ({ postID, commentID, content }, { rejectWithValue, getState }) => {
         try {
             await editCommentApi({ postID, commentID, content });
-            return { postID, commentID };
+            const comments = getState().comments.comments;
+            const commentIndex = comments.findIndex((comment) => comment.commentID === commentID);
+            if (commentIndex >= 0) {
+                const updatedComment = { ...comments[commentIndex], content };
+                return { postID, commentID, comment: updatedComment };
+            }
+            throw new Error('Comment not found');
         } catch (error) {
             return rejectWithValue(error.message);
         }
@@ -149,6 +156,17 @@ const commentSlice = createSlice({
             .addCase(deleteComment.fulfilled, (state, action) => {
                 state.comments = state.comments.filter((comment) => comment.commentID !== action.payload.commentID);
             })
+            .addCase(editComment.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                const { postID, commentID, comment } = action.payload;
+                const comments = state.comments.slice();
+                const commentIndex = comments.findIndex((comment) => comment.commentID === commentID);
+                if (commentIndex >= 0) {
+                    comments[commentIndex] = comment;
+                }
+                state.comments = comments;
+                state.comment = comment;
+            })
     },
 });
 
@@ -157,7 +175,8 @@ export const commentSliceActions = {
     fetchComments,
     fetchComment,
     createComment,
-    deleteComment
+    deleteComment,
+    editComment
 };
 
 export default commentSlice.reducer;
