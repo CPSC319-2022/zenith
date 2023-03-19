@@ -2,26 +2,26 @@ steps:
 # Containerize (includes testing)
   - name: gcr.io/cloud-builders/docker
     args: 
-      - 'build'
-      - '--no-cache'
-      - '-t'
-      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/backend:$COMMIT_SHA'
-      - '--file'
-      - './blog/Dockerfile'
-      - "./blog"
+    - 'build'
+    - '--no-cache'
+    - '-t'
+    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/backend:$COMMIT_SHA'
+    - '--file'
+    - './blog/Dockerfile'
+    - "./blog"
     allowFailure: false
     timeout: 300s
     id: Containerize & Test Backend
 
   - name: gcr.io/cloud-builders/docker
-     args: 
-      - 'build'
-      - '--no-cache'
-      - '-t'
-      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/frontend:$COMMIT_SHA'
-      - '--file'
-      - './frontend/frontend.dockerfile'
-      - "./frontend"
+    args: 
+    - 'build'
+    - '--no-cache'
+    - '-t'
+    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/frontend:$COMMIT_SHA'
+    - '--file'
+    - './frontend/frontend.dockerfile'
+    - "./frontend"
     allowFailure: false
     timeout: 300s
     id: Containerize & Test Frontend
