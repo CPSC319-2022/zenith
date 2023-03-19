@@ -4,22 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents + post finished">
+    <list default="true" id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="added JSON test">
+      <change afterPath="$PROJECT_DIR$/Zenith/Zenith.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Zenith/src/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/Controller/ControllerTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/CorsConfiguration$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/CorsConfiguration$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/CorsConfiguration.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/CorsConfiguration.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/CommentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/CommentController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/LoginController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/PostController.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/PostController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/CommentRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/CommentRowMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/PostRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/PostRowMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/UserRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/UserRowMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/blog_setup.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/blog_setup.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/zenith.iml" beforeDir="false" afterPath="$PROJECT_DIR$/zenith.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,9 +31,14 @@
         <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
+  </component>
+  <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="2NE6lZ8ML18QyQJlzC9SNzpmK0u" />
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2NDDE9j4dywyFLFoUYl62y7mEMK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -49,6 +46,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "jdk.selected.JAVA_MODULE": "18",
+    "last_opened_file_path": "/Users/sherlock/Desktop/zenith",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.31990233"
+  }
+}]]></component>
+  <component name="RunManager">
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
@@ -117,8 +131,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="18" />
       <option name="PACKAGE_NAME" value="com.blog.model" />
       <option name="MAIN_CLASS_NAME" value="com.blog.model.UnitTests" />
       <option name="METHOD_NAME" value="guestConstructor" />
@@ -127,36 +139,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Zenith-" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.blog.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.blog.model" />
-      <option name="MAIN_CLASS_NAME" value="com.blog.model.UserTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BlogApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="blog" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.blog.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.blog.BlogApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.UnitTests.guestConstructor" />
         <item itemvalue="JUnit.UnitTests" />
         <item itemvalue="JUnit.DatabaseTest" />
       </list>
@@ -164,19 +149,12 @@
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task id="LOCAL-00001" summary="contents half-way">
-      <created>1679043117165</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1679043117165</updated>
-    </task>
-    <task id="LOCAL-00002" summary="contents + post finished">
-      <created>1679099469122</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1679099469122</updated>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="added JSON test" />
+      <created>1679189644816</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679189644816</updated>
     </task>
     <task active="true" id="Default" summary="Default task">
       <changelist id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents + post finished" />
@@ -198,16 +176,22 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="contents half-way" />
-    <MESSAGE value="contents + post finished" />
-    <option name="LAST_COMMIT_MESSAGE" value="contents + post finished" />
   </component>
 </project>
