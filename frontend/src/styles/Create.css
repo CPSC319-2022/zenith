@@ -4,43 +4,46 @@
     flex-direction: column;
     gap: 20px;
     padding: 5%;
-   
-}
-
-.content {
+  }
+  
+  .content {
     gap: 20px;
-    
-}
-
-input {
+    margin-bottom: 2%;
+  }
+  
+  
+  input {
     padding: 10px;
     border: 1px solid #bfc0c0ff;
     border-radius: 10px;
-}
-
-.editor-container {
+    width: 100%;
+  }
+  
+  .editor-container {
     height: 300px;
     overflow: scroll;
     border: 1px solid #bfc0c0ff;
     border-radius: 10px;
-}
-
-.editor {
+    margin-top: 5%;
+  }
+  
+  .editor {
     height: 100%;
-    
-   
-}
-
-.menu {
+    /* border: 1px solid #bfc0c0ff; */
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 16px;
+  min-height: 200px;
+  }
+  
+  .menu {
     flex: 2;
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-}
-
-.menu-item {
-    /* border: 1px solid #bfc0c0ff;
-    border-radius: 10px; */
+  }
+  
+  .menu-item {
     padding: 10px;
     font-size: 12px;
     text-align: center;
@@ -49,44 +52,58 @@ input {
     justify-content: space-between;
     gap: 20px;
     align-items:center ;
-
-}
-
-
-
-.visibility {
+  }
+  
+  .visibility {
     font-size: 12px;
-}
-
-.img-upload {
+  }
+  
+  .img-upload {
     text-decoration: underline;
     cursor: pointer;
-}
-
-.buttons {
+  }
+  
+  .buttons {
     margin-top: 10px;
-}
-
-.btn1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .btn1 {
     cursor: pointer;
     color: #ef8354ff;;
     background-color: #ffffff;
     border: 1px solid #ef8354ff;
     padding: 3px 5px;
-}
-
-.btn2 {
+  }
+  
+  .btn2 {
     cursor: pointer;
     color: #ffffffff;
     background-color: #ef8354ff;
     border: 1px solid #ef8354ff;
     padding: 3px 5px;
-}
-
-@media screen and (max-width: 768px) {
- 
-    .menu-item {
-        flex-direction: column;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .create {
+      padding: 2%;
     }
-}
     
+    input {
+      width: 100%;
+    }
+  
+    .menu-item {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .buttons {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  

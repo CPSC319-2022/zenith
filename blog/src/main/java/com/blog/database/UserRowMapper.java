@@ -22,10 +22,8 @@ public class UserRowMapper implements RowMapper<User> {
 		} else if (rs.getInt("user_level") == 2) {
 			userLevel = UserLevel.ADMIN;
 		}
-		// String creationDate = rs.getString("creation_date");
-		// String lastLogin = rs.getString("last_login");
-		String creationDate = "2023-03-15T06:00:00.861336Z";
-		String lastLogin = "2023-03-15T06:00:00.861336Z";
+		String creationDate = rs.getString("creation_date");
+		String lastLogin = rs.getString("last_login");
 		UserStatus userStatus = null;
 		int status = rs.getInt("user_status");
 		if (status == 0) {

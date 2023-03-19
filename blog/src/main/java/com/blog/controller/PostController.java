@@ -4,6 +4,7 @@ import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.exception.DoesNotExistException;
 import com.blog.exception.InvalidPermissionException;
+import com.blog.exception.LoginFailedException;
 import com.blog.model.Post;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
@@ -115,7 +116,7 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "authorID":      String,   // The author of the post.
+     *              "accessToken":   String,   // The access token of the author of the post.
      *              "title":         String,   // The title of the post.
      *              "content":       String,   // The content of the post.
      *              "allowComments": boolean,  // Whether to allow comments
@@ -124,14 +125,12 @@ public class PostController {
      * @throws BlogException
      */
     private static String createPost(JSONObject input) throws BlogException {
-        String authorID;
         String title;
         String content;
         boolean allowComments;
 
         // Read data from JSON
         try {
-            authorID = input.getString("authorID");
             title = input.getString("title");
             content = input.getString("content");
             allowComments = input.getBoolean("allowComments");
@@ -141,11 +140,11 @@ public class PostController {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
 
-        // Retrieve the user
-        User user = User.retrieve(authorID);
+        // Retrieve the author
+        User author = UserController.retrieveUserByAccessToken(input);
 
-        // Check whether the user has permission to make a post.
-        if (user.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
+        // Check whether the author has permission to make a post.
+        if (author.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
             throw new InvalidPermissionException("User does not have the necessary permission to make a post.");
         }
 
@@ -157,7 +156,7 @@ public class PostController {
         String currentTime = Utility.getCurrentTime();
         Post post = new Post(
                 Post.NEW_POST_ID,
-                authorID,
+                author.getUserID(),
                 title,
                 content,
                 currentTime,
@@ -172,8 +171,8 @@ public class PostController {
         // Save post to database
         int postID = Database.save(post);
 
-        // Indicate that the user is a contributor
-        userIsContributor(user);
+        // Indicate that the author is a contributor
+        userIsContributor(author);
 
         // Return the created post
         return Post.retrieve(postID).asJSONString();
@@ -184,8 +183,8 @@ public class PostController {
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID": int,     // The post to delete.
-     *              "userID": String,  // The user attempting to delete.
+     *              "postID":      int,     // The post to delete.
+     *              "accessToken": String,  // The access token of the user attempting to delete.
      *              }
      * @throws BlogException
      */
@@ -194,7 +193,7 @@ public class PostController {
         Post post = retrievePost(input);
 
         // Retrieve the user
-        User user = UserController.retrieveUser(input);
+        User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to delete post
         if (post.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
@@ -214,7 +213,7 @@ public class PostController {
      *              "title":         String   // The new title of the post.
      *              "content":       String   // The new content of the post.
      *              "allowComments": boolean  // Whether to allow comments.
-     *              "userID":        String,  // The user attempting to edit.
+     *              "accessToken":   String,  // The access token of the user attempting to edit.
      *              }
      * @throws BlogException
      */
@@ -242,7 +241,7 @@ public class PostController {
         Post post = retrievePost(input);
 
         // Retrieve the user
-        User user = UserController.retrieveUser(input);
+        User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to edit post
         if (post.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
@@ -397,11 +396,16 @@ public class PostController {
 
     @PostMapping("/createPost")
     @ResponseBody
-    public ResponseEntity<String> createPost(@RequestBody String input) {
+    public ResponseEntity<String> createPost(@RequestHeader("Authorization") String accessToken,
+                                             @RequestBody String body) {
         try {
-            return ResponseEntity.ok(createPost(new JSONObject(input)));
-        } catch (InvalidPermissionException e) {
+            JSONObject input = new JSONObject(body)
+                    .put("accessToken", accessToken);
+            return ResponseEntity.ok(createPost(input));
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -409,12 +413,15 @@ public class PostController {
 
     @DeleteMapping("/deletePost")
     @ResponseBody
-    public ResponseEntity<String> deletePost(@RequestBody String input) {
+    public ResponseEntity<String> deletePost(@RequestHeader("Authorization") String accessToken,
+                                             @RequestBody String body) {
         try {
-            deletePost(new JSONObject(input));
+            JSONObject input = new JSONObject(body)
+                    .put("accessToken", accessToken);
+            deletePost(input);
             return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -422,12 +429,15 @@ public class PostController {
 
     @PutMapping("/editPost")
     @ResponseBody
-    public ResponseEntity<String> editPost(@RequestBody String input) {
+    public ResponseEntity<String> editPost(@RequestHeader("Authorization") String accessToken,
+                                           @RequestBody String body) {
         try {
-            editPost(new JSONObject(input));
+            JSONObject input = new JSONObject(body)
+                    .put("accessToken", accessToken);
+            editPost(input);
             return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -435,9 +445,9 @@ public class PostController {
 
     @PutMapping("/upvotePost")
     @ResponseBody
-    public ResponseEntity<String> upvotePost(@RequestBody String input) {
+    public ResponseEntity<String> upvotePost(@RequestBody String body) {
         try {
-            upvotePost(new JSONObject(input));
+            upvotePost(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -446,9 +456,9 @@ public class PostController {
 
     @PutMapping("/downvotePost")
     @ResponseBody
-    public ResponseEntity<String> downvotePost(@RequestBody String input) {
+    public ResponseEntity<String> downvotePost(@RequestBody String body) {
         try {
-            downvotePost(new JSONObject(input));
+            downvotePost(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -457,9 +467,9 @@ public class PostController {
 
     @PutMapping("/viewPost")
     @ResponseBody
-    public ResponseEntity<String> viewPost(@RequestBody String input) {
+    public ResponseEntity<String> viewPost(@RequestBody String body) {
         try {
-            viewPost(new JSONObject(input));
+            viewPost(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
