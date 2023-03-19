@@ -1,6 +1,8 @@
 package com.blog.model;
 
 import com.blog.database.Database;
+import com.blog.exception.UserDoesNotExistException;
+import com.blog.exception.UserIsDeletedException;
 import com.blog.utils.Utility;
 import org.json.JSONObject;
 
@@ -29,14 +31,16 @@ import org.json.JSONObject;
  * void        setDeleted(boolean deleted)
  */
 public class User extends Record {
-    // Delete final for userID for convenience to retrieve data, may change later
-    private int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
+    public static final int NEW_USER_ID = 0;
+    
+    private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
     private String username;
     private UserLevel userLevel;
     private String creationDate;
     private String lastLogin;
     private UserStatus userStatus;
     private String profilePicture;  // URL to the profile picture
+    private String bio;
 
     /**
      * Default guest user constructor.
@@ -54,7 +58,13 @@ public class User extends Record {
      */
     public User(int userID) {
         this.userID = userID;
-        Database.retrieve(this);
+        try {
+            Database.retrieve(this);
+        } catch (UserDoesNotExistException e) {
+            // todo
+        } catch (UserIsDeletedException e) {
+            // todo
+        }
     }
 
     public User(int userID,
@@ -64,6 +74,7 @@ public class User extends Record {
                 String lastLogin,
                 UserStatus userStatus,
                 String profilePicture,
+                String bio,
                 boolean isDeleted) {
         super(isDeleted);
         this.userID = userID;
@@ -73,6 +84,7 @@ public class User extends Record {
         this.lastLogin = lastLogin;
         this.userStatus = userStatus;
         this.profilePicture = profilePicture;
+        this.bio = bio;
     }
 
     /**
@@ -91,6 +103,16 @@ public class User extends Record {
                 .put("profilePicture", profilePicture);
     }
 
+    public void copy(User u) {
+        this.setUsername(u.getUsername());
+        this.setCreationDate(u.getCreationDate());
+        this.setLastLogin(u.getLastLogin());
+        this.setProfilePicture(u.getProfilePicture());
+        this.setUserLevel(u.getUserLevel());
+        this.setDeleted(u.isDeleted());
+    }
+
+
     /**
      * Updates the last login time to the current time.
      */
@@ -100,10 +122,6 @@ public class User extends Record {
 
     public int getUserID() {
         return userID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
     }
 
     public String getUsername() {
@@ -152,5 +170,13 @@ public class User extends Record {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getBio() {
+        return this.bio;
     }
 }

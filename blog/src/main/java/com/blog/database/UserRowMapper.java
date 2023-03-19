@@ -6,16 +6,41 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.blog.model.User;
+import com.blog.model.UserLevel;
+import com.blog.model.UserStatus;
  
 public class UserRowMapper implements RowMapper<User> {
  
 	@Override
 	public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-		User user = new User();
-		user.setUserID(rs.getInt("user_ID"));
-		user.setUsername(rs.getString("username"));
-		user.setProfilePicture(rs.getString("avatar"));
-		// TODO: add other fields
-		return user;
+		int userId = rs.getInt("user_ID");
+		String username = rs.getString("username");
+		UserLevel userLevel = null;
+		if (rs.getBoolean("administrator")) {
+			userLevel = UserLevel.ADMIN;
+		} else if (rs.getBoolean("contributor")) {
+			userLevel = UserLevel.CONTRIBUTOR;
+		} else {;
+			userLevel = UserLevel.READER;
+		}
+		// String creationDate = rs.getString("creation_date");
+		// String lastLogin = rs.getString("last_login");
+		String creationDate = "2023-03-15T06:00:00.861336Z";
+		String lastLogin = "2023-03-15T06:00:00.861336Z";
+		UserStatus userStatus = null;
+		int status = rs.getInt("user_status");
+		if (status == 0) {
+			userStatus = UserStatus.ONLINE;
+		} else if (status == 1) {
+			userStatus = UserStatus.AWAY;
+		} else if (status == 2) {
+			userStatus = UserStatus.BUSY;
+		} else {
+			userStatus = UserStatus.OFFLINE;
+		}
+		String profilePicture = rs.getString("profile_picture");
+		String bio = rs.getString("bio");
+		boolean isDeleted = rs.getBoolean("is_deleted");
+		return new User(userId, username, userLevel, creationDate, lastLogin, userStatus, profilePicture, bio, isDeleted);
 	}
 }

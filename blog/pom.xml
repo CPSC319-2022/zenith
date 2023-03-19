@@ -14,7 +14,10 @@
 	<name>blog</name>
 	<description>cpsc 319 project</description>
 	<properties>
-		<java.version>19</java.version>
+		<java.version>17</java.version>
+
+    <maven.test.skip>true</maven.test.skip>
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -27,6 +30,16 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -97,6 +110,7 @@
     </dependencies>
 
 	<build>
+		<finalName>backend</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

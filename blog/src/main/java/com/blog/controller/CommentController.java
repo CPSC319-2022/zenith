@@ -10,10 +10,97 @@ import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+@RestController
 public class CommentController {
+    @GetMapping("/getComment")
+    @ResponseBody
+    public ResponseEntity<String> getComment(@RequestParam("postID") int postID, @RequestParam("commentID") int commentID) {
+        try {
+            JSONObject input = new JSONObject();
+            input.put("postID", postID);
+            input.put("commentID", commentID);
+            return ResponseEntity.ok(getComment(input).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getComments")
+    @ResponseBody
+    public ResponseEntity<String> getComments(@RequestParam("postID") int postID, @RequestParam("commentIDStart") int commentIDStart, @RequestParam("count") int count, @RequestParam("reverse") boolean reverse) {
+        try {
+            JSONObject input = new JSONObject();
+            input.put("postID", postID);
+            input.put("commentIDStart", commentIDStart);
+            input.put("count", count);
+            input.put("reverse", reverse);
+            return ResponseEntity.ok(getComments(input).toString());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/createComment")
+    @ResponseBody
+    public ResponseEntity<String> createComment(@RequestBody String input) {
+        try {
+            createComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/deleteComment")
+    @ResponseBody
+    public ResponseEntity<String> deleteComment(@RequestBody String input) {
+        try {
+            deleteComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/editComment")
+    @ResponseBody
+    public ResponseEntity<String> editComment(@RequestBody String input) {
+        try {
+            editComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/upvoteComment")
+    @ResponseBody
+    public ResponseEntity<String> upvoteComment(@RequestBody String input) {
+        try {
+            upvoteComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/downvoteComment")
+    @ResponseBody
+    public ResponseEntity<String> downvoteComment(@RequestBody String input) {
+        try {
+            downvoteComment(new JSONObject(input));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     /**
      * Returns a JSON containing the requested comment.
      *
@@ -36,7 +123,7 @@ public class CommentController {
      * }
      * @throws BlogException
      */
-    public static JSONObject getComment(JSONObject input) throws BlogException {
+    private static JSONObject getComment(JSONObject input) throws BlogException {
         // Retrieve the comment
         Comment comment = retrieveComment(input);
 
@@ -71,7 +158,7 @@ public class CommentController {
      * ]
      * @throws BlogException
      */
-    public static JSONArray getComments(JSONObject input) throws BlogException {
+    private static JSONArray getComments(JSONObject input) throws BlogException {
         int postID;
         int commentIDStart;
         int count;
@@ -116,7 +203,7 @@ public class CommentController {
      *              }
      * @throws BlogException
      */
-    public static void createComment(JSONObject input) throws BlogException {
+    private static void createComment(JSONObject input) throws BlogException {
         int postID;
         int authorID;
         String content;
@@ -166,7 +253,7 @@ public class CommentController {
      *              }
      * @throws BlogException
      */
-    public static void deleteComment(JSONObject input) throws BlogException {
+    private static void deleteComment(JSONObject input) throws BlogException {
         // Retrieve the comment
         Comment comment = retrieveComment(input);
 
@@ -185,7 +272,7 @@ public class CommentController {
      *              }
      * @throws BlogException
      */
-    public static void editComment(JSONObject input) throws BlogException {
+    private static void editComment(JSONObject input) throws BlogException {
         String content;
 
         // Read data from JSON
@@ -221,7 +308,7 @@ public class CommentController {
      *              }
      * @throws BlogException
      */
-    public static void upvoteComment(JSONObject input) throws BlogException {
+    private static void upvoteComment(JSONObject input) throws BlogException {
         // Retrieve the comment
         Comment comment = retrieveComment(input);
 
@@ -242,7 +329,7 @@ public class CommentController {
      *              }
      * @throws BlogException
      */
-    public static void downvoteComment(JSONObject input) throws BlogException {
+    private static void downvoteComment(JSONObject input) throws BlogException {
         // Retrieve the comment
         Comment comment = retrieveComment(input);
 

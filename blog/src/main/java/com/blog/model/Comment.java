@@ -31,10 +31,9 @@ import org.json.JSONObject;
  * void    setDownvotes(int downvotes)
  */
 public class Comment extends Content {
-    // Delete final for convenience to retrieve data, may change later
     public static final int NEW_COMMENT_ID = 0;
 
-    private int postID;
+    private final int postID;
     private int commentID;
 
     public Comment() {
@@ -73,12 +72,18 @@ public class Comment extends Content {
                 .put("commentID", commentID);
     }
 
-    public int getPostID() {
-        return postID;
+    public void copy(Comment c) {
+        this.setAuthorID(c.getAuthorID());
+        this.setContent(c.getContent());
+        this.setCreationDate(c.getCreationDate());
+        this.setLastModified(c.getLastModified());
+        this.setUpvotes(c.getUpvotes());
+        this.setDownvotes(c.getDownvotes());
+        this.setDeleted(c.isDeleted());
     }
 
-    public void setPostID(int postID) {
-        this.postID = postID;
+    public int getPostID() {
+        return postID;
     }
 
     public int getCommentID() {

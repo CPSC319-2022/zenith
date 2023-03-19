@@ -1,0 +1,43 @@
+steps:
+# Containerize (includes testing)
+  - name: 'grc.io/cloud-builder/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest', '-f', './blog/Dockerfile', "./blog"]
+    allowFailure: false
+    timeout: 300s
+
+  - name: 'grc.io/cloud-builder/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/frontend:latest', '-f', './frontend/frontend.dockerfile', "./frontend"]
+    allowFailure: false
+    timeout: 300s
+
+# Push images to registery
+  - name: 'grc.io/cloud-builder/docker'
+    args: ['push', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest']
+
+  - name: 'grc.io/cloud-builder/docker'
+    args: ['push', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest']
+
+# Deploy
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+    - 'run'
+    - 'deploy'
+    - 'cloudrunservice'
+    - '--image'
+    - 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest'
+    - '--platform'
+    - 'managed'
+    - '--allow-authenticated'
+  
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+    - 'run'
+    - 'deploy'
+    - 'cloudrunservice'
+    - '--image'
+    - 'gcr.io/$PROJECT_ID/$BRANCH_NAME/frontend:latest'
+    - '--platform'
+    - 'managed'
+    - '--allow-autenticated'

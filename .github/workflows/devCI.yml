@@ -1,0 +1,45 @@
+
+name: Pull Request to QA on successfull push/pull to dev
+
+on:
+  push:
+    branches:
+      - "dev"
+  pull_request:
+    branches:
+      - "dev"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build backend docker image, in which tests will run
+        run: docker build -t "zenith/backend-test:latest" --file ./blog/Dockerfile ./blog
+        
+      - name: Build frontend docker image, in which tests will run
+        run: docker build -t "zenith/frontend-test:latest" --file ./frontend/frontend.dockerfile ./blog
+      
+      - name: Cleans up images
+        if: always()
+        run: docker image prune --all
+        
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with: 
+          fetch-depth: 0
+          
+      - name: Fetch remote changes
+        run: git fetch -a
+
+      - name: Change working branch to qa
+        run: git checkout qa
+
+      - name: marge dev to qa
+        run: git merge dev
+    
