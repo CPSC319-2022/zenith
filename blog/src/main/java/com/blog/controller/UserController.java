@@ -213,7 +213,7 @@ public class UserController {
 
     @GetMapping("/getUser")
     @ResponseBody
-    public ResponseEntity<String> getUser(@RequestParam("userID") int userID) {
+    public ResponseEntity<String> getUser(@RequestParam("userID") String userID) {
         try {
             JSONObject input = new JSONObject()
                     .put("userID", userID);
