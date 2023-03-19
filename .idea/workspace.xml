@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="">
+    <list default="true" id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents + post finished">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/anc_json_compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/eduworks_json_ld.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/skyscreamer_jsonassert.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_spring.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Zenith-.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Zenith-.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -12,26 +17,14 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CodeInsightWorkspaceSettings">
-    <option name="optimizeImportsOnTheFly" value="true" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="JUnit5 Test Class" />
-        <option value="Enum" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProjectId" id="2LcCCUIjchju9XTl64MS5VryYZn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -167,34 +160,23 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="" />
-      <created>1676160858109</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1676160858109</updated>
-      <workItem from="1676160874319" duration="2451000" />
-      <workItem from="1676164804612" duration="15000" />
-      <workItem from="1676164837306" duration="993000" />
-      <workItem from="1676166684937" duration="1339000" />
-      <workItem from="1676168088316" duration="13492000" />
-      <workItem from="1676186679101" duration="7599000" />
-      <workItem from="1677397703475" duration="6388000" />
-      <workItem from="1677701434893" duration="10114000" />
-      <workItem from="1677731139246" duration="265000" />
-      <workItem from="1677906178082" duration="6901000" />
-      <workItem from="1677972599470" duration="10057000" />
-      <workItem from="1678015070561" duration="695000" />
-      <workItem from="1678179511528" duration="17766000" />
-      <workItem from="1678216422362" duration="1474000" />
-      <workItem from="1678234058652" duration="1000000" />
+    <task id="LOCAL-00001" summary="contents half-way">
+      <created>1679043117165</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1679043117165</updated>
     </task>
+    <task id="LOCAL-00002" summary="contents + post finished">
+      <created>1679099469122</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1679099469122</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -209,6 +191,8 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="contents half-way" />
+    <MESSAGE value="contents + post finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="contents + post finished" />
   </component>
 </project>

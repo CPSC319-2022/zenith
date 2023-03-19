@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="springframework.roo.addon.jdbc" type="repository">
+    <properties maven-id="org.springframework.roo:org.springframework.roo.addon.jdbc:2.0.0.M1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/roo/org.springframework.roo.addon.jdbc/2.0.0.M1/org.springframework.roo.addon.jdbc-2.0.0.M1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.core/5.0.0/org.osgi.core-5.0.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.compendium/5.0.0/org.osgi.compendium-5.0.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/felix/org.apache.felix.scr.annotations/1.9.10/org.apache.felix.scr.annotations-1.9.10.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/roo/org.springframework.roo.support/2.0.0.M1/org.springframework.roo.support-2.0.0.M1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-io/commons-io/2.4/commons-io-2.4.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.8/commons-codec-1.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
