@@ -73,7 +73,7 @@ public class Database {
      */
     public static void retrieve(User user) throws DoesNotExistException, IsDeletedException {
         String userID = user.getUserID();
-        String sql = "SELECT * FROM User WHERE user_ID = " + userID;
+        String sql = "SELECT * FROM User WHERE user_ID = \"" + userID + "\"";
         if (jdbcTemplate == null) {
           createTemplate();
         }
@@ -322,10 +322,8 @@ public class Database {
             status = 3;
           }
           String bio = user.getBio();
-          // String creationDate = user.getCreationDate();
-          String creationDate = "2023-03-01 00:00:00";
-          // String lastLogin = user.getLastLogin();
-          String lastLogin = "2023-03-01 00:00:00";
+          String creationDate = user.getCreationDate();
+          String lastLogin = user.getLastLogin();
           return "INSERT INTO User VALUES(\"" + id + "\", \"" + user.getUsername() 
           + "\", \"" + creationDate + "\", \"" + lastLogin + "\", " + status + ", " + profile + ", \"" + bio + "\", " + level + ", " + user.isDeleted() + ")";
      }
@@ -353,10 +351,8 @@ public class Database {
           } else if (user.getUserStatus() == UserStatus.OFFLINE) {
               status = 3;
           }
-          // String creationDate = post.getCreationDate();
-          String creationDate = "2023-03-01 00:00:00";
-          // String lastLogin = user.getLastLogin();
-          String lastLogin = "2023-03-01 00:00:00";
+          String creationDate = user.getCreationDate();
+          String lastLogin = user.getLastLogin();
           
           return "UPDATE User SET username = \"" + user.getUsername() + "\", creation_date = \"" + creationDate + "\", last_login = \"" + lastLogin 
           + "\", user_status = " + status + ", profile_picture = " + profile + ", bio = " + bio + ", user_level = " + level + ", is_deleted = " + user.isDeleted() 
@@ -364,40 +360,32 @@ public class Database {
     }
 
      private static String formInsert(Post post, int id) {
-          // String creationDate = post.getCreationDate();
-          String creationDate = "2023-03-01 00:00:00";
-          // String lastModified = post.getLastModified();
-          String lastModified = "2023-03-01 00:00:00";
+          String creationDate = post.getCreationDate();
+          String lastModified = post.getLastModified();
           return "INSERT INTO Post VALUES(" + id + ", \"" + post.getAuthorID() + "\", \"" + post.getTitle() + "\", \"" + post.getContent() + "\", \"" 
           + creationDate + "\", \"" + lastModified + "\", " + post.getUpvotes() + ", " + post.getDownvotes() + ", " 
           + post.getViews() + ", " + post.isDeleted() + ", " + post.isAllowComments() + ")";
      }
 
      private static String formUpdate(Post post, int id) {
-          // String creationDate = comment.getCreationDate();
-          String creationDate = "2023-03-01 00:00:00";
-          // String lastModified = comment.getLastModified();
-          String lastModified = "2023-03-01 00:00:00";
+          String creationDate = post.getCreationDate();
+          String lastModified = post.getLastModified();
           return "UPDATE Post SET user_ID = \"" + post.getAuthorID() + "\", title = \"" + post.getTitle() + "\", content = \"" + post.getContent() + "\", creation_date = \"" + creationDate 
           + "\", last_modified = \"" + lastModified + "\", upvotes = " + post.getUpvotes() + ", downvotes = " + post.getDownvotes() + ", views = " + post.getViews() + ", is_deleted = " 
           + post.isDeleted() + ", allow_comments = " + post.isAllowComments() + " WHERE post_ID = " + id;
     }
 
      private static String formInsert(Comment comment, int id) {
-          // String creationDate = comment.getCreationDate();
-          String creationDate = "2023-03-01 00:00:00";
-          // String lastModified = comment.getLastModified();
-          String lastModified = "2023-03-01 00:00:00";
+          String creationDate = comment.getCreationDate();
+          String lastModified = comment.getLastModified();
           return "INSERT INTO Comment VALUES(" + comment.getPostID() + ", " + id + ", \"" + comment.getAuthorID() + "\", \"" + comment.getContent() + "\", \"" 
           + creationDate + "\", \"" + lastModified + "\", " + comment.getUpvotes() + ", " + comment.getDownvotes() + ", " 
           + comment.isDeleted() + ")";
      }
 
      private static String formUpdate(Comment comment, int id) {
-          // String creationDate = comment.getCreationDate();
-          String creationDate = "2023-03-01 00:00:00";
-          // String lastModified = comment.getLastModified();
-          String lastModified = "2023-03-01 00:00:00";
+          String creationDate = comment.getCreationDate();
+          String lastModified = comment.getLastModified();
           return "UPDATE Comment SET user_ID = \"" + comment.getAuthorID() + "\", content = \"" + comment.getContent() + "\", creation_date = \"" + creationDate 
           + "\", last_modified = \"" + lastModified + "\", upvotes = " + comment.getUpvotes() + ", downvotes = " + comment.getDownvotes() + ", is_deleted = " 
           + comment.isDeleted() + " WHERE post_ID = " +  comment.getPostID() + " AND comment_number = " + id;

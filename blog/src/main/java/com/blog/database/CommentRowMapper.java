@@ -15,10 +15,8 @@ public class CommentRowMapper implements RowMapper<Comment> {
 		int commentID = rs.getInt("comment_number");
 		String authorID = rs.getString("user_ID");
 		String content = rs.getString("content");
-		//String creationDate = rs.getString("creation_date");
-		//String lastModified = rs.getString("last_modified");
-		String creationDate = "2023-03-15T06:00:00.861336Z";
-    	String lastModified = "2023-03-15T06:00:00.861336Z";
+		String creationDate = rs.getString("creation_date");
+		String lastModified = rs.getString("last_modified");
 		int upvotes = rs.getInt("upvotes");
 		int downvotes = rs.getInt("downvotes");
 		boolean isDeleted = rs.getBoolean("is_deleted");
