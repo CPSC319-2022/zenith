@@ -280,9 +280,9 @@ public class UserController {
 
     @DeleteMapping("/deleteUser")
     @ResponseBody
-    public ResponseEntity<String> deleteUser(@RequestBody String input) {
+    public ResponseEntity<String> deleteUser(@RequestBody String body) {
         try {
-            deleteUser(new JSONObject(input));
+            deleteUser(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -291,9 +291,9 @@ public class UserController {
 
     @PutMapping("/updateUserLevel")
     @ResponseBody
-    public ResponseEntity<String> updateUserLevel(@RequestBody String input) {
+    public ResponseEntity<String> updateUserLevel(@RequestBody String body) {
         try {
-            updateUserLevel(new JSONObject(input));
+            updateUserLevel(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -302,9 +302,9 @@ public class UserController {
 
     @PutMapping("/updateUserStatus")
     @ResponseBody
-    public ResponseEntity<String> updateUserStatus(@RequestBody String input) {
+    public ResponseEntity<String> updateUserStatus(@RequestBody String body) {
         try {
-            updateUserStatus(new JSONObject(input));
+            updateUserStatus(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -313,9 +313,9 @@ public class UserController {
 
     @PutMapping("/updateProfilePicture")
     @ResponseBody
-    public ResponseEntity<String> updateProfilePicture(@RequestBody String input) {
+    public ResponseEntity<String> updateProfilePicture(@RequestBody String body) {
         try {
-            updateProfilePicture(new JSONObject(input));
+            updateProfilePicture(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -324,9 +324,9 @@ public class UserController {
 
     @PutMapping("/updateBio")
     @ResponseBody
-    public ResponseEntity<String> updateBio(@RequestBody String input) {
+    public ResponseEntity<String> updateBio(@RequestBody String body) {
         try {
-            updateBio(new JSONObject(input));
+            updateBio(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

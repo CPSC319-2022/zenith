@@ -4,6 +4,7 @@ import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.exception.DoesNotExistException;
 import com.blog.exception.InvalidPermissionException;
+import com.blog.exception.LoginFailedException;
 import com.blog.model.Post;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
@@ -397,9 +398,14 @@ public class PostController {
 
     @PostMapping("/createPost")
     @ResponseBody
-    public ResponseEntity<String> createPost(@RequestBody String input) {
+    public ResponseEntity<String> createPost(@RequestHeader("Authorization") String accessToken,
+                                             @RequestBody String body) {
         try {
-            return ResponseEntity.ok(createPost(new JSONObject(input)));
+            JSONObject input = new JSONObject(body)
+                    .put("authorID", LoginController.getUserID(accessToken));
+            return ResponseEntity.ok(createPost(input));
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
@@ -409,9 +415,12 @@ public class PostController {
 
     @DeleteMapping("/deletePost")
     @ResponseBody
-    public ResponseEntity<String> deletePost(@RequestBody String input) {
+    public ResponseEntity<String> deletePost(@RequestHeader("Authorization") String accessToken,
+                                             @RequestBody String body) {
         try {
-            deletePost(new JSONObject(input));
+            JSONObject input = new JSONObject(body)
+                    .put("userID", LoginController.getUserID(accessToken));
+            deletePost(input);
             return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
@@ -422,9 +431,12 @@ public class PostController {
 
     @PutMapping("/editPost")
     @ResponseBody
-    public ResponseEntity<String> editPost(@RequestBody String input) {
+    public ResponseEntity<String> editPost(@RequestHeader("Authorization") String accessToken,
+                                           @RequestBody String body) {
         try {
-            editPost(new JSONObject(input));
+            JSONObject input = new JSONObject(body)
+                    .put("userID", LoginController.getUserID(accessToken));
+            editPost(input);
             return ResponseEntity.ok().build();
         } catch (InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
@@ -435,9 +447,9 @@ public class PostController {
 
     @PutMapping("/upvotePost")
     @ResponseBody
-    public ResponseEntity<String> upvotePost(@RequestBody String input) {
+    public ResponseEntity<String> upvotePost(@RequestBody String body) {
         try {
-            upvotePost(new JSONObject(input));
+            upvotePost(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -446,9 +458,9 @@ public class PostController {
 
     @PutMapping("/downvotePost")
     @ResponseBody
-    public ResponseEntity<String> downvotePost(@RequestBody String input) {
+    public ResponseEntity<String> downvotePost(@RequestBody String body) {
         try {
-            downvotePost(new JSONObject(input));
+            downvotePost(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -457,9 +469,9 @@ public class PostController {
 
     @PutMapping("/viewPost")
     @ResponseBody
-    public ResponseEntity<String> viewPost(@RequestBody String input) {
+    public ResponseEntity<String> viewPost(@RequestBody String body) {
         try {
-            viewPost(new JSONObject(input));
+            viewPost(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
