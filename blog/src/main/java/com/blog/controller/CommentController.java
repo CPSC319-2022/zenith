@@ -4,6 +4,7 @@ import com.blog.database.Database;
 import com.blog.exception.BlogException;
 import com.blog.exception.DoesNotExistException;
 import com.blog.exception.InvalidPermissionException;
+import com.blog.exception.LoginFailedException;
 import com.blog.model.Comment;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
@@ -143,7 +144,7 @@ public class CommentController {
 
         // Check whether the user has UserLevel of at least UserLevel.READER
         if (user.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
-            throw new BlogException("User does not have the necessary permission to make a comment.");
+            throw new InvalidPermissionException("User does not have the necessary permission to make a comment.");
         }
 
         // Validate the data
@@ -316,7 +317,8 @@ public class CommentController {
 
     @GetMapping("/getComment")
     @ResponseBody
-    public ResponseEntity<String> getComment(@RequestParam("postID") int postID, @RequestParam("commentID") int commentID) {
+    public ResponseEntity<String> getComment(@RequestParam("postID") int postID,
+                                             @RequestParam("commentID") int commentID) {
         try {
             JSONObject input = new JSONObject()
                     .put("postID", postID)
@@ -331,7 +333,10 @@ public class CommentController {
 
     @GetMapping("/getComments")
     @ResponseBody
-    public ResponseEntity<String> getComments(@RequestParam("postID") int postID, @RequestParam("commentIDStart") int commentIDStart, @RequestParam("count") int count, @RequestParam("reverse") boolean reverse) {
+    public ResponseEntity<String> getComments(@RequestParam("postID") int postID,
+                                              @RequestParam("commentIDStart") int commentIDStart,
+                                              @RequestParam("count") int count,
+                                              @RequestParam("reverse") boolean reverse) {
         try {
             JSONObject input = new JSONObject()
                     .put("postID", postID)
@@ -348,9 +353,16 @@ public class CommentController {
 
     @PostMapping("/createComment")
     @ResponseBody
-    public ResponseEntity<String> createComment(@RequestBody String input) {
+    public ResponseEntity<String> createComment(@RequestHeader("Authorization") String accessToken,
+                                                @RequestBody String body) {
         try {
-            return ResponseEntity.ok(createComment(new JSONObject(input)));
+            JSONObject input = new JSONObject(body)
+                    .put("authorID", LoginController.getUserID(accessToken));
+            return ResponseEntity.ok(createComment(input));
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -358,9 +370,12 @@ public class CommentController {
 
     @DeleteMapping("/deleteComment")
     @ResponseBody
-    public ResponseEntity<String> deleteComment(@RequestBody String input) {
+    public ResponseEntity<String> deleteComment(@RequestHeader("Authorization") String accessToken,
+                                                @RequestBody String body) {
         try {
-            deleteComment(new JSONObject(input));
+            JSONObject input = new JSONObject(body)
+                    .put("userID", LoginController.getUserID(accessToken));
+            deleteComment(input);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -369,9 +384,12 @@ public class CommentController {
 
     @PutMapping("/editComment")
     @ResponseBody
-    public ResponseEntity<String> editComment(@RequestBody String input) {
+    public ResponseEntity<String> editComment(@RequestHeader("Authorization") String accessToken,
+                                              @RequestBody String body) {
         try {
-            editComment(new JSONObject(input));
+            JSONObject input = new JSONObject(body)
+                    .put("userID", LoginController.getUserID(accessToken));
+            editComment(input);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -380,9 +398,9 @@ public class CommentController {
 
     @PutMapping("/upvoteComment")
     @ResponseBody
-    public ResponseEntity<String> upvoteComment(@RequestBody String input) {
+    public ResponseEntity<String> upvoteComment(@RequestBody String body) {
         try {
-            upvoteComment(new JSONObject(input));
+            upvoteComment(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -391,9 +409,9 @@ public class CommentController {
 
     @PutMapping("/downvoteComment")
     @ResponseBody
-    public ResponseEntity<String> downvoteComment(@RequestBody String input) {
+    public ResponseEntity<String> downvoteComment(@RequestBody String body) {
         try {
-            downvoteComment(new JSONObject(input));
+            downvoteComment(new JSONObject(body));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
