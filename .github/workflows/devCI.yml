@@ -3,13 +3,14 @@ name: Pull Request to QA on successfull push/pull to dev
 on:
   push:
     branches:
-      - "dev"
+      - dev
   pull_request:
     branches:
-      - "dev"
+      - dev
 
 jobs:
   test:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
