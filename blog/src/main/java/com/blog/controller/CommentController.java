@@ -360,9 +360,9 @@ public class CommentController {
                     .put("authorID", LoginController.getUserID(accessToken));
             return ResponseEntity.ok(createComment(input));
         } catch (LoginFailedException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -377,6 +377,8 @@ public class CommentController {
                     .put("userID", LoginController.getUserID(accessToken));
             deleteComment(input);
             return ResponseEntity.ok().build();
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -391,6 +393,8 @@ public class CommentController {
                     .put("userID", LoginController.getUserID(accessToken));
             editComment(input);
             return ResponseEntity.ok().build();
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
