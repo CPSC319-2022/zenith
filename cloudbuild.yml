@@ -1,43 +1,65 @@
 steps:
 # Containerize (includes testing)
-  - name: 'grc.io/cloud-builder/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest', '-f', './blog/Dockerfile', "./blog"]
+  - name: gcr.io/cloud-builders/docker
+    args: 
+      - 'build'
+      - '--no-cache'
+      - '-t'
+      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/backend:$COMMIT_SHA'
+      - '--file'
+      - './blog/Dockerfile'
+      - "./blog"
     allowFailure: false
     timeout: 300s
+    id: Containerize & Test Backend
 
-  - name: 'grc.io/cloud-builder/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/frontend:latest', '-f', './frontend/frontend.dockerfile', "./frontend"]
+  - name: gcr.io/cloud-builders/docker
+     args: 
+      - 'build'
+      - '--no-cache'
+      - '-t'
+      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/frontend:$COMMIT_SHA'
+      - '--file'
+      - './frontend/frontend.dockerfile'
+      - "./frontend"
     allowFailure: false
     timeout: 300s
+    id: Containerize & Test Frontend
 
 # Push images to registery
-  - name: 'grc.io/cloud-builder/docker'
-    args: ['push', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest']
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/backend:$COMMIT_SHA']
+    id: Push Backend Container to Registery
 
-  - name: 'grc.io/cloud-builder/docker'
-    args: ['push', '-t', 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest']
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/frontend:$COMMIT_SHA']
+    id: Push Frontend Container to Registery
 
 # Deploy
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     entrypoint: gcloud
     args:
-    - 'run'
-    - 'deploy'
-    - 'cloudrunservice'
-    - '--image'
-    - 'gcr.io/$PROJECT_ID/$BRANCH_NAME/backend:latest'
-    - '--platform'
-    - 'managed'
-    - '--allow-authenticated'
+    - update
+    - $_SERVICE_NAME
+    - '--platform=managed'
+    - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/backend:$COMMIT_SHA'
+    - >-
+      --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
+    - '--region=$_DEPLOY_REGION'
+    - '--quiet'
+    id: Deploy Backend
   
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     entrypoint: gcloud
     args:
-    - 'run'
-    - 'deploy'
-    - 'cloudrunservice'
-    - '--image'
-    - 'gcr.io/$PROJECT_ID/$BRANCH_NAME/frontend:latest'
-    - '--platform'
-    - 'managed'
-    - '--allow-autenticated'
+    - update
+    - $_SERVICE_NAME
+    - '--platform=managed'
+    - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/frontend:$COMMIT_SHA'
+    - >-
+      --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
+    - '--region=$_DEPLOY_REGION'
+    - '--quiet'
+    id: Deploy Frontend
+
+timeout: 1500s

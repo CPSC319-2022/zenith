@@ -18,7 +18,7 @@ jobs:
         run: docker build -t "zenith/backend-test:latest" --file ./blog/Dockerfile ./blog
         
       - name: Build frontend docker image, in which tests will run
-        run: docker build -t "zenith/frontend-test:latest" --file ./frontend/frontend.dockerfile ./blog
+        run: docker build -t "zenith/frontend-test:latest" --file ./frontend/frontend.dockerfile ./frontend
       
       - name: Cleans up images
         if: always()
