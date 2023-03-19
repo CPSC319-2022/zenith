@@ -127,6 +127,11 @@ public class CommentController {
         int postID;
         String content;
 
+        // Check if input is null
+    if (input == null) {
+        throw new BlogException("JSON object received is null.");
+    }
+
         // Read data from JSON
         try {
             postID = input.getInt("postID");
@@ -144,6 +149,7 @@ public class CommentController {
         if (author.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
             throw new InvalidPermissionException("User does not have the necessary permission to make a comment.");
         }
+
 
         // Validate the data
         Comment.validateContent(content);
