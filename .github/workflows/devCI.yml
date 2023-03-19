@@ -12,15 +12,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       
       - name: Build backend docker image, in which tests will run
+        uses: actions/checkout@v3
         run: docker build -t "zenith/backend-test:latest" --file ./blog/Dockerfile ./blog
         
       - name: Build frontend docker image, in which tests will run
+        uses: actions/checkout@v3
         run: docker build -t "zenith/frontend-test:latest" --file ./frontend/frontend.dockerfile ./frontend
       
       - name: Cleans up images
+        uses: actions/checkout@v3
         if: always()
         run: docker image prune --all
         
@@ -29,26 +31,31 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
-        with: 
-          fetch-depth: 0
           
       - name: Fetch remote changes
+        uses: actions/checkout@v3
+        with: 
+          fetch-depth: 0
         run: git fetch -a
 
       - name: Change working branch to qa
+        uses: actions/checkout@v3
+        with: 
+          fetch-depth: 0
         run: git checkout qa
 
       - name: marge dev to qa
+        uses: actions/checkout@v3
+        with: 
+          fetch-depth: 0
         run: git merge dev
   
   notify:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: slackapi/slack-github-action@v1.23.0
-
       - name: Sends report of commit to project slack channel
+        uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: 
           slack-message: "GitHub build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
