@@ -1,25 +1,14 @@
 package com.blog.database;
 
-import com.blog.model.Comment;
-import com.blog.model.Post;
-import com.blog.model.User;
-import com.blog.model.UserLevel;
-import com.blog.model.UserStatus;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.blog.exception.DoesNotExistException;
+import com.blog.exception.IsDeletedException;
+import com.blog.model.*;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import javax.sql.DataSource;
-
-import com.blog.database.*;
-import com.blog.exception.UserDoesNotExistException;
-import com.blog.exception.UserIsDeletedException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class handles all calls to the database related to the blog application.
@@ -40,7 +29,7 @@ public class Database {
      *
      * @param comment
      */
-    public static void retrieve(Comment comment) {
+    public static void retrieve(Comment comment) throws DoesNotExistException {
         int postID = comment.getPostID();
         int commentID = comment.getCommentID();
         String sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number = " + commentID;
@@ -51,12 +40,8 @@ public class Database {
           Comment temp =  jdbcTemplate.queryForObject(sql, new CommentRowMapper());
           comment.copy(temp);
         } catch (EmptyResultDataAccessException e) {
-          comment.setContent(null);
+            throw new DoesNotExistException("Comment with postID " + postID + " and commentID " + commentID + " does not exist.");
         }
-
-        /*
-        if comment does not exist, return without error. but make sure that you do comment.setContent(null) first.
-         */
     }
 
     /**
@@ -64,7 +49,7 @@ public class Database {
      *
      * @param post
      */
-    public static void retrieve(Post post) {
+    public static void retrieve(Post post) throws DoesNotExistException {
         int postID = post.getPostID();
         String sql = "SELECT * FROM Post WHERE post_ID = " + postID;
         if (jdbcTemplate == null) {
@@ -74,11 +59,8 @@ public class Database {
           Post temp = jdbcTemplate.queryForObject(sql, new PostRowMapper());
           post.copy(temp);
         } catch (EmptyResultDataAccessException e) {
-          post.setContent(null);
+          throw new DoesNotExistException("Post with postID " + postID + " does not exist.");
         }
-        /*
-        if post does not exist, return without error. but make sure that you do post.setContent(null) first.
-         */
     }
 
     /**
@@ -86,11 +68,11 @@ public class Database {
      * by the given <code>User</code> object and updates its fields.
      *
      * @param user  The <code>User</code> object to update. Contains the <code>userID</code>.
-     * @throws UserDoesNotExistException
-     * @throws UserIsDeletedException
+     * @throws DoesNotExistException
+     * @throws IsDeletedException
      */
-    public static void retrieve(User user) throws UserDoesNotExistException, UserIsDeletedException {
-        int userID = user.getUserID();
+    public static void retrieve(User user) throws DoesNotExistException, IsDeletedException {
+        String userID = user.getUserID();
         String sql = "SELECT * FROM User WHERE user_ID = " + userID;
         if (jdbcTemplate == null) {
           createTemplate();
@@ -99,10 +81,10 @@ public class Database {
           User temp = jdbcTemplate.queryForObject(sql, new UserRowMapper());
           user.copy(temp);
           if (temp.isDeleted()) {
-               throw new UserIsDeletedException("User with ID " + userID + " is deleted.");
+               throw new IsDeletedException("User with ID " + userID + " is deleted.");
           }
         } catch (EmptyResultDataAccessException e) {
-          throw new UserDoesNotExistException("User with ID " + userID + " does not exist.");
+          throw new DoesNotExistException("User with ID " + userID + " does not exist.");
         }
 	   
         /*
@@ -136,7 +118,6 @@ public class Database {
           for (Comment c : temp) {
                comments.add(c);
           }
-
     }
 
     /**
@@ -249,25 +230,15 @@ public class Database {
      *
      * @return the userID
      */
-    public static int save(User user) {
-        int userID = user.getUserID();
-        String sql = "SELECT MAX(user_id) FROM User";
+    public static String save(User user) {
+        String userID = user.getUserID();
+        String sql = "SELECT COUNT(*) FROM User WHERE user_ID = " + userID;
         if (jdbcTemplate == null) {
           createTemplate();
         }
-        int maxID;
-        try {
-          maxID = jdbcTemplate.queryForObject(sql, Integer.class);
-        } catch (Exception e) {
-          maxID = 0;
-        }
-        if (maxID != 0 && userID > maxID) {
-          throw new Error("Invalid user ID.");
-        }
-        if (userID != 0) {
+        if (jdbcTemplate.queryForObject(sql, Integer.class) == 1) {
           sql = formUpdate(user, userID);
         } else {
-          userID = maxID + 1;
           sql = formInsert(user, userID);
         }
         jdbcTemplate.update(sql);
@@ -317,9 +288,11 @@ public class Database {
      *
      * @param user  The <code>User</code> object to save. Contains the <code>userID</code>.
      */
+
+    //todo:need to change as the user id is different now
     public static void delete(User user) {
-        int userID = user.getUserID();
-        String sql = "UPDATE User SET is_deleted = true WHERE user_ID = " + userID;
+        String userID = user.getUserID();
+        String sql = "UPDATE User SET is_deleted = true WHERE user_ID = \"" + userID + "\"";
         if (jdbcTemplate == null) {
           createTemplate();
         }
@@ -329,18 +302,16 @@ public class Database {
         // Note that there is no warning even if the user does not exist.
     }
 
-    private static String formInsert(User user, int id) {
+    private static String formInsert(User user, String id) {
           String profile = "DEFAULT";
           if (user.getProfilePicture() != null) {
               profile = "\"" + user.getProfilePicture() + "\"";
           }
-          String level = "";
-          if (user.getUserLevel() == UserLevel.ADMIN) {
-              level = "false, true";
-          } else if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
-               level = "true, false";
-          } else {
-               level = "false, false";
+          int level = 1;
+          if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
+              level = 2;
+          } else if (user.getUserLevel() == UserLevel.ADMIN) {
+               level = 3;
           }
           int status = 0;
           if (user.getUserStatus() == UserStatus.AWAY) {
@@ -355,11 +326,11 @@ public class Database {
           String creationDate = "2023-03-01 00:00:00";
           // String lastLogin = user.getLastLogin();
           String lastLogin = "2023-03-01 00:00:00";
-          return "INSERT INTO User VALUES(" + id + ", \"" + user.getUsername() 
+          return "INSERT INTO User VALUES(\"" + id + "\", \"" + user.getUsername() 
           + "\", \"" + creationDate + "\", \"" + lastLogin + "\", " + status + ", " + profile + ", \"" + bio + "\", " + level + ", " + user.isDeleted() + ")";
      }
 
-     private static String formUpdate(User user, int id) {
+     private static String formUpdate(User user, String id) {
           String profile = "NULL";
           if (user.getProfilePicture() != null) {
               profile = "\"" + user.getProfilePicture() + "\"";
@@ -368,13 +339,11 @@ public class Database {
           if (user.getBio() != null) {
               bio = "\"" + user.getBio() + "\"";
           }
-          String level = "";
-          if (user.getUserLevel() == UserLevel.ADMIN) {
-              level = "contributor = false, administrator = true";
-          } else if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
-              level = "contributor = true, administrator = false";
-          } else {
-              level = "contributor = false, administrator = false";
+          int level = 1;
+          if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
+              level = 2;
+          } else if (user.getUserLevel() == UserLevel.ADMIN) {
+               level = 3;
           }
           int status = 0;
           if (user.getUserStatus() == UserStatus.AWAY) {
@@ -390,8 +359,8 @@ public class Database {
           String lastLogin = "2023-03-01 00:00:00";
           
           return "UPDATE User SET username = \"" + user.getUsername() + "\", creation_date = \"" + creationDate + "\", last_login = \"" + lastLogin 
-          + "\", user_status = " + status + ", profile_picture = " + profile + ", bio = " + bio + ", " + level + ", is_deleted = " + user.isDeleted() 
-          + " WHERE user_ID = " + id;
+          + "\", user_status = " + status + ", profile_picture = " + profile + ", bio = " + bio + ", user_level = " + level + ", is_deleted = " + user.isDeleted() 
+          + " WHERE user_ID = \"" + id + "\"";
     }
 
      private static String formInsert(Post post, int id) {
@@ -399,7 +368,7 @@ public class Database {
           String creationDate = "2023-03-01 00:00:00";
           // String lastModified = post.getLastModified();
           String lastModified = "2023-03-01 00:00:00";
-          return "INSERT INTO Post VALUES(" + id + ", " + post.getAuthorID() + ", \"" + post.getTitle() + "\", \"" + post.getContent() + "\", \"" 
+          return "INSERT INTO Post VALUES(" + id + ", \"" + post.getAuthorID() + "\", \"" + post.getTitle() + "\", \"" + post.getContent() + "\", \"" 
           + creationDate + "\", \"" + lastModified + "\", " + post.getUpvotes() + ", " + post.getDownvotes() + ", " 
           + post.getViews() + ", " + post.isDeleted() + ", " + post.isAllowComments() + ")";
      }
@@ -409,7 +378,7 @@ public class Database {
           String creationDate = "2023-03-01 00:00:00";
           // String lastModified = comment.getLastModified();
           String lastModified = "2023-03-01 00:00:00";
-          return "UPDATE Post SET user_ID = " + post.getAuthorID() + ", title = \"" + post.getTitle() + "\", content = \"" + post.getContent() + "\", creation_date = \"" + creationDate 
+          return "UPDATE Post SET user_ID = \"" + post.getAuthorID() + "\", title = \"" + post.getTitle() + "\", content = \"" + post.getContent() + "\", creation_date = \"" + creationDate 
           + "\", last_modified = \"" + lastModified + "\", upvotes = " + post.getUpvotes() + ", downvotes = " + post.getDownvotes() + ", views = " + post.getViews() + ", is_deleted = " 
           + post.isDeleted() + ", allow_comments = " + post.isAllowComments() + " WHERE post_ID = " + id;
     }
@@ -419,7 +388,7 @@ public class Database {
           String creationDate = "2023-03-01 00:00:00";
           // String lastModified = comment.getLastModified();
           String lastModified = "2023-03-01 00:00:00";
-          return "INSERT INTO Comment VALUES(" + comment.getPostID() + ", " + id + ", " + comment.getAuthorID() + ", \"" + comment.getContent() + "\", \"" 
+          return "INSERT INTO Comment VALUES(" + comment.getPostID() + ", " + id + ", \"" + comment.getAuthorID() + "\", \"" + comment.getContent() + "\", \"" 
           + creationDate + "\", \"" + lastModified + "\", " + comment.getUpvotes() + ", " + comment.getDownvotes() + ", " 
           + comment.isDeleted() + ")";
      }
@@ -429,7 +398,7 @@ public class Database {
           String creationDate = "2023-03-01 00:00:00";
           // String lastModified = comment.getLastModified();
           String lastModified = "2023-03-01 00:00:00";
-          return "UPDATE Comment SET user_ID = " + comment.getAuthorID() + ", content = \"" + comment.getContent() + "\", creation_date = \"" + creationDate 
+          return "UPDATE Comment SET user_ID = \"" + comment.getAuthorID() + "\", content = \"" + comment.getContent() + "\", creation_date = \"" + creationDate 
           + "\", last_modified = \"" + lastModified + "\", upvotes = " + comment.getUpvotes() + ", downvotes = " + comment.getDownvotes() + ", is_deleted = " 
           + comment.isDeleted() + " WHERE post_ID = " +  comment.getPostID() + " AND comment_number = " + id;
     }

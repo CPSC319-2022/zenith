@@ -1,8 +1,8 @@
 package com.blog.model;
 
 import com.blog.database.Database;
-import com.blog.exception.UserDoesNotExistException;
-import com.blog.exception.UserIsDeletedException;
+import com.blog.exception.DoesNotExistException;
+import com.blog.exception.IsDeletedException;
 import com.blog.utils.Utility;
 import org.json.JSONObject;
 
@@ -31,9 +31,7 @@ import org.json.JSONObject;
  * void        setDeleted(boolean deleted)
  */
 public class User extends Record {
-    public static final int NEW_USER_ID = 0;
-    
-    private final int userID;  // TODO: reserve 0 for guest user? Maybe even up to n reserved for testing.
+    private final String userID;
     private String username;
     private UserLevel userLevel;
     private String creationDate;
@@ -42,32 +40,11 @@ public class User extends Record {
     private String profilePicture;  // URL to the profile picture
     private String bio;
 
-    /**
-     * Default guest user constructor.
-     */
-    public User() {
-        this.userID = 0;
-        this.userLevel = UserLevel.GUEST;
-        creationDate = null;  // TODO: change to current time
-    }
-
-    /**
-     * Constructor for an existing user.
-     *
-     * @param userID The unique user identifier.
-     */
-    public User(int userID) {
+    public User(String userID) {
         this.userID = userID;
-        try {
-            Database.retrieve(this);
-        } catch (UserDoesNotExistException e) {
-            // todo
-        } catch (UserIsDeletedException e) {
-            // todo
-        }
     }
 
-    public User(int userID,
+    public User(String userID,
                 String username,
                 UserLevel userLevel,
                 String creationDate,
@@ -88,6 +65,20 @@ public class User extends Record {
     }
 
     /**
+     * Factory method to retrieve the user with the given userID.
+     *
+     * @param userID The user to retrieve.
+     * @return The user with the given userID.
+     * @throws IsDeletedException If the user is deleted.
+     * @throws DoesNotExistException If the user does not exist.
+     */
+    public static User retrieve(String userID) throws IsDeletedException, DoesNotExistException {
+        User user = new User(userID);
+        Database.retrieve(user);
+        return user;
+    }
+
+    /**
      * Returns the JSON representation of this object.
      *
      * @return JSONObject
@@ -99,8 +90,19 @@ public class User extends Record {
                 // .put("userLevel", userLevel.ordinal())
                 .put("creationDate", creationDate)
                 .put("lastLogin", lastLogin)
-                // .put("userStatus", userStatus.ordinal())
-                .put("profilePicture", profilePicture);
+
+                .put("userStatus", userStatus.ordinal())
+                .put("profilePicture", profilePicture)
+                .put("bio", bio);
+    }
+
+    /**
+     * Returns the JSON string of this object
+     * @return String
+     */
+    public String asJSONString() {
+        return asJSONObject().toString();
+
     }
 
     public void copy(User u) {
@@ -113,15 +115,7 @@ public class User extends Record {
         this.setBio(u.getBio());
     }
 
-
-    /**
-     * Updates the last login time to the current time.
-     */
-    public void lastLoginNow() {
-        lastLogin = Utility.getCurrentTime();
-    }
-
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
@@ -157,6 +151,13 @@ public class User extends Record {
         this.lastLogin = lastLogin;
     }
 
+    /**
+     * Updates the last login time to the current time.
+     */
+    public void setLastLoginNow() {
+        lastLogin = Utility.getCurrentTime();
+    }
+
     public UserStatus getUserStatus() {
         return userStatus;
     }
@@ -173,11 +174,11 @@ public class User extends Record {
         this.profilePicture = profilePicture;
     }
 
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
     public String getBio() {
         return this.bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="fr.opensagres.xdocreport.springframework.web.servlet.view" type="repository">
+    <properties maven-id="fr.opensagres.xdocreport:org.springframework.web.servlet.view.xdocreport:1.0.6" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/fr/opensagres/xdocreport/org.springframework.web.servlet.view.xdocreport/1.0.6/org.springframework.web.servlet.view.xdocreport-1.0.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/fr/opensagres/xdocreport/fr.opensagres.xdocreport.template/1.0.6/fr.opensagres.xdocreport.template-1.0.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/fr/opensagres/xdocreport/fr.opensagres.xdocreport.core/1.0.6/fr.opensagres.xdocreport.core-1.0.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/fr/opensagres/xdocreport/fr.opensagres.xdocreport.converter/1.0.6/fr.opensagres.xdocreport.converter-1.0.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/fr/opensagres/xdocreport/fr.opensagres.xdocreport.document/1.0.6/fr.opensagres.xdocreport.document-1.0.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -4,41 +4,110 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="">
+    <list default="true" id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/fr_opensagres_xdocreport_springframework_web_servlet_view.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/google_api_client.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/google_http_client_jackson2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/javax_servlet_api.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/junit_jupiter.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/skyscreamer_jsonassert.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_security_spring_config.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_security_spring_oauth2_client.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/springframework_spring_webmvc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/zaxxer_HikariCP.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/BlogApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/CorsConfiguration$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/CorsConfiguration.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/CommentController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/LoginController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/PostController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/controller/UserController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/database/CommentRowMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/database/Database.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/database/DatabaseConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/database/PostRowMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/database/UserRowMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/exception/BlogException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/exception/DoesNotExistException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/exception/InvalidPermissionException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/exception/IsDeletedException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/exception/LoginFailedException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/Comment.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/Content.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/Post.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/Record.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/User.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/UserLevel.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/model/UserStatus.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/production/blog/com/blog/utils/Utility.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/test/blog/com/blog/database/DatabaseTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/out/test/blog/com/blog/model/UnitTests.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/LoginController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/exception/DoesNotExistException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/exception/InitializationException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/exception/IsDeletedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/exception/LoginFailedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/zenith.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/devCI.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/devCI.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Zenith-.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Zenith-.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/org_springframework_boot_spring_boot_2_7_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/org_springframework_boot_spring_boot_autoconfigure_2_7_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/springframework_boot_spring_test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/org_springframework_boot_spring_boot_autoconfigure_2_7_01.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/springframework_boot_spring.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/springframework_spring_jdbc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-<<<<<<< HEAD
+      <change beforePath="$PROJECT_DIR$/blog/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/blog/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/blog/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/BlogApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/BlogApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Content.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Content.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Record.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Record.java" afterDir="false" />
-=======
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/PostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/PostController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/UserController.java" afterDir="false" />
->>>>>>> edbdcf3b1427545a56e0f680c047e615a1a0f10b
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/loginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/CommentRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/CommentRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/PostRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/PostRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/UserRowMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/UserRowMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/exception/UserDoesNotExistException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/exception/UserIsDeletedException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Content.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Content.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/CustomUserDetailsFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/CustomUserDetailsFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/BlogApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/database/DatabaseTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/database/DatabaseTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloudbuild.yml" beforeDir="false" afterPath="$PROJECT_DIR$/cloudbuild.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/blog_manage.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/blog_manage.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/blog_setup.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/blog_setup.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CodeInsightWorkspaceSettings">
-    <option name="optimizeImportsOnTheFly" value="true" />
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JUnit5 Test Class" />
-        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProjectId" id="2LcCCUIjchju9XTl64MS5VryYZn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -46,26 +115,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="Downloaded.Files.Path.Enabled" value="false" />
-    <property name="Repository.Attach.Annotations" value="false" />
-    <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="Repository.Attach.Sources" value="false" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="TODO_SCOPE" value="All Places" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
-    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
-    <property name="jdk.selected.JAVA_MODULE" value="1.8" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="copyright" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "node.js.selected.package.tslint": "(autodetect)",
+    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/frontend/src/images" />
@@ -80,7 +135,58 @@
       <recent name="com.blog.model" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.UserTest">
+  <component name="RunManager">
+    <configuration name="DatabaseTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="blog" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.blog.database.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.blog.database" />
+      <option name="MAIN_CLASS_NAME" value="com.blog.database.DatabaseTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UnitTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="blog" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.blog.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="18" />
+      <option name="PACKAGE_NAME" value="com.blog.model" />
+      <option name="MAIN_CLASS_NAME" value="com.blog.model.UnitTests" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UnitTests.guestConstructor" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="blog" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.blog.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="18" />
+      <option name="PACKAGE_NAME" value="com.blog.model" />
+      <option name="MAIN_CLASS_NAME" value="com.blog.model.UnitTests" />
+      <option name="METHOD_NAME" value="guestConstructor" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="UserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Zenith-" />
       <extension name="coverage">
@@ -96,65 +202,37 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserTest.guestConstructor" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Zenith-" />
+    <configuration name="BlogApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="blog" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.blog.model.*" />
+          <option name="PATTERN" value="com.blog.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.blog.model" />
-      <option name="MAIN_CLASS_NAME" value="com.blog.model.UserTest" />
-      <option name="METHOD_NAME" value="guestConstructor" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.blog.BlogApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/frontend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="start" />
-      </scripts>
-      <node-interpreter value="project" />
-      <package-manager value="npm" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="JUnit.UserTest" />
-        <item itemvalue="JUnit.UserTest.guestConstructor" />
-        <item itemvalue="npm.start" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="ec321431-3d73-4fff-a276-d6102e4dde3a" name="Changes" comment="" />
-      <created>1676160858109</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1676160858109</updated>
-      <workItem from="1676160874319" duration="2451000" />
-      <workItem from="1676164804612" duration="15000" />
-      <workItem from="1676164837306" duration="993000" />
-      <workItem from="1676166684937" duration="1339000" />
-      <workItem from="1676168088316" duration="13492000" />
-      <workItem from="1676186679101" duration="7599000" />
-      <workItem from="1677397703475" duration="6388000" />
-      <workItem from="1677701434893" duration="10114000" />
-      <workItem from="1677731139246" duration="265000" />
-      <workItem from="1677906178082" duration="6901000" />
-      <workItem from="1677972599470" duration="10057000" />
-      <workItem from="1678015070561" duration="695000" />
-      <workItem from="1678179511528" duration="17766000" />
-      <workItem from="1678216422362" duration="1474000" />
-      <workItem from="1678234058652" duration="1000000" />
+    <task id="LOCAL-00001" summary="contents half-way">
+      <created>1679043117165</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1679043117165</updated>
     </task>
+    <task id="LOCAL-00002" summary="contents + post finished">
+      <created>1679099469122</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1679099469122</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,6 +250,8 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="contents half-way" />
+    <MESSAGE value="contents + post finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="contents + post finished" />
   </component>
 </project>

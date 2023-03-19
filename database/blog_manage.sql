@@ -7,9 +7,9 @@
 --
 
 INSERT INTO User
-VALUES(user_ID, user_password, username, creationDate, creationDate, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+VALUES(user_ID, user_password, username, creationDate, creationDate, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 --Example: INSERT INTO User
---         VALUES("1", 12345, "user1", "2023-03-01 01:02:03", "2023-3-1 01:02:03", DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+--         VALUES("1", 12345, "user1", "2023-03-01 01:02:03", "2023-3-1 01:02:03", DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 
 INSERT INTO Post
 VALUES(post_ID, user_ID, title, content, creationDate, creationDate, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)

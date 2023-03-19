@@ -2,6 +2,7 @@ package com.blog.controller;
 
 import com.blog.database.Database;
 import com.blog.exception.BlogException;
+import com.blog.exception.DoesNotExistException;
 import com.blog.exception.InvalidPermissionException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.blog.exception.LoginFailedException;
 
 import com.blog.model.Post;
 import com.blog.model.User;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 
 @RestController
 public class PostController {
+
   // Replace the getPost method
 @GetMapping("/getPost")
 @ResponseBody
@@ -168,6 +170,7 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
         }
     }
 
+
     /**
      * Returns a JSON containing the requested post.
      *
@@ -175,10 +178,10 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      *              {
      *              "postID":    int,  // The requested post.
      *              }
-     * @return The JSON representing the post using the following syntax:
+     * @return The JSON string representing the post using the following syntax:
      * {
      * "postID":        int,
-     * "authorID":      int,
+     * "authorID":      String,
      * "title":         String,
      * "content":       String,
      * "creationDate":  String,
@@ -191,12 +194,12 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      * }
      * @throws BlogException
      */
-    private static JSONObject getPost(JSONObject input) throws BlogException {
+    private static String getPost(JSONObject input) throws BlogException {
         // Retrieve the post
         Post post = retrievePost(input);
 
-        // Return the JSON response
-        return post.asJSONObject();
+        // Return the JSON string
+        return post.asJSONString();
     }
 
     /**
@@ -208,11 +211,11 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      *              "count":       int,     // The number of requested posts.
      *              "reverse":     boolean  // Whether to get posts incrementally or decrementally.
      *              }
-     * @return The JSON representing the posts using the following syntax:
+     * @return The JSON string representing the posts using the following syntax:
      * [
      * {                           //
      * "postID":        int,       //
-     * "authorID":      int,       //
+     * "authorID":      String,    //
      * "title":         String,    //
      * "content":       String,    //
      * "creationDate":  String,    //
@@ -227,7 +230,7 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      * ]
      * @throws BlogException
      */
-    private static JSONArray getPosts(JSONObject input) throws BlogException {
+    private static String getPosts(JSONObject input) throws BlogException {
         int postIDStart;
         int count;
         boolean reverse;
@@ -256,7 +259,7 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
         }
 
         // Return the JSON response
-        return response;
+        return response.toString();
     }
 
     /**
@@ -264,24 +267,24 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "authorID":      int,     // The author of the post.
-     *              "title":         String   // The title of the post.
-     *              "content":       String   // The content of the post.
-     *              "allowComments": boolean  // Whether to allow comments
+     *              "authorID":      String,   // The author of the post.
+     *              "title":         String,   // The title of the post.
+     *              "content":       String,   // The content of the post.
+     *              "allowComments": boolean,  // Whether to allow comments
      *              }
+     * @return The JSON string representing the created post
      * @throws BlogException
      */
-    private static void createPost(JSONObject input) throws BlogException {
-        int authorID;
+    private static String createPost(JSONObject input) throws BlogException {
+        String authorID;
         String title;
         String content;
         boolean allowComments;
 
         // Read data from JSON
         try {
-            System.out.println(input);
-            authorID = input.getInt("authorID");
-            authorID = input.getInt("authorID");
+
+            authorID = input.getString("authorID");
             title = input.getString("title");
             content = input.getString("content");
             allowComments = input.getBoolean("allowComments");
@@ -292,10 +295,10 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
         }
 
         // Retrieve the user
-        User user = new User(authorID);
+        User user = User.retrieve(authorID);
 
-        // Check whether the user has permission to make a post. // TODO: change to MEMBER
-        if (UserLevel.READER.compareTo(user.getUserLevel()) < 0) {
+        // Check whether the user has permission to make a post.
+        if (user.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
             throw new InvalidPermissionException("User does not have the necessary permission to make a post.");
         }
 
@@ -320,7 +323,13 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
         );
 
         // Save post to database
-        Database.save(post);
+        int postID = Database.save(post);
+
+        // Indicate that the user is a contributor
+        userIsContributor(user);
+
+        // Return the created post
+        return Post.retrieve(postID).asJSONString();
     }
 
     /**
@@ -328,8 +337,8 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID": int,  // The post to delete.
-     *              "userID": int,  // The user attempting to delete.
+     *              "postID": int,     // The post to delete.
+     *              "userID": String,  // The user attempting to delete.
      *              }
      * @throws BlogException
      */
@@ -341,7 +350,7 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
         User user = UserController.retrieveUser(input);
 
         // Check whether user has permission to delete post
-        if (post.getAuthorID() != user.getUserID() && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+        if (post.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
             throw new InvalidPermissionException("User does not have the necessary permission to delete this post.");
         }
 
@@ -357,8 +366,8 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      *              "postID":        int,     // The post to edit.
      *              "title":         String   // The new title of the post.
      *              "content":       String   // The new content of the post.
-     *              "allowComments": boolean  // Whether to allow comments
-     *              "userID":        int,     // The user attempting to edit.
+     *              "allowComments": boolean  // Whether to allow comments.
+     *              "userID":        String,  // The user attempting to edit.
      *              }
      * @throws BlogException
      */
@@ -388,8 +397,8 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
         // Retrieve the user
         User user = UserController.retrieveUser(input);
 
-        // Check whether user has permission to delete post
-        if (post.getAuthorID() != user.getUserID() && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+        // Check whether user has permission to edit post
+        if (post.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
             throw new InvalidPermissionException("User does not have the necessary permission to edit this post.");
         }
 
@@ -408,7 +417,7 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post to upvote.
+     *              "postID": int,  // The post to upvote.
      *              }
      * @throws BlogException
      */
@@ -428,7 +437,7 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post to downvote.
+     *              "postID": int,  // The post to downvote.
      *              }
      * @throws BlogException
      */
@@ -448,7 +457,7 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
      *
      * @param input A JSON containing the following key-value pairs:
      *              {
-     *              "postID":    int,  // The post to increment view counter.
+     *              "postID": int,  // The post to increment view counter.
      *              }
      * @throws BlogException
      */
@@ -486,6 +495,138 @@ public ResponseEntity<String> createPost(@RequestBody String input, @RequestHead
         }
 
         // Return the retrieved post
-        return new Post(postID);
+        return Post.retrieve(postID);
+    }
+
+    /**
+     * Sets the given user as a contributor.
+     *
+     * @param user The user to set as a contributor.
+     */
+    private static void userIsContributor(User user) {
+        // Check if user is already a contributor or higher
+        if (user.getUserLevel().compareTo(UserLevel.CONTRIBUTOR) >= 0) {
+            return;
+        }
+
+        // Set the user as a contributor
+        user.setUserLevel(UserLevel.CONTRIBUTOR);
+
+        // Save this change to the database
+        Database.save(user);
+    }
+
+    @GetMapping("/getPost")
+    @ResponseBody
+    public ResponseEntity<String> getPost(@RequestParam("postID") int postID) {
+        try {
+            JSONObject input = new JSONObject()
+                    .put("postID", postID);
+            return ResponseEntity.ok(getPost(input));
+        } catch (DoesNotExistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/getPosts")
+    @ResponseBody
+    public ResponseEntity<String> getPosts(@RequestParam("postIDStart") int postIDStart,
+                                           @RequestParam("count") int count,
+                                           @RequestParam("reverse") boolean reverse) {
+        try {
+            JSONObject input = new JSONObject()
+                    .put("postIDStart", postIDStart)
+                    .put("count", count)
+                    .put("reverse", reverse);
+            return ResponseEntity.ok(getPosts(input));
+        } catch (DoesNotExistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/createPost")
+    @ResponseBody
+    public ResponseEntity<String> createPost(@RequestHeader("Authorization") String accessToken,
+                                             @RequestBody String body) {
+        try {
+            JSONObject input = new JSONObject(body)
+                    .put("authorID", LoginController.getUserID(accessToken));
+            return ResponseEntity.ok(createPost(input));
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/deletePost")
+    @ResponseBody
+    public ResponseEntity<String> deletePost(@RequestHeader("Authorization") String accessToken,
+                                             @RequestBody String body) {
+        try {
+            JSONObject input = new JSONObject(body)
+                    .put("userID", LoginController.getUserID(accessToken));
+            deletePost(input);
+            return ResponseEntity.ok().build();
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/editPost")
+    @ResponseBody
+    public ResponseEntity<String> editPost(@RequestHeader("Authorization") String accessToken,
+                                           @RequestBody String body) {
+        try {
+            JSONObject input = new JSONObject(body)
+                    .put("userID", LoginController.getUserID(accessToken));
+            editPost(input);
+            return ResponseEntity.ok().build();
+        } catch (InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/upvotePost")
+    @ResponseBody
+    public ResponseEntity<String> upvotePost(@RequestBody String body) {
+        try {
+            upvotePost(new JSONObject(body));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/downvotePost")
+    @ResponseBody
+    public ResponseEntity<String> downvotePost(@RequestBody String body) {
+        try {
+            downvotePost(new JSONObject(body));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/viewPost")
+    @ResponseBody
+    public ResponseEntity<String> viewPost(@RequestBody String body) {
+        try {
+            viewPost(new JSONObject(body));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

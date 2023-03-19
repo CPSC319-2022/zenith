@@ -4,7 +4,7 @@ spring:
       client:
         registration:
           google:
-            client-id:  137046975675-86mneph4bv1sfafa1788famgv2ot695r.apps.googleusercontent.com 
+            client-id:  137046975675-86mneph4bv1sfafa1788famgv2ot695r.apps.googleusercontent.com
             client-secret:  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
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:

@@ -1,4 +1,3 @@
-
 name: Pull Request to QA on successfull push/pull to dev
 
 on:
@@ -19,7 +18,7 @@ jobs:
         run: docker build -t "zenith/backend-test:latest" --file ./blog/Dockerfile ./blog
         
       - name: Build frontend docker image, in which tests will run
-        run: docker build -t "zenith/frontend-test:latest" --file ./frontend/frontend.dockerfile ./blog
+        run: docker build -t "zenith/frontend-test:latest" --file ./frontend/frontend.dockerfile ./frontend
       
       - name: Cleans up images
         if: always()
@@ -42,4 +41,16 @@ jobs:
 
       - name: marge dev to qa
         run: git merge dev
-    
+  
+  notify:
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: slackapi/slack-github-action@v1.23.0
+
+      - name: Sends report of commit to project slack channel
+        with:
+          channel-id: 
+          slack-message: "GitHub build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
