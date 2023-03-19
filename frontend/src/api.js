@@ -1,4 +1,6 @@
 // api.js
+
+
 import axios from 'axios';
 import { getAccessToken } from './redux/slices/auth';
 
@@ -13,6 +15,7 @@ import { getAccessToken } from './redux/slices/auth';
 //   }
 //   return {};
 // };
+
 
 export const getPosts = async ({ postIDStart, count, reverse }) => {
   try {
@@ -87,7 +90,6 @@ export const getComment = async ({postID, commentID}) => {
 };
 
 export const createComment = async ({ postID, authorID, content }) => {
-    console.log("createComment: ", postID, authorID, content);
     const response = await axios.post('http://localhost:8080/createComment', {
       postID,
       authorID,
@@ -143,6 +145,38 @@ export const upvoteComment = async ({ postID, commentID }) => {
 export const downvoteComment = async ({ postID, commentID }) => {
   try {
     const response = await axios.put('http://localhost:8080/downvoteComment', JSON.stringify({ postID: postID, commentID: commentID }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const deleteComment = async ({ postID, commentID }) => {
+  try {
+    const body = JSON.stringify({ postID, commentID });
+    const response = await axios.delete('http://localhost:8080/deleteComment', {
+      data: body,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const editComment = async ({ postID, commentID, content }) => {
+  try {
+    const response = await axios.put('http://localhost:8080/editComment', JSON.stringify({ postID: postID, commentID: commentID, content: content }), {
       headers: { 'Content-Type': 'application/json' },
     });
     if (response.status !== 200) {
