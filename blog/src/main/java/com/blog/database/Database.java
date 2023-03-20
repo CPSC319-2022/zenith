@@ -231,7 +231,6 @@ public class Database {
      * @return the userID
      */
     public static String save(User user) {
-      // return "-1";
         String userID = user.getUserID();
         String sql = "SELECT COUNT(*) FROM User WHERE user_ID = " + userID;
         if (jdbcTemplate == null) {

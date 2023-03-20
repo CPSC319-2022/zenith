@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import {Container, Row, Col, Button} from 'react-bootstrap';
+import {Container, Row, Col, Button, Modal, Card} from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 import { fetchComments, upvoteComment, downvoteComment,editComment, deleteComment} from '../redux/slices/commentSlice';
-import { fetchPost, upvotePost, downvotePost } from '../redux/slices/postSlice';
+import {fetchPost, upvotePost, downvotePost, editPost} from '../redux/slices/postSlice';
 import { commentSliceActions } from '../redux/slices/commentSlice';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Comment from '../components/Comment';
 import Filter from 'bad-words';
-import { AiFillLike, AiFillDislike } from 'react-icons/ai';
+import {AiFillLike, AiFillDislike, AiOutlineEdit} from 'react-icons/ai';
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -27,6 +27,10 @@ const SinglePost = () => {
   const [commentBody, setCommentBody] = useState('');
   const [profanityError, setProfanityError] = useState('');
   const [updateComments, setUpdateComments] = useState(false);
+
+  const [editingPost, setEditingPost] = useState(false);
+  const [editedPostContent, setEditedPostContent] = useState('');
+
 
   useEffect(() => {
     dispatch(fetchPost({ postID: id }));
@@ -50,6 +54,25 @@ const SinglePost = () => {
     await dispatch(downvotePost(postID));
     dispatch(fetchPost({ postID: id }));
   };
+
+  const handleEditPost = () => {
+    setEditingPost(true);
+    setEditedPostContent(post.content);
+  };
+
+  const handleSave = async (postID, title, content, allowComments) => {
+    if (editingPost) {
+      content = editedPostContent.toString();
+      console.log('whats going to thunk', editingPost, postID, title, content, allowComments);
+      await dispatch(editPost({ postID, title, content, allowComments }));
+      setEditingPost(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingPost(false);
+  };
+
 
   const handleUpvoteComment = async (postID, commentID) => {
     await dispatch(upvoteComment({ postID, commentID }));
@@ -111,14 +134,27 @@ const SinglePost = () => {
               {post && (
                   <>
                     <h1>{post.title}</h1>
-                    <div
-                        className="post-content"
-                        dangerouslySetInnerHTML={{ __html: post.content }}
-                    ></div>
+                    {editingPost ? (
+                        <ReactQuill
+                            className="editor"
+                            theme="snow"
+                            value={editedPostContent}
+                            onChange={(content) => setEditedPostContent(content)}
+                        />
+                    ) : (
+                        <div
+                            className="post-content"
+                            dangerouslySetInnerHTML={{ __html: post.content }}
+                        ></div>
+                    )}
+                    {/*<div*/}
+                    {/*    className="post-content"*/}
+                    {/*    dangerouslySetInnerHTML={{ __html: post.content }}*/}
+                    {/*></div>*/}
                   </>
               )}
 
-              {/* Add upvote and downvote buttons for the post */}
+              {/* Add upvote, downvote, and edit buttons for the post */}
               {post && (
                   <div className="post-votes">
                     <Button variant="outline-primary" onClick={() => handleUpvotePost(post.postID)}>
@@ -127,6 +163,20 @@ const SinglePost = () => {
                     <Button variant="outline-danger" onClick={() => handleDownvotePost(post.postID)}>
                       <AiFillDislike /> {post.downvotes}
                     </Button>
+                    {editingPost ? (
+                        <>
+                          <Button variant="success" onClick={() =>handleSave(post.postID, post.title, post.content, post.allowComments)}>
+                            Save
+                          </Button>
+                          <Button variant="secondary" onClick={handleCancel}>
+                            Cancel
+                          </Button>
+                        </>
+                    ) : (
+                        <Button variant="outline-info" onClick={handleEditPost}>
+                          <AiOutlineEdit />
+                        </Button>
+                    )}
                   </div>
               )}
 
