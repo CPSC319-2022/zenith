@@ -176,11 +176,10 @@ public class User extends Record {
         return super.asJSONObject()
                 .put("userID", userID)
                 .put("username", username)
-                // .put("userLevel", userLevel.ordinal())
+                .put("userLevel", userLevel)
                 .put("creationDate", creationDate)
                 .put("lastLogin", lastLogin)
-
-                .put("userStatus", userStatus.ordinal())
+                .put("userStatus", userStatus)
                 .put("profilePicture", profilePicture)
                 .put("bio", bio);
     }
