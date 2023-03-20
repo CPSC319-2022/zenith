@@ -59,7 +59,7 @@ public class Comment extends Content {
     /**
      * Factory method to retrieve the comment with the given postID and commentID.
      *
-     * @param postID The post to retrieve the comment from.
+     * @param postID    The post to retrieve the comment from.
      * @param commentID The comment to retrieve.
      * @return The comment with the given postID and commentID.
      */
@@ -82,6 +82,7 @@ public class Comment extends Content {
 
     /**
      * Returns the JSON string of this object
+     *
      * @return String
      */
     public String asJSONString() {

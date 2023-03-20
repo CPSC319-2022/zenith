@@ -84,6 +84,18 @@ public class Post extends Content {
     }
 
     /**
+     * Validates the length of the title field.
+     *
+     * @param title The title to validate.
+     * @throws BlogException
+     */
+    public static void validateTitle(String title) throws BlogException {
+        if (title.length() < MIN_TITLE_LENGTH) {
+            throw new BlogException("Title length is too short.");
+        }
+    }
+
+    /**
      * Returns the JSON representation of this object.
      *
      * @return JSONObject
@@ -98,22 +110,11 @@ public class Post extends Content {
 
     /**
      * Returns the JSON string of this object
+     *
      * @return String
      */
     public String asJSONString() {
         return asJSONObject().toString();
-    }
-
-    /**
-     * Validates the length of the title field.
-     *
-     * @param title The title to validate.
-     * @throws BlogException
-     */
-    public static void validateTitle(String title) throws BlogException {
-        if (title.length() < MIN_TITLE_LENGTH) {
-            throw new BlogException("Title length is too short.");
-        }
     }
 
     public void copy(Post p) {
