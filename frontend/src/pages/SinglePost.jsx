@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import {Container, Row, Col, Button, Modal, Card} from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+
 import { fetchComments, upvoteComment, downvoteComment,editComment, deleteComment} from '../redux/slices/commentSlice';
 import {fetchPost, upvotePost, downvotePost, editPost} from '../redux/slices/postSlice';
 import { commentSliceActions } from '../redux/slices/commentSlice';
@@ -17,6 +18,9 @@ const SinglePost = () => {
   const post = useSelector((state) => state.posts.post);
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  console.log('isAuthenticated:', isAuthenticated);
+
   const comments = useSelector((state) => state.comments.comments, shallowEqual);
   const commentsStatus = useSelector((state) => state.comments.status);
   const commentsError = useSelector((state) => state.comments.error);
@@ -105,12 +109,11 @@ const SinglePost = () => {
       return;
     }
 
-    const authorID = 1;
+    //const authorID = 1;
 
     await dispatch(
         commentSliceActions.createComment({
           postID: id,
-          authorID,
           content: commentBody,
         })
     );

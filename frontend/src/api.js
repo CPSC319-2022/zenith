@@ -108,11 +108,19 @@ export const getComment = async ({postID, commentID}) => {
     return response.data;
 };
 
-export const createComment = async ({ postID, authorID, content }) => {
+export const createComment = async ({ postID, content }) => {
+  const token = getAccessToken();
+
+  console.log("createComment: ", postID, content);
     const response = await axios.post(`${apiUrl}/createComment`, {
       postID,
-      authorID,
       content,
+    },{
+      headers: {
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+      },
     });
     return response.data;
 };
