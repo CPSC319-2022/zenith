@@ -25,12 +25,15 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="qa" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="2NE6lZ8ML18QyQJlzC9SNzpmK0u" />
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2NDDE9j4dywyFLFoUYl62y7mEMK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -107,8 +110,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="18" />
       <option name="PACKAGE_NAME" value="com.blog.model" />
       <option name="MAIN_CLASS_NAME" value="com.blog.model.UnitTests" />
       <option name="METHOD_NAME" value="guestConstructor" />
@@ -117,60 +118,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Zenith-" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.blog.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.blog.model" />
-      <option name="MAIN_CLASS_NAME" value="com.blog.model.UserTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BlogApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="blog" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.blog.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.blog.BlogApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.UnitTests" />
-        <item itemvalue="JUnit.DatabaseTest" />
+        <item itemvalue="JUnit.UnitTests.guestConstructor" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task id="LOCAL-00001" summary="contents half-way">
-      <created>1679043117165</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1679043117165</updated>
-    </task>
-    <task id="LOCAL-00002" summary="contents + post finished">
-      <created>1679099469122</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1679099469122</updated>
-    </task>
     <task active="true" id="Default" summary="Default task">
-      <changelist id="6e0516ea-df61-42b5-8a60-8d2255a1a5e3" name="Changes" comment="contents + post finished" />
-      <created>1679217050303</created>
+      <changelist id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="added JSON test" />
+      <created>1679189644816</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1679217050303</updated>
@@ -178,27 +136,41 @@
       <workItem from="1679217531656" duration="2118000" />
       <workItem from="1679277805023" duration="670000" />
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00001" summary="Unit Tests fixes">
+      <created>1679259709343</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1679259709343</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="qa" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="contents half-way" />
-    <MESSAGE value="contents + post finished" />
-    <option name="LAST_COMMIT_MESSAGE" value="contents + post finished" />
+    <MESSAGE value="Unit Tests fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Unit Tests fixes" />
   </component>
 </project>
