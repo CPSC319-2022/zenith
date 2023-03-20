@@ -81,10 +81,10 @@ public class User extends Record {
         super(isDeleted);
         this.userID = userID;
         this.username = username;
-        // this.userLevel = userLevel;
+        this.userLevel = userLevel;
         this.creationDate = creationDate;
         this.lastLogin = lastLogin;
-        //this.userStatus = userStatus;
+        this.userStatus = userStatus;
         this.profilePicture = profilePicture;
         this.bio = bio;
     }

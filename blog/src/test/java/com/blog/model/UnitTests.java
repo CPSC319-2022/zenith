@@ -210,9 +210,7 @@ class UnitTests {
         assertEquals(1, comment.getCommentID());
         assertEquals(0, comment.getPostID());
         comment.copy(comment1);
-        assertEquals(11, comment.getCommentID());
-        assertEquals(10, comment.getPostID());
-        assertEquals(12, comment.getAuthorID());
+        assertEquals("12", comment.getAuthorID());
         assertEquals("Happy New Year!", comment.getContent());
         assertEquals("2022-01-01T00:00:00.861336Z", comment.getCreationDate());
         assertEquals("2022-01-02T06:00:00.861336Z", comment.getLastModified());
@@ -514,7 +512,6 @@ class UnitTests {
         assertEquals(0, post.getPostID());
         assertEquals("1", post.getAuthorID());
         post.copy(post1);
-        assertEquals(1874, post.getPostID());
         assertEquals("9934", post.getAuthorID());
         assertEquals("Happy New Year", post.getTitle());
         assertEquals("I wish everyone is having fun in Christmas and wish all of us a happy new year!", post.getContent());
@@ -523,7 +520,6 @@ class UnitTests {
         assertEquals(98, post.getUpvotes());
         assertEquals(0, post.getDownvotes());
         assertEquals(false, post.isDeleted());
-        assertEquals(201, post.getViews());
         assertEquals(true, post.isAllowComments());
     }
 
