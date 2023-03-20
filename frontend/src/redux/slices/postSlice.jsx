@@ -46,13 +46,25 @@ export const editPost = createAsyncThunk(
     async ({ postID, title, content, allowComments }, { rejectWithValue }) => {
         console.log('within thunk', postID, title, content, allowComments);
         try {
-            await editPostAPI({postID, title, content, allowComments});
-            return 'Post created successfully';
+            const editedPost = await editPostAPI({postID, title, content, allowComments});
+            return editedPost;
         } catch (err) {
             return rejectWithValue(err.message);
         }
     }
 );
+// export const editPost = createAsyncThunk(
+//     'posts/editPost',
+//     async ({ postID, title, content, allowComments }, { rejectWithValue }) => {
+//         console.log('within thunk', postID, title, content, allowComments);
+//         try {
+//             await editPostAPI({postID, title, content, allowComments});
+//             return 'Post created successfully';
+//         } catch (err) {
+//             return rejectWithValue(err.message);
+//         }
+//     }
+// );
 
 // Async thunk for upvoting a post
 export const upvotePost = createAsyncThunk(

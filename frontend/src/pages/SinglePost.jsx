@@ -30,6 +30,12 @@ const SinglePost = () => {
 
   const [editingPost, setEditingPost] = useState(false);
   const [editedPostContent, setEditedPostContent] = useState('');
+  const [postUpdated, setPostUpdated] = useState(false);
+
+
+  useEffect(() => {
+    dispatch(fetchPost({ postID: id }));
+  }, [id, dispatch, postUpdated]);
 
 
   useEffect(() => {
@@ -63,9 +69,9 @@ const SinglePost = () => {
   const handleSave = async (postID, title, content, allowComments) => {
     if (editingPost) {
       content = editedPostContent.toString();
-      console.log('whats going to thunk', editingPost, postID, title, content, allowComments);
       await dispatch(editPost({ postID, title, content, allowComments }));
       setEditingPost(false);
+      setPostUpdated(!postUpdated); // This line will trigger the refetch
     }
   };
 

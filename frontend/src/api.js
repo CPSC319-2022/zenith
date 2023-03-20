@@ -184,12 +184,16 @@ export const downvoteComment = async ({ postID, commentID }) => {
 };
 
 export const deleteComment = async ({ postID, commentID }) => {
+  const token = getAccessToken();
   try {
     const body = JSON.stringify({ postID, commentID });
     const response = await axios.delete(`${apiUrl}/deleteComment`, {
       data: body,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json' ,
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
       }
     });
     if (response.status !== 200) {
@@ -202,9 +206,16 @@ export const deleteComment = async ({ postID, commentID }) => {
 };
 
 export const editComment = async ({ postID, commentID, content }) => {
+  const token = getAccessToken();
   try {
     const response = await axios.put(`${apiUrl}/editComment`, JSON.stringify({ postID: postID, commentID: commentID, content: content }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers:
+          {
+            'Content-Type': 'application/json' ,
+              Authorization: `Bearer ${token.credential}`,
+              'X-Oauth-Provider': 'google',
+              'X-Oauth-Credential': JSON.stringify(token.credential),
+          },
     });
     if (response.status !== 200) {
       throw new Error('Server Error');
