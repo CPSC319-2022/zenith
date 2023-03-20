@@ -245,9 +245,9 @@ public class PostController {
         User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to edit post
-        if (post.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
-            throw new InvalidPermissionException("User does not have the necessary permission to edit this post.");
-        }
+         if (!(post.getAuthorID().equals(user.getUserID()) && ((UserLevel.CONTRIBUTOR.compareTo(user.getUserLevel()) < 0) || (UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0)))) {
+                            throw new InvalidPermissionException("User does not have the necessary permission to edit this post.");
+                }
 
         // Apply edit to post
         post.setTitle(title);
