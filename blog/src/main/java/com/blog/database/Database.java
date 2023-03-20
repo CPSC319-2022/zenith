@@ -231,19 +231,19 @@ public class Database {
      * @return the userID
      */
     public static String save(User user) {
-      return "-1";
-        // String userID = user.getUserID();
-        // String sql = "SELECT COUNT(*) FROM User WHERE user_ID = " + userID;
-        // if (jdbcTemplate == null) {
-        //   createTemplate();
-        // }
-        // if (jdbcTemplate.queryForObject(sql, Integer.class) == 1) {
-        //   sql = formUpdate(user, userID);
-        // } else {
-        //   sql = formInsert(user, userID);
-        // }
-        // jdbcTemplate.update(sql);
-        // return userID;
+      // return "-1";
+        String userID = user.getUserID();
+        String sql = "SELECT COUNT(*) FROM User WHERE user_ID = " + userID;
+        if (jdbcTemplate == null) {
+          createTemplate();
+        }
+        if (jdbcTemplate.queryForObject(sql, Integer.class) == 1) {
+          sql = formUpdate(user, userID);
+        } else {
+          sql = formInsert(user, userID);
+        }
+        jdbcTemplate.update(sql);
+        return userID;
         // Note that since user ID is final, you will have to create a new user later for further use.
         /*
               if key already exist in database, update

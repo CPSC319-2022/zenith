@@ -142,6 +142,7 @@ public class PostController {
 
         // Retrieve the author
         User author = UserController.retrieveUserByAccessToken(input);
+        System.out.println("Author: " + author);
 
         // Check whether the author has permission to make a post.
         if (author.getUserLevel().compareTo(UserLevel.GUEST) == 0) {

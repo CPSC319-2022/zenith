@@ -4,18 +4,13 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../styles/Create.css';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import { postSliceActions } from '../redux/slices/postSlice';
-import { setClientId } from '../redux/slices/auth';
-
 import { Link } from 'react-router-dom';
 
 const CreatePost = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  console.log('isAuthenticated:', isAuthenticated);
-  const clientID = useSelector((state) => state.auth.user?.clientId);
-  console.log('clientIDCreate:', clientID);
+ 
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
@@ -31,7 +26,6 @@ const CreatePost = () => {
 
     dispatch(
       postSliceActions.createPost({
-        authorID: clientID,
         title,
         content: body,
         allowComments,
