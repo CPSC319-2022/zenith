@@ -59,6 +59,28 @@ export const createPost = async ({ title, content, allowComments }) => {
 };
 
 
+export const editPost = async ({ postID, title, content, allowComments }) => {
+  const token = getAccessToken();
+  console.log("editPost token: ", token);
+  console.log("typeof token.credential: ", typeof token.credential);
+  // const cred = (token.credential);
+  // console.log("editPost credential: ", cred);
+  const response = await axios.put(`${apiUrl}/editPost`, {
+    postID,
+    title,
+    content,
+    allowComments,
+  }, {
+    headers: {
+      Authorization: `Bearer ${token.credential}`,
+      'X-Oauth-Provider': 'google',
+      'X-Oauth-Credential': JSON.stringify(token.credential),
+    },
+  });
+  return response.data;
+};
+
+
 
 
 //Comments

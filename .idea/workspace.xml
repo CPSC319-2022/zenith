@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="Unit Tests fixes">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="contents + post finished">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/Controller/ControllerTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/Controller/ControllerTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/database/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/security/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/SinglePost.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/SinglePost.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/redux/slices/postSlice.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/redux/slices/postSlice.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,12 +54,16 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "jdk.selected.JAVA_MODULE": "18",
     "last_opened_file_path": "/Users/sherlock/Desktop/zenith",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.31990233"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.UnitTests">
+  <component name="RunManager">
     <configuration name="DatabaseTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="blog" />
       <extension name="coverage">
@@ -136,15 +142,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="JUnit.UnitTests" />
-        <item itemvalue="JUnit.UnitTests.commentAsJSONString" />
-        <item itemvalue="JUnit.UnitTests.userAsJSONObject" />
-        <item itemvalue="JUnit.DatabaseTest" />
-        <item itemvalue="JUnit.UnitTests.commentLastModified" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -205,13 +202,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Unit Tests fixes" />
     <option name="LAST_COMMIT_MESSAGE" value="Unit Tests fixes" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/zenith$DatabaseTest.ic" NAME="DatabaseTest Coverage Results" MODIFIED="1679302684140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
-      <FILTER>com.blog.database.*</FILTER>
-    </SUITE>
-    <SUITE FILE_PATH="coverage/zenith$UnitTests.ic" NAME="UnitTests Coverage Results" MODIFIED="1679306104287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
-      <FILTER>com.blog.model.*</FILTER>
-    </SUITE>
   </component>
 </project>
