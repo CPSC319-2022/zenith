@@ -128,9 +128,9 @@ public class CommentController {
         String content;
 
         // Check if input is null
-    if (input == null) {
-        throw new BlogException("JSON object received is null.");
-    }
+        if (input == null) {
+            throw new BlogException("JSON object received is null.");
+        }
 
         // Read data from JSON
         try {
