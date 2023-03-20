@@ -7,8 +7,12 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+
+import java.time.Instant;
 
 import static com.blog.model.UserLevel.*;
+import static com.blog.model.UserStatus.OFFLINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -23,8 +27,8 @@ class UnitTests {
                 "",
                 "Guest Username",
                 GUEST,
-                Utility.getCurrentTime(),
-                Utility.getCurrentTime(),
+                "2023-03-15T06:00:00.861336Z",
+                "2023-03-16T06:00:00.861336Z",
                 UserStatus.ONLINE,
                 "url to profile picture",
                 "Guest bio",
@@ -59,8 +63,14 @@ class UnitTests {
      * Tests for User + UserLevel + UserStatus
      */
     @Test
-    void guestConstructor() {
+    void guestConstructorOne() {
         assertEquals(UserLevel.GUEST, guest.getUserLevel());
+    }
+
+    @Test
+    void guestConstructorTwo() {
+        User user1 = new User("1");
+        assertEquals("", guest.getUserID());
     }
 
 
@@ -68,6 +78,11 @@ class UnitTests {
     void userNameSet() {
         guest.setUsername("Guest");
         assertEquals("Guest", guest.getUsername());
+    }
+
+    @Test
+    void userGetUserID() {
+        assertEquals("", guest.getUserID());
     }
 
     @Test
@@ -88,9 +103,23 @@ class UnitTests {
     }
 
     @Test
+    void userGetLastLogin() {
+        assertEquals("2023-03-16T06:00:00.861336Z", guest.getLastLogin());
+    }
+
+    @Test
     void userLastLoginSet() {
-         guest.setCreationDate("2023-03-15T06:00:00.861336Z");
+         guest.setLastLogin("2023-03-15T06:00:00.861336Z");
          assertEquals("2023-03-15T06:00:00.861336Z", guest.getCreationDate());
+    }
+
+    @Test
+    void userSetLastLoginNow() {
+        Instant timeBefore = Instant.parse(Utility.getCurrentTime());
+        guest.setLastLoginNow();
+        Instant timeAfter = Instant.parse(Utility.getCurrentTime());
+        assertEquals(true, timeBefore.isBefore(Instant.parse(guest.getLastLogin())));
+        assertEquals(true, timeAfter.isAfter(Instant.parse(guest.getLastLogin())));
     }
 
     @Test
@@ -99,8 +128,8 @@ class UnitTests {
         assertEquals(UserStatus.AWAY, guest.getUserStatus());
         guest.setUserStatus(UserStatus.BUSY);
         assertEquals(UserStatus.BUSY, guest.getUserStatus());
-        guest.setUserStatus(UserStatus.OFFLINE);
-        assertEquals(UserStatus.OFFLINE, guest.getUserStatus());
+        guest.setUserStatus(OFFLINE);
+        assertEquals(OFFLINE, guest.getUserStatus());
         guest.setUserStatus(UserStatus.ONLINE);
         assertEquals(UserStatus.ONLINE, guest.getUserStatus());
     }
@@ -140,6 +169,87 @@ class UnitTests {
         assertEquals("a1ns8", guest.getBio());
     }
 
+    @Test
+    void userAsJSONObject(){
+        JSONObject expectedJson = new JSONObject()
+                .put("userID", "99")
+                .put("username", "Admin")
+                .put("creationDate", "2021-12-09T06:00:00.861336Z")
+                .put("lastLogin", "2023-03-19T19:00:30.861336Z")
+                .put("userStatus", OFFLINE)
+                .put("profilePicture", "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
+                .put("bio", "Admin is watching you");
+
+        User admin = new User(
+                "99",
+                "Admin",
+                ADMIN,
+                "2021-12-09T06:00:00.861336Z",
+                "2023-03-19T19:00:30.861336Z",
+                OFFLINE,
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                "Admin is watching you",
+                false
+        );
+        JSONObject actualJson = admin.asJSONObject();
+
+        try {
+            JSONAssert.assertEquals(expectedJson, actualJson, false);
+        } catch (JSONException je) {
+            fail("JSON type is not the same.");
+        }
+    }
+
+    @Test
+    void userAsJSONString(){
+        JSONObject expectedJson = new JSONObject()
+                .put("userID", "99")
+                .put("username", "Admin")
+                .put("creationDate", "2021-12-09T06:00:00.861336Z")
+                .put("lastLogin", "2023-03-19T19:00:30.861336Z")
+                .put("userStatus", OFFLINE)
+                .put("profilePicture", "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
+                .put("bio", "Admin is watching you");
+        String expectedOutput = expectedJson.toString();
+        User admin = new User(
+                "99",
+                "Admin",
+                ADMIN,
+                "2021-12-09T06:00:00.861336Z",
+                "2023-03-19T19:00:30.861336Z",
+                OFFLINE,
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                "Admin is watching you",
+                false
+        );
+        String actualOutput = admin.asJSONString();
+        try {
+            JSONAssert.assertEquals(expectedOutput, actualOutput, false);
+        } catch (Exception e) {
+            fail("String does not match.");
+        }
+    }
+
+    @Test
+    void userCopy() {
+        User admin = new User(
+                "99",
+                "Admin",
+                ADMIN,
+                "2021-12-09T06:00:00.861336Z",
+                "2023-03-19T19:00:30.861336Z",
+                OFFLINE,
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                "Admin is watching you",
+                false
+        );
+        assertEquals("Guest Username", guest.getUsername());
+        guest.copy(admin);
+        assertEquals("Admin", guest.getUsername());
+        assertEquals(ADMIN, guest.getUserLevel());
+    }
+
+
     /**
      * Tests for Comment
      */
@@ -176,6 +286,8 @@ class UnitTests {
         assertEquals(1, comment1.getDownvotes());
         assertEquals(false, comment1.isDeleted());
     }
+
+
 
     @Test
     void commentPostIDCheck() {
@@ -260,9 +372,11 @@ class UnitTests {
 
     @Test
     void commentLastModified() {
-        String timeNow = Utility.getCurrentTime();
+        Instant timeBefore = Instant.parse(Utility.getCurrentTime());
         comment.lastModifiedNow();
-        assertEquals(timeNow, comment.getLastModified());
+        Instant timeAfter = Instant.parse(Utility.getCurrentTime());
+        assertEquals(true, timeBefore.isBefore(Instant.parse(comment.getLastModified())));
+        assertEquals(true, timeAfter.isAfter(Instant.parse(comment.getLastModified())));
     }
 
     @Test
@@ -376,6 +490,32 @@ class UnitTests {
             JSONAssert.assertEquals(expectedJson, actualJson, false);
         } catch (JSONException je) {
             fail("JSON type is not the same.");
+        }
+    }
+
+    @Test
+    void commentAsJSONString(){
+        JSONObject expectedJson = new JSONObject()
+                .put("postID", 10)
+                .put("commentID", 11);
+        String expectedOutput = expectedJson.toString();
+        Comment comment1 = new Comment(
+                10,
+                11,
+                "12",
+                "Happy New Year!",
+                "2022-01-01T00:00:00.861336Z",
+                "2022-01-02T06:00:00.861336Z",
+                18,
+                1,
+                true
+        );
+
+        String actualOutput = comment1.asJSONString();
+        try {
+            JSONAssert.assertEquals(expectedOutput, actualOutput, false);
+        } catch (Exception e) {
+            fail("String does not match.");
         }
     }
 
@@ -548,9 +688,11 @@ class UnitTests {
 
     @Test
     void postLastModified() {
-        String timeNow = Utility.getCurrentTime();
+        Instant timeBefore = Instant.parse(Utility.getCurrentTime());
         post.lastModifiedNow();
-        assertEquals(timeNow, post.getLastModified());
+        Instant timeAfter = Instant.parse(Utility.getCurrentTime());
+        assertEquals(true, timeBefore.isBefore(Instant.parse(post.getLastModified())));
+        assertEquals(true, timeAfter.isAfter(Instant.parse(post.getLastModified())));
     }
 
     @Test
