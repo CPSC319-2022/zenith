@@ -194,7 +194,7 @@ public class CommentController {
         User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to delete comment
-        if (comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+        if (!(comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0)) {
             throw new InvalidPermissionException("User does not have the necessary permission to delete this comment.");
         }
 
@@ -236,7 +236,7 @@ public class CommentController {
         User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to delete post
-        if (comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+        if (!(comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0)) {
             throw new InvalidPermissionException("User does not have the necessary permission to edit this comment.");
         }
 
