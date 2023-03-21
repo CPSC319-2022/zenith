@@ -225,3 +225,69 @@ export const editComment = async ({ postID, commentID, content }) => {
     throw new Error(error.message);
   }
 };
+
+// User related API functions
+export const getUsers = async ({ userIDStart, count, reverse }) => {
+  try {
+    const response = await axios.get(`${apiUrl}/getUsers`, {
+      params: {
+        userIDStart,
+        count,
+        reverse,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const getUser = async (userID) => {
+  try {
+    const response = await axios.get(`${apiUrl}/getUser`, {
+      params: { userID },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const createUser = async ({ name, email }) => {
+  const token = getAccessToken();
+  try {
+    const response = await axios.post(`${apiUrl}/createUser`, {
+      name,
+      email,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const editUser = async ({ userID, name, email }) => {
+  const token = getAccessToken();
+  try {
+    const response = await axios.put(`${apiUrl}/editUser`, {
+      userID,
+      name,
+      email,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

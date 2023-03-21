@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import {Container, Row, Col, Button, Modal, Card} from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
@@ -6,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { fetchComments, upvoteComment, downvoteComment,editComment, deleteComment} from '../redux/slices/commentSlice';
 import {fetchPost, upvotePost, downvotePost, editPost} from '../redux/slices/postSlice';
 import { commentSliceActions } from '../redux/slices/commentSlice';
+import { userSliceActions } from '../redux/slices/userSlice';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Comment from '../components/Comment';
@@ -24,6 +26,8 @@ const SinglePost = () => {
   const comments = useSelector((state) => state.comments.comments, shallowEqual);
   const commentsStatus = useSelector((state) => state.comments.status);
   const commentsError = useSelector((state) => state.comments.error);
+  const [authorUsername, setAuthorUsername] = useState('');
+  const [authorPicture, setAuthorPicture] = useState('');
   const [commentBody, setCommentBody] = useState('');
   const [profanityError, setProfanityError] = useState('');
   const [updateComments, setUpdateComments] = useState(false);
@@ -50,6 +54,18 @@ const SinglePost = () => {
     const filter = new Filter();
     return filter.isProfane(text);
   };
+  useEffect(() => {
+    if (post) {
+      dispatch(userSliceActions.fetchUser(post.authorID))
+        .then((response) => {
+          if (response.meta.requestStatus === 'fulfilled') {
+            setAuthorUsername(response.payload.username);
+            setAuthorPicture(response.payload.profilePicture);
+          }
+        });
+    }
+  }, [post, dispatch]);
+
 
   const handleUpvotePost = async (postID) => {
     await dispatch(upvotePost(postID ));
@@ -132,33 +148,36 @@ const SinglePost = () => {
 
 
   return (
-      <Container>
-        <Row>
-          <Col xs={12} md={10} lg={8} className="mx-auto">
-            <div className="single-post">
-              {/* Render post title and content */}
-              {post && (
-                  <>
-                    <h1>{post.title}</h1>
-                    {editingPost ? (
-                        <ReactQuill
-                            className="editor"
-                            theme="snow"
-                            value={editedPostContent}
-                            onChange={(content) => setEditedPostContent(content)}
-                        />
-                    ) : (
-                        <div
-                            className="post-content"
-                            dangerouslySetInnerHTML={{ __html: post.content }}
-                        ></div>
-                    )}
-                    {/*<div*/}
-                    {/*    className="post-content"*/}
-                    {/*    dangerouslySetInnerHTML={{ __html: post.content }}*/}
-                    {/*></div>*/}
-                  </>
-              )}
+    <Container>
+    <Row>
+      <Col xs={12} md={10} lg={8} className="mx-auto">
+        <div className="single-post">
+          {/* Render post title, author username, creation date, and content */}
+          {post && (
+              <>
+                <h1>{post.title}</h1>
+                {/* <img src={authorPicture} alt="Profile Picture" /> <p>{authorUsername} | {new Date(post.creationDate).toLocaleString().split(',')[0]}</p> */}
+                <div className="author-info">
+        <Link to={`/profile/${post.authorID}`}>
+          <img className="author-picture" src={authorPicture} alt={authorUsername} />
+          <h4>{authorUsername}</h4>
+        </Link>
+      </div>
+                {editingPost ? (
+                    <ReactQuill
+                        className="editor"
+                        theme="snow"
+                        value={editedPostContent}
+                        onChange={(content) => setEditedPostContent(content)}
+                    />
+                ) : (
+                    <div
+                        className="post-content"
+                        dangerouslySetInnerHTML={{ __html: post.content }}
+                    ></div>
+                )}
+              </>
+          )}
 
               {/* Add upvote, downvote, and edit buttons for the post */}
               {post && (
