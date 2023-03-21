@@ -66,9 +66,10 @@ const Home = () => {
             <div className="content">
               <Link className="link" to={`/single-post/${post.postID}`}>
                 <h1 className="post-title">{post.title}</h1>
-                {console.log(post.title)}
+                {/* {console.log(post.title)} */}
               </Link>
-              <div className="post-content"><div dangerouslySetInnerHTML={{ __html: post.content }}></div></div>
+              {console.log("this:",post.content.substring(0, 50))}
+              <div className="post-content"><div dangerouslySetInnerHTML={{ __html: post.content.substring(0,50)+"..." }}></div></div>
 
               <Button className="read-button" onClick={() => handleClick({post})}>
                 Read More
