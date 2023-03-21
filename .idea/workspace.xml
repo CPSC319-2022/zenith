@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="718dca1e-e2e0-452a-8811-2df7468d31f0" name="Changes" comment="Unit Tests fixes">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/PostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/controller/PostController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Comment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Content.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Content.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Record.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/Record.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/UserLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/main/java/com/blog/model/UserLevel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/blog/src/test/java/com/blog/model/UnitTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +28,17 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/blog/src/main/java/com/blog/controller/UserController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/blog/src/main/java/com/blog/controller/CommentController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/blog/src/main/java/com/blog/model/Post.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/blog/src/main/java/com/blog/model/Comment.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/blog/src/main/java/com/blog/model/Content.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/blog/src/main/java/com/blog/model/Record.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/blog/src/main/java/com/blog/model/User.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/blog/src/main/java/com/blog/model/UserLevel.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/blog/src/main/java/com/blog/controller/PostController.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -47,7 +50,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="RunManager" selected="JUnit.DatabaseTest">
+  <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager" selected="JUnit.UnitTests">
     <configuration name="DatabaseTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="blog" />
       <extension name="coverage">
@@ -126,6 +134,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.UnitTests" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
