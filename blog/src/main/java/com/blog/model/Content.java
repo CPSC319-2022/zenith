@@ -6,31 +6,9 @@ import org.json.JSONObject;
 
 /**
  * Abstract class Content to be extended by Post and Comment.
- *
- * Methods
- * ----------
- * boolean  isDisplayable()
- *
- * int      getAuthorID()
- * void     setAuthorID(int authorID)
- * String   getContent()
- * void     setContent(String content)
- * Clock    getCreationDate()
- * void     setCreationDate(Clock creationDate)
- * Clock    getLastModified()
- * void     setLastModified(Clock lastModified)
- * int      getUpvotes()
- * void     setUpvotes(int upvotes)
- * int      getDownvotes()
- * void     setDownvotes(int downvotes)
- *
- * Inherited Methods
- * ----------
- * boolean  isDeleted()
- * void     setDeleted(boolean deleted)
  */
 public abstract class Content extends Record {
-    static final int MIN_CONTENT_LENGTH = 1;
+    private static final int MIN_CONTENT_LENGTH = 1;
 
     private String authorID;
     private String content;
@@ -42,20 +20,32 @@ public abstract class Content extends Record {
     public Content() {
     }
 
-    public Content(String  authorID,
-                   String  content,
-                   String  creationDate,
-                   String  lastModified,
-                   int     upvotes,
-                   int     downvotes,
+    public Content(String authorID,
+                   String content,
+                   String creationDate,
+                   String lastModified,
+                   int upvotes,
+                   int downvotes,
                    boolean isDeleted) {
         super(isDeleted);
-        this.authorID     = authorID;
-        this.content      = content;
+        this.authorID = authorID;
+        this.content = content;
         this.creationDate = creationDate;
         this.lastModified = lastModified;
-        this.upvotes      = upvotes;
-        this.downvotes    = downvotes;
+        this.upvotes = upvotes;
+        this.downvotes = downvotes;
+    }
+
+    /**
+     * Validates the length of the content field.
+     *
+     * @param content The content to validate.
+     * @throws BlogException
+     */
+    public static void validateContent(String content) throws BlogException {
+        if (content.length() < MIN_CONTENT_LENGTH) {
+            throw new BlogException("Content length is too short.");
+        }
     }
 
     /**
@@ -74,24 +64,20 @@ public abstract class Content extends Record {
     }
 
     /**
-     * Validates the length of the content field.
-     *
-     * @param content The content to validate.
-     * @throws BlogException
-     */
-    public static void validateContent(String content) throws BlogException {
-        if (content.length() < MIN_CONTENT_LENGTH) {
-            throw new BlogException("Content length is too short.");
-        }
-    }
-
-    /**
      * Returns whether this content is displayable. That is, it has content and is not deleted.
      *
      * @return boolean
      */
     public boolean isDisplayable() {
         return content != null && !isDeleted();
+    }
+
+    /**
+     * @param user The user to check authorship.
+     * @return Whether the user is the author of this content.
+     */
+    public boolean isAuthoredBy(User user) {
+        return authorID.equals(user.getUserID());
     }
 
     /**

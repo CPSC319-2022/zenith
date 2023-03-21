@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+import static com.blog.model.Comment.NEW_COMMENT_ID;
+import static com.blog.model.UserLevel.ADMIN;
+
 @RestController
 public class CommentController {
     /**
@@ -146,10 +149,9 @@ public class CommentController {
         User author = UserController.retrieveUserByAccessToken(input);
 
         // Check whether the author has permission to make a comment
-        if (author.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
+        if (author.is(UserLevel.VIEWER)) {
             throw new InvalidPermissionException("User does not have the necessary permission to make a comment.");
         }
-
 
         // Validate the data
         Comment.validateContent(content);
@@ -158,7 +160,7 @@ public class CommentController {
         String currentTime = Utility.getCurrentTime();
         Comment comment = new Comment(
                 postID,
-                Comment.NEW_COMMENT_ID,
+                NEW_COMMENT_ID,
                 author.getUserID(),
                 content,
                 currentTime,
@@ -194,7 +196,7 @@ public class CommentController {
         User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to delete comment
-        if (!comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+        if (!comment.isAuthoredBy(user) && !user.is(ADMIN)) {
             throw new InvalidPermissionException("User does not have the necessary permission to delete this comment.");
         }
 
@@ -235,8 +237,8 @@ public class CommentController {
         // Retrieve the user
         User user = UserController.retrieveUserByAccessToken(input);
 
-        // Check whether user has permission to delete post
-        if (!comment.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+        // Check whether user has permission to edit comment
+        if (!comment.isAuthoredBy(user)) {
             throw new InvalidPermissionException("User does not have the necessary permission to edit this comment.");
         }
 
