@@ -4,11 +4,6 @@ import org.json.JSONObject;
 
 /**
  * Abstract class for objects that can be saved in the database.
- * <p>
- * Methods
- * ----------
- * boolean  isDeleted()
- * void     setDeleted(boolean deleted)
  */
 public abstract class Record {
     private boolean isDeleted;

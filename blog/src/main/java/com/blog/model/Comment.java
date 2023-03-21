@@ -6,30 +6,6 @@ import org.json.JSONObject;
 
 /**
  * Class that stores the details of a comment.
- * <p>
- * Constructors
- * ----------
- * Comment(int postID, int commentID)
- * <p>
- * Methods
- * ----------
- * int  getPostID()
- * int  getCommentID()
- * <p>
- * Inherited Methods
- * ----------
- * int     getAuthorID()
- * void    setAuthorID(int authorID)
- * String  getContent()
- * void    setContent(String content)
- * Clock   getCreationDate()
- * void    setCreationDate(Clock creationDate)
- * Clock   getLastModified()
- * void    setLastModified(Clock lastModified)
- * int     getUpvotes()
- * void    setUpvotes(int upvotes)
- * int     getDownvotes()
- * void    setDownvotes(int downvotes)
  */
 public class Comment extends Content {
     public static final int NEW_COMMENT_ID = 0;

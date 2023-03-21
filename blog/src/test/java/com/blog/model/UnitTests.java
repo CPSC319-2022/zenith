@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 import java.time.Instant;
 
@@ -26,7 +25,7 @@ class UnitTests {
         guest = new User(
                 "",
                 "Guest Username",
-                GUEST,
+                VIEWER,
                 "2023-03-15T06:00:00.861336Z",
                 "2023-03-16T06:00:00.861336Z",
                 UserStatus.ONLINE,
@@ -64,7 +63,7 @@ class UnitTests {
      */
     @Test
     void guestConstructorOne() {
-        assertEquals(UserLevel.GUEST, guest.getUserLevel());
+        assertEquals(UserLevel.VIEWER, guest.getUserLevel());
     }
 
     @Test
@@ -87,7 +86,7 @@ class UnitTests {
 
     @Test
     void guestToOtherLevels() {
-        assertEquals(UserLevel.GUEST, guest.getUserLevel());
+        assertEquals(UserLevel.VIEWER, guest.getUserLevel());
         guest.setUserLevel(READER);
         assertEquals(UserLevel.READER, guest.getUserLevel());
         guest.setUserLevel(CONTRIBUTOR);

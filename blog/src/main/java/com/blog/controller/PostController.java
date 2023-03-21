@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+import static com.blog.model.Post.NEW_POST_ID;
+import static com.blog.model.UserLevel.ADMIN;
+import static com.blog.model.UserLevel.CONTRIBUTOR;
+
 @RestController
 public class PostController {
     /**
@@ -144,7 +148,7 @@ public class PostController {
         User author = UserController.retrieveUserByAccessToken(input);
 
         // Check whether the author has permission to make a post
-        if (author.getUserLevel().compareTo(UserLevel.GUEST) == 0) {
+        if (author.below(CONTRIBUTOR)) {
             throw new InvalidPermissionException("User does not have the necessary permission to make a post.");
         }
 
@@ -155,7 +159,7 @@ public class PostController {
         // Create new post
         String currentTime = Utility.getCurrentTime();
         Post post = new Post(
-                Post.NEW_POST_ID,
+                NEW_POST_ID,
                 author.getUserID(),
                 title,
                 content,
@@ -170,9 +174,6 @@ public class PostController {
 
         // Save post to database
         int postID = Database.save(post);
-
-        // Indicate that the author is a contributor
-        userIsContributor(author);
 
         // Return the created post
         return Post.retrieve(postID).asJSONString();
@@ -196,7 +197,7 @@ public class PostController {
         User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to delete post
-        if (!post.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+        if (!post.isAuthoredBy(user) && !user.is(ADMIN)) {
             throw new InvalidPermissionException("User does not have the necessary permission to delete this post.");
         }
 
@@ -244,7 +245,7 @@ public class PostController {
         User user = UserController.retrieveUserByAccessToken(input);
 
         // Check whether user has permission to edit post
-        if (!post.getAuthorID().equals(user.getUserID()) && UserLevel.ADMIN.compareTo(user.getUserLevel()) < 0) {
+        if (!post.isAuthoredBy(user)) {
             throw new InvalidPermissionException("User does not have the necessary permission to edit this post.");
         }
 
@@ -342,24 +343,6 @@ public class PostController {
 
         // Return the retrieved post
         return Post.retrieve(postID);
-    }
-
-    /**
-     * Sets the given user as a contributor.
-     *
-     * @param user The user to set as a contributor.
-     */
-    private static void userIsContributor(User user) {
-        // Check if user is already a contributor or higher
-        if (user.getUserLevel().compareTo(UserLevel.CONTRIBUTOR) >= 0) {
-            return;
-        }
-
-        // Set the user as a contributor
-        user.setUserLevel(UserLevel.CONTRIBUTOR);
-
-        // Save this change to the database
-        Database.save(user);
     }
 
     @GetMapping("/getPost")

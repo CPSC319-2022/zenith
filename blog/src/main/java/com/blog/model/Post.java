@@ -7,41 +7,10 @@ import org.json.JSONObject;
 
 /**
  * Class that stores the details of a blog post.
- * <p>
- * Constructors
- * ----------
- * Post(int postID)
- * <p>
- * Methods
- * ----------
- * int      getPostID()
- * String   getTitle()
- * void     setTitle(String title)
- * int      getViews()
- * void     setViews(int views)
- * boolean  isAllowComments()
- * void     setAllowComments(boolean allowComments)
- * <p>
- * Inherited Methods
- * ----------
- * int      getAuthorID()
- * void     setAuthorID(int authorID)
- * String   getContent()
- * void     setContent(String content)
- * Clock    getCreationDate()
- * void     setCreationDate(Clock creationDate)
- * Clock    getLastModified()
- * void     setLastModified(Clock lastModified)
- * int      getUpvotes()
- * void     setUpvotes(int upvotes)
- * int      getDownvotes()
- * void     setDownvotes(int downvotes)
- * boolean  isDeleted()
- * void     setDeleted(boolean deleted)
  */
 public class Post extends Content {
     public static final int NEW_POST_ID = 0;
-    static final int MIN_TITLE_LENGTH = 1;
+    private static final int MIN_TITLE_LENGTH = 1;
 
     private final int postID;
     private String title;

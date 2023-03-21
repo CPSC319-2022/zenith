@@ -5,18 +5,26 @@ package com.blog.model;
  *
  * User Levels
  * ----------
- * ADMIN:
- *     May promote members to a higher type.
- * CONTRIBUTOR:
- *     May create posts.
+ * VIEWER:
+ *     Not logged in. Only has read privileges.
  * READER:
  *     May make comments.
- * GUEST:
- *     Not logged in. Only has read privileges.
+ * CONTRIBUTOR:
+ *     May create posts.
+ * ADMIN:
+ *     May promote members to a higher type.
  */
 public enum UserLevel {
-    ADMIN,
-    CONTRIBUTOR,
+    VIEWER,
     READER,
-    GUEST
+    CONTRIBUTOR,
+    ADMIN;
+
+    public boolean below(UserLevel userLevel) {
+        return this.compareTo(userLevel) < 0;
+    }
+
+    public boolean above(UserLevel userLevel) {
+        return this.compareTo(userLevel) > 0;
+    }
 }

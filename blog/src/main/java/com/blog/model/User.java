@@ -18,27 +18,6 @@ import java.util.Collections;
 
 /**
  * Class that stores the details of a user.
- * <p>
- * Methods
- * ----------
- * int         getUserID()
- * String      getUsername()
- * void        setUsername(String username)
- * UserLevel   getUserLevel()
- * void        setUserLevel(UserLevel userLevel)
- * Clock       getCreationDate()
- * void        setCreationDate(Clock creationDate)
- * Clock       getLastLogin()
- * void        setLastLogin(Clock lastLogin)
- * UserStatus  getUserStatus()
- * void        setUserStatus(UserStatus userStatus)
- * String      getProfilePicture()
- * void        setProfilePicture(String profilePicture)
- * <p>
- * Inherited Methods
- * ----------
- * boolean     isDeleted()
- * void        setDeleted(boolean deleted)
  */
 public class User extends Record {
     private static GoogleIdTokenVerifier VERIFIER;
@@ -192,6 +171,30 @@ public class User extends Record {
     public String asJSONString() {
         return asJSONObject().toString();
 
+    }
+
+    /**
+     * @param userLevel The user level to check against.
+     * @return Whether this user is of the given user level.
+     */
+    public boolean is(UserLevel userLevel) {
+        return this.getUserLevel() == userLevel;
+    }
+
+    /**
+     * @param userLevel The user level to check against.
+     * @return Whether this user is below the given user level.
+     */
+    public boolean below(UserLevel userLevel) {
+        return this.getUserLevel().below(userLevel);
+    }
+
+    /**
+     * @param userLevel The user level to check against.
+     * @return Whether this user is above the given user level.
+     */
+    public boolean above(UserLevel userLevel) {
+        return this.getUserLevel().above(userLevel);
     }
 
     public void copy(User u) {
