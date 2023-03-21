@@ -36,7 +36,7 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="/single-post/:id" element={<SinglePost />} />
                             <Route path="/create" element={<Create />} />
-                            {/* <Route path="/profile" element={<Profile />} /> */}
+                            <Route path="/profile/:id" element={<Profile />} />
                             <Route path="/wip" element={<WIP />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/login" element={<Login />} />

@@ -40,9 +40,9 @@ const Comment = ({ comment, onUpvote, onDownvote, onEdit, onDelete }) => {
             <div>
               <span className="emoji">{emoji}</span>
             </div>
-            {/* <Card.Subtitle className="text-muted">
-              {new Date(comment.creationDate).toLocaleString()}
-            </Card.Subtitle> */}
+            <Card.Subtitle className="text-muted">
+              {new Date(comment.creationDate).toLocaleString().split(',')[0]}
+            </Card.Subtitle>
           </div>
           {editing ? (
               <textarea value={editedContent} onChange={handleChange} />
