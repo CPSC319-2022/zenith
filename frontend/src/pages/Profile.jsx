@@ -25,6 +25,7 @@ const Profile = () => {
   if (!user) {
     return <div>Loading...</div>;
   }
+  
 
   return (
     <div className="profile">
