@@ -17,13 +17,13 @@ import java.util.List;
 
 public class Database {
 
+    public static void retrieve
     private static JdbcTemplate jdbcTemplate;
 
     public static void createTemplate() {
         DataSource dataSource = DatabaseConfig.dataSource();
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
-
 
     /**
      * @param comment
@@ -377,24 +377,52 @@ public class Database {
     }
 
     /**
-     * @param userID      The user requesting a promotion.
-     * @param target      The target user level to be promoted to.
-     * @param requestTime The time that the request was made.
-     * @param reason      The reason for the request.
+     * @param request The promotion request.
+     * @return The requestID
      * @throws DoesNotExistException If the user does not exist.
      */
-    public static void requestPromotion(String userID, UserLevel target, String requestTime, String reason) throws DoesNotExistException, BlogException {
+    public static int save(PromotionRequest request) throws DoesNotExistException, BlogException {
         /*
-        TODO: key should be userID
-              inserts this row or if key exists, update the target and reason
+        TODO: if user has active request (not deleted), update and return the existing requestID
+              otherwise generate incrementing requestID then insert and return the generated requestID
               throw new DoesNotExistException("User does not exist.") if userID not in User table
-
-              INSERT INTO table_name
-              VALUES (userID, target, requestTime, reason)
-              ON DUPLICATE KEY
-              UPDATE target=target, requestTime=requestTime, reason=reason
          */
-        throw new BlogException("Not Implemented"); // TODO: remove throws BlogException from function declaration after done
+        throw new BlogException("Not Implemented"); // TODO: remove throws BlogException from method signature after done
+    }
+
+    /**
+     * Retrieves the user record from the database with corresponding <code>userID</code> specified
+     * by the given <code>User</code> object and updates its fields.
+     *
+     * @param request The <code>PromotionRequest</code> object to update. Contains the <code>requestID</code>.
+     * @throws DoesNotExistException
+     */
+    public static void retrieve(PromotionRequest request) throws DoesNotExistException {
+        int requestID = request.getRequestID();
+        /*
+        TODO: throw error if cannot find requestID
+         */
+        throw new DoesNotExistException("Not Implemented");
+    }
+
+    /**
+     * Retrieves the next <code>count</code> displayable requests starting from <code>requestIDStart</code>
+     * into <code>requests</code>.
+     *
+     * @param requests
+     * @param requestIDStart
+     * @param count
+     * @param reverse
+     */
+    public static void retrievePromotionRequests(ArrayList<PromotionRequest> requests, int requestIDStart, int count, boolean reverse) {
+        // TODO: Not Implemented
+    }
+
+    /**
+     * @param request
+     */
+    public static void delete(PromotionRequest request) {
+        // TODO: set deleted flag
     }
 
     /**
@@ -408,10 +436,10 @@ public class Database {
         /*
         TODO: Change user level of userID to the target.
               throw new DoesNotExistException("User does not exist.") if userID not in User table
-              After changing user level, remove all promotion requests that
+              After changing user level, hard delete all promotion requests that
               this user has that is not higher than their current new level.
          */
-        throw new BlogException("Not Implemented"); // TODO: remove throws BlogException from function declaration after done
+        throw new BlogException("Not Implemented"); // TODO: remove throws BlogException from method signature after done
     }
 
     private static String formInsert(User user, String id) {
