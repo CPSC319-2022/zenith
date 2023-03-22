@@ -1,10 +1,7 @@
 package com.blog.controller;
 
 import com.blog.database.Database;
-import com.blog.exception.BlogException;
-import com.blog.exception.DoesNotExistException;
-import com.blog.exception.InvalidPermissionException;
-import com.blog.exception.LoginFailedException;
+import com.blog.exception.*;
 import com.blog.model.Comment;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
@@ -264,7 +261,7 @@ public class CommentController {
         } catch (DoesNotExistException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -277,7 +274,7 @@ public class CommentController {
         try {
             return ResponseEntity.ok(getComments(postID, commentIDStart, count, reverse));
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -286,13 +283,17 @@ public class CommentController {
     public ResponseEntity<String> create(@RequestHeader("Authorization") String accessToken,
                                          @RequestBody String body) {
         try {
-            return ResponseEntity.ok(createComment(accessToken, new JSONObject(body)));
-        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(createComment(accessToken, new JSONObject(body)), HttpStatus.CREATED);
+        } catch (IsDeletedException | InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        } catch (InvalidPermissionException e) {
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -303,11 +304,17 @@ public class CommentController {
                                          @RequestParam("commentID") int commentID) {
         try {
             deleteComment(accessToken, postID, commentID);
-            return ResponseEntity.ok().build();
-        } catch (InvalidPermissionException e) {
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException | InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -317,11 +324,17 @@ public class CommentController {
                                        @RequestBody String body) {
         try {
             editComment(accessToken, new JSONObject(body));
-            return ResponseEntity.ok().build();
-        } catch (InvalidPermissionException e) {
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException | InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -332,9 +345,17 @@ public class CommentController {
                                          @RequestParam("commentID") int commentID) {
         try {
             upvoteComment(accessToken, postID, commentID);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -345,9 +366,17 @@ public class CommentController {
                                            @RequestParam("commentID") int commentID) {
         try {
             downvoteComment(accessToken, postID, commentID);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

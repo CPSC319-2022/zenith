@@ -1,10 +1,7 @@
 package com.blog.controller;
 
 import com.blog.database.Database;
-import com.blog.exception.BlogException;
-import com.blog.exception.DoesNotExistException;
-import com.blog.exception.InvalidPermissionException;
-import com.blog.exception.LoginFailedException;
+import com.blog.exception.*;
 import com.blog.model.Post;
 import com.blog.model.User;
 import com.blog.utils.Utility;
@@ -285,7 +282,7 @@ public class PostController {
         } catch (DoesNotExistException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -297,7 +294,7 @@ public class PostController {
         try {
             return ResponseEntity.ok(getPosts(postIDStart, count, reverse));
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -306,13 +303,17 @@ public class PostController {
     public ResponseEntity<String> create(@RequestHeader("Authorization") String accessToken,
                                          @RequestBody String body) {
         try {
-            return ResponseEntity.ok(createPost(accessToken, new JSONObject(body)));
-        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(createPost(accessToken, new JSONObject(body)), HttpStatus.CREATED);
+        } catch (IsDeletedException | InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        } catch (InvalidPermissionException e) {
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -322,11 +323,17 @@ public class PostController {
                                          @RequestParam("postID") int postID) {
         try {
             deletePost(accessToken, postID);
-            return ResponseEntity.ok().build();
-        } catch (InvalidPermissionException e) {
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException | InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -336,11 +343,17 @@ public class PostController {
                                        @RequestBody String body) {
         try {
             editPost(accessToken, new JSONObject(body));
-            return ResponseEntity.ok().build();
-        } catch (InvalidPermissionException e) {
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException | InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -350,9 +363,17 @@ public class PostController {
                                          @RequestParam("postID") int postID) {
         try {
             upvotePost(accessToken, postID);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -362,9 +383,17 @@ public class PostController {
                                            @RequestParam("postID") int postID) {
         try {
             downvotePost(accessToken, postID);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -373,9 +402,11 @@ public class PostController {
     public ResponseEntity<String> view(@RequestParam("postID") int postID) {
         try {
             viewPost(postID);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            return ResponseEntity.noContent().build();
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
