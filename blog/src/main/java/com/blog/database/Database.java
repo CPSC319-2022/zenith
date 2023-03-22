@@ -303,7 +303,7 @@ public class Database {
 
                  if user has neither upvoted nor downvoted, normal insert
                  if user already downvoted, change downvote to upvote
-                 if user already upvoted, throw BlogException
+                 if user already upvoted, throw new BlogException("User already upvoted this post.")
          */
         throw new BlogException("Not Implemented");
     }
@@ -333,7 +333,7 @@ public class Database {
 
                  if user has neither upvoted nor downvoted, normal insert
                  if user already downvoted, change downvote to upvote
-                 if user already upvoted, throw BlogException
+                 if user already upvoted, throw new BlogException("User already upvoted this comment.")
          */
         throw new BlogException("Not Implemented");
     }
