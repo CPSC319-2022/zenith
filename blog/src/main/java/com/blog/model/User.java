@@ -194,7 +194,6 @@ public class User extends Record {
      */
     public String asJSONString() {
         return asJSONObject().toString();
-
     }
 
     /**
