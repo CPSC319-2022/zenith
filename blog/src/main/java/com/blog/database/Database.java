@@ -297,7 +297,7 @@ public class Database {
      * @param postID The post to upvote.
      * @throws BlogException If the user already upvoted this post.
      */
-    public static void upvote(int userID, int postID) throws BlogException {
+    public static void upvote(String userID, int postID) throws BlogException {
         /* TODO: will also need new table with key (userID, postID)
                  also need column for whether they upvoted or downvoted (binary column)
 
@@ -321,7 +321,7 @@ public class Database {
      * @param postID The post to downvote.
      * @throws BlogException If the user already downvoted this post.
      */
-    public static void downvote(int userID, int postID) throws BlogException {
+    public static void downvote(String userID, int postID) throws BlogException {
         /* TODO: should same table as upvote
 
                  similar behaviour as upvote but flipped
@@ -335,7 +335,7 @@ public class Database {
      * @param commentID The post to upvote.
      * @throws BlogException If the user already upvoted this post.
      */
-    public static void upvote(int userID, int postID, int commentID) throws BlogException {
+    public static void upvote(String userID, int postID, int commentID) throws BlogException {
         /* TODO: will also need new table with key (userID, postID, commentID)
                  also need column for whether they upvoted or downvoted (binary column)
 
@@ -349,7 +349,7 @@ public class Database {
      * @param postID The post to downvote.
      * @throws BlogException If the user already downvoted this post.
      */
-    public static void downvote(int userID, int postID, int commentID) throws BlogException {
+    public static void downvote(String userID, int postID, int commentID) throws BlogException {
         /* TODO: should same table as upvote
 
                  similar behaviour as upvote but flipped
