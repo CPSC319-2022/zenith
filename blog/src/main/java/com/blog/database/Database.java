@@ -17,7 +17,6 @@ import java.util.List;
 
 public class Database {
 
-    public static void retrieve
     private static JdbcTemplate jdbcTemplate;
 
     public static void createTemplate() {
