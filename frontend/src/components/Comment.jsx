@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { AiFillLike, AiFillDislike, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
-
+import ReactQuill from 'react-quill';
 
 const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇'];
 
@@ -45,7 +45,9 @@ const Comment = ({ comment, onUpvote, onDownvote, onEdit, onDelete }) => {
             </Card.Subtitle>
           </div>
           {editing ? (
-              <textarea value={editedContent} onChange={handleChange} />
+               <div className="editor-container">
+               <ReactQuill className="editor" theme="snow" value={editedContent} onChange={handleChange} />
+             </div>
           ) : (
               <Card.Text dangerouslySetInnerHTML={{ __html: comment.content }}></Card.Text>
           )}
