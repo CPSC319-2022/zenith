@@ -22,6 +22,7 @@ import static com.blog.model.Comment.NEW_COMMENT_ID;
 import static com.blog.model.UserLevel.ADMIN;
 
 @RestController
+@RequestMapping("/comment")
 public class CommentController {
     /**
      * Returns a JSON containing the requested comment.

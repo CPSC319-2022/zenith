@@ -23,6 +23,7 @@ import static com.blog.model.UserLevel.ADMIN;
 import static com.blog.model.UserLevel.CONTRIBUTOR;
 
 @RestController
+@RequestMapping("/post")
 public class PostController {
     /**
      * Returns a JSON containing the requested post.

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
     //Returns a json containing the requested user
     public static JSONObject getUser(JSONObject input) throws BlogException {
