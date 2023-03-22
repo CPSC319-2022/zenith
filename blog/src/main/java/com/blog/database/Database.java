@@ -330,6 +330,25 @@ public class Database {
     }
 
     /**
+     * Increments the view counter of the given post.
+     *
+     * @param postID The post.
+     */
+    public static void view(int postID) {
+        // TODO
+    }
+
+    /**
+     * Increments the view counter of the given comment.
+     *
+     * @param postID    The post.
+     * @param commentID The comment.
+     */
+    public static void view(int postID, int commentID) {
+        // TODO
+    }
+
+    /**
      * @param userID    The user trying to upvote.
      * @param postID    The post to upvote.
      * @param commentID The post to upvote.
