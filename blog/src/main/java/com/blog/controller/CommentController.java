@@ -214,7 +214,7 @@ public class CommentController {
 
         // Apply edit to comment
         comment.setContent(content);
-        comment.setLastModified(Utility.getCurrentTime());
+        comment.lastModifiedNow();
 
         // Save comment to database
         Database.save(comment);

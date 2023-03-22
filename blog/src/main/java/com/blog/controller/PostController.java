@@ -226,7 +226,7 @@ public class PostController {
         // Apply edit to post
         post.setTitle(title);
         post.setContent(content);
-        post.setLastModified(Utility.getCurrentTime());
+        post.lastModifiedNow();
         post.setAllowComments(allowComments);
 
         // Save post to database
