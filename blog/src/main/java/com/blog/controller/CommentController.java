@@ -265,12 +265,12 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/get")
+    @GetMapping("/gets")
     @ResponseBody
-    public ResponseEntity<String> get(@RequestParam("postID") int postID,
-                                      @RequestParam("commentIDStart") int commentIDStart,
-                                      @RequestParam("count") int count,
-                                      @RequestParam("reverse") boolean reverse) {
+    public ResponseEntity<String> gets(@RequestParam("postID") int postID,
+                                       @RequestParam("commentIDStart") int commentIDStart,
+                                       @RequestParam("count") int count,
+                                       @RequestParam("reverse") boolean reverse) {
         try {
             return ResponseEntity.ok(getComments(postID, commentIDStart, count, reverse));
         } catch (Exception e) {

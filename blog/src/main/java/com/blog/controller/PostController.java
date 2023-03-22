@@ -286,11 +286,11 @@ public class PostController {
         }
     }
 
-    @GetMapping("/get")
+    @GetMapping("/gets")
     @ResponseBody
-    public ResponseEntity<String> get(@RequestParam("postIDStart") int postIDStart,
-                                      @RequestParam("count") int count,
-                                      @RequestParam("reverse") boolean reverse) {
+    public ResponseEntity<String> gets(@RequestParam("postIDStart") int postIDStart,
+                                       @RequestParam("count") int count,
+                                       @RequestParam("reverse") boolean reverse) {
         try {
             return ResponseEntity.ok(getPosts(postIDStart, count, reverse));
         } catch (Exception e) {

@@ -143,12 +143,12 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/get")
+    @GetMapping("/gets")
     @ResponseBody
-    public ResponseEntity<String> get(@RequestHeader("Authorization") String accessToken,
-                                      @RequestParam("requestIDStart") int requestIDStart,
-                                      @RequestParam("count") int count,
-                                      @RequestParam("reverse") boolean reverse) {
+    public ResponseEntity<String> gets(@RequestHeader("Authorization") String accessToken,
+                                       @RequestParam("requestIDStart") int requestIDStart,
+                                       @RequestParam("count") int count,
+                                       @RequestParam("reverse") boolean reverse) {
         try {
             return ResponseEntity.ok(getPromotionRequests(accessToken, requestIDStart, count, reverse));
         } catch (IsDeletedException | InvalidPermissionException e) {
