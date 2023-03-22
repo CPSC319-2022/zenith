@@ -1,7 +1,7 @@
 package com.blog.controller;
 
 import com.blog.database.Database;
-import com.blog.exception.BlogException;
+import com.blog.exception.*;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
 import com.blog.model.UserStatus;
@@ -11,86 +11,150 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.blog.model.UserLevel.ADMIN;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    //Returns a json containing the requested user
-    public static JSONObject getUser(JSONObject input) throws BlogException {
+    /**
+     * Returns a JSON string containing the requested user.
+     *
+     * @param userID The user ID of the requested user.
+     * @return The JSON string representing the user using the following syntax:
+     * {
+     * "userID":         String,
+     * "username":       String,
+     * "userLevel":      String,
+     * "creationDate":   String,
+     * "lastLogin":      String,
+     * "userStatus":     String,
+     * "profilePicture": String,
+     * "bio":            String,
+     * "isDeleted":      boolean
+     * }
+     * @throws DoesNotExistException If the requested user does not exist.
+     * @throws IsDeletedException    If the requested user is deleted.
+     */
+    private static String getUserByUserID(String userID) throws DoesNotExistException, IsDeletedException {
         // Retrieve the user
-        User user = retrieveUserByUserID(input);
+        User user = User.retrieveByUserID(userID);
 
-        return user.asJSONObject();
+        // Return the JSON string
+        return user.asJSONString();
+    }
+
+    /**
+     * Returns a JSON string containing the requested user.
+     *
+     * @param accessToken The access token of the requested user.
+     * @return The JSON string representing the user using the following syntax:
+     * {
+     * "userID":         String,
+     * "username":       String,
+     * "userLevel":      String,
+     * "creationDate":   String,
+     * "lastLogin":      String,
+     * "userStatus":     String,
+     * "profilePicture": String,
+     * "bio":            String,
+     * "isDeleted":      boolean
+     * }
+     * @throws LoginFailedException    If the access token is invalid.
+     * @throws IsDeletedException      If the requested user is deleted.
+     * @throws InitializationException If unable to create GoogleIDTokenVerifier.
+     */
+    private static String getUserByAccessToken(String accessToken) throws IsDeletedException, LoginFailedException, InitializationException {
+        // Retrieve the user
+        User user = User.retrieveByAccessToken(accessToken);
+
+        // Return the JSON string
+        return user.asJSONString();
     }
 
     /**
      * Deletes a user in the database.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "userID":    int,  // The user to delete.
-     *              }
-     * @throws BlogException
+     * @param accessToken The access token of the user attempting to delete.
+     * @param userID      The user to delete.
      */
-    public static void deleteUser(JSONObject input) throws BlogException {
+    private static void deleteUser(String accessToken, String userID) throws BlogException {
+        User deleter;
+        User user;
+
+        // Retrieve the deleter
+        try {
+            deleter = User.retrieveByAccessToken(accessToken);
+        } catch (IsDeletedException e) {
+            throw new IsDeletedException("The user attempting to delete is deleted.");
+        }
+
         // Retrieve the user
-        User user = retrieveUserByUserID(input);
+        try {
+            user = User.retrieveByUserID(userID);
+        } catch (IsDeletedException e) {
+            throw new IsDeletedException("The user to be deleted is already deleted.");
+        }
+
+        // Check whether deleter has permission to delete user
+        if (!deleter.is(user) && !deleter.is(ADMIN)) {
+            throw new InvalidPermissionException("User does not have the necessary permission to delete this user.");
+        }
 
         // Delete user in database
         Database.delete(user);
     }
 
     /**
-     * Retrieves a user from the database.
+     * Edits a user in the database.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "userID":    string,  // The user to retrieve.
-     *              }
-     * @return The retrieved User.
+     * @param accessToken The access token of the user attempting to edit.
+     * @param input       A JSON containing the following key-value pairs:
+     *                    {
+     *                    "userID":         String,  // The user to edit.
+     *                    "username":       String,  // The new username of the user.
+     *                    "profilePicture": String,  // The new profile picture of the user.
+     *                    "bio":            String   // The new bio of the user.
+     *                    }
      * @throws BlogException
      */
-    public static User retrieveUserByUserID(JSONObject input) throws BlogException {
+    private static void editUser(String accessToken, JSONObject input) throws BlogException {
         String userID;
+        String username;
+        String profilePicture;
+        String bio;
 
         // Read data from JSON
         try {
             userID = input.getString("userID");
+            username = input.getString("username");
+            profilePicture = input.getString("profilePicture");
+            bio = input.getString("bio");
         } catch (JSONException e) {
             throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
         } catch (NullPointerException e) {
             throw new BlogException("JSON object received is null. \n" + e.getMessage());
         }
 
-        // Return the retrieved user
-        return User.retrieveByUserID(userID);
-    }
+        // Validate the data
+        User.validateUsername(username);
+        User.validateBio(bio);
 
-    /**
-     * Retrieves a user from the database.
-     *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "accessToken":  String,  // The access token of the user to retrieve.
-     *              }
-     * @return The retrieved User.
-     * @throws BlogException
-     */
+        // Retrieve the users
+        User editor = User.retrieveByAccessToken(accessToken);
+        User user = User.retrieveByUserID(userID);
 
-    //todo: change this part
-    public static User retrieveUserByAccessToken(JSONObject input) throws BlogException {
-        String accessToken;
-
-        // Read data from JSON
-        try {
-            accessToken = input.getString("accessToken");
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
+        // Check whether editor has permission to edit user
+        if (!editor.is(user)) {
+            throw new InvalidPermissionException("User does not have the necessary permission to edit this user.");
         }
 
-        // Return the retrieved user
-        return User.retrieveByAccessToken(accessToken);
+        // Apply edit to user
+        user.setUsername(username);
+        user.setProfilePicture(profilePicture);
+        user.setBio(bio);
+
+        // Save user to database
+        Database.save(user);
     }
 
     /**
@@ -101,14 +165,16 @@ public class UserController {
      *              }
      * @return Updates the User Status and saves the changes in the database
      * @throws BlogException
+     * @deprecated Feature to be removed.
      */
+    @Deprecated
     private static void updateUserStatus(JSONObject input) throws BlogException {
         User user;
         String status;
 
         try {
-            //userID = input.getInt("userID");
-            user = retrieveUserByUserID(input);
+            String userID = input.getString("userID");
+            user = User.retrieveByUserID(userID);
             status = input.getString("user_status");
 
             if (status.toUpperCase() == "OFFLINE")
@@ -124,58 +190,6 @@ public class UserController {
     }
 
     /**
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "userID":    int,     // The user to retrieve.
-     *              "profile_picture": String // URL of the new profile picture of the user
-     *              }
-     * @return Updates the profile picture and saves the changes in the database
-     * @throws BlogException
-     */
-    public static void updateProfilePicture(JSONObject input) throws BlogException {
-        User user;
-        String profile_picture;
-
-        try {
-            user = retrieveUserByUserID(input);
-            profile_picture = input.getString("profile_picture");
-            user.setProfilePicture(profile_picture);
-            Database.save(user);
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
-    }
-
-    /**
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "userID": int,    // The user to update.
-     *              "bio":    String  // The content of the user bio.
-     *              }
-     * @return Updates the bio of the user and saves the changes in the database
-     * @throws BlogException
-     */
-    public static void updateBio(JSONObject input) throws BlogException {
-        String bio;
-
-        try {
-            bio = input.getString("bio");
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
-
-        User user = retrieveUserByUserID(input);
-
-        user.setBio(bio);
-
-        Database.save(user);
-    }
-
-    /**
      * Updates user level of the promotee only if the promoter has the authorization to do so.
      *
      * @param input JSONObject would contain the following key-value pairs:
@@ -185,8 +199,10 @@ public class UserController {
      *              "new_level": the new user level for the promotee
      *              }
      * @throws BlogException
+     * @deprecated Feature moved to AdminController.
      */
-    public void updateUserLevel(JSONObject input) throws BlogException {
+    @Deprecated
+    private void updateUserLevel(JSONObject input) throws BlogException {
         String promoterID;
         String promoteeID;
         String new_level;
@@ -205,77 +221,77 @@ public class UserController {
         User promoter = User.retrieveByUserID(promoterID);
         User promotee = User.retrieveByUserID(promoteeID);
 
-        if (promoter.getUserLevel() != UserLevel.ADMIN)
+        if (promoter.getUserLevel() != ADMIN)
             throw new BlogException("Promoter not authorized to make the required changes");
 
         new_level = input.getString("new_level");
         promotee.setUserLevel(UserLevel.valueOf(new_level)); //converting string to enum
     }
 
-    @GetMapping("/getUser")
+    @GetMapping("/get")
     @ResponseBody
-    public ResponseEntity<String> getUser(@RequestParam("userID") String userID) {
+    public ResponseEntity<String> get(@RequestHeader(value = "Authorization", required = false) String accessToken,
+                                      @RequestParam(value = "userID", required = false) String userID) {
         try {
-            JSONObject input = new JSONObject()
-                    .put("userID", userID);
-            return ResponseEntity.ok(getUser(input).toString());
-        } catch (Exception e) {
+            if (accessToken != null) {
+                return ResponseEntity.ok(getUserByAccessToken(accessToken));
+            } else if (userID != null) {
+                return ResponseEntity.ok(getUserByUserID(userID));
+            } else {
+                throw new BlogException("Neither accessToken nor userID was provided.");
+            }
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (DoesNotExistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/deleteUser")
+    @DeleteMapping("/delete")
     @ResponseBody
-    public ResponseEntity<String> deleteUser(@RequestBody String body) {
+    public ResponseEntity<String> delete(@RequestHeader("Authorization") String accessToken,
+                                         @RequestParam("userID") String userID) {
         try {
-            deleteUser(new JSONObject(body));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            deleteUser(accessToken, userID);
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/updateUserLevel")
+    @PutMapping("/edit")
     @ResponseBody
-    public ResponseEntity<String> updateUserLevel(@RequestBody String body) {
+    public ResponseEntity<String> edit(@RequestHeader("Authorization") String accessToken,
+                                       @RequestBody String body) {
         try {
-            updateUserLevel(new JSONObject(body));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            editUser(accessToken, new JSONObject(body));
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException | InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/updateUserStatus")
-    @ResponseBody
-    public ResponseEntity<String> updateUserStatus(@RequestBody String body) {
-        try {
-            updateUserStatus(new JSONObject(body));
-            return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/updateProfilePicture")
-    @ResponseBody
-    public ResponseEntity<String> updateProfilePicture(@RequestBody String body) {
-        try {
-            updateProfilePicture(new JSONObject(body));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/updateBio")
-    @ResponseBody
-    public ResponseEntity<String> updateBio(@RequestBody String body) {
-        try {
-            updateBio(new JSONObject(body));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

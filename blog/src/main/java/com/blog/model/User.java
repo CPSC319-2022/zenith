@@ -39,8 +39,8 @@ public class User extends Record {
     private String username;
     private UserLevel userLevel;
     private String creationDate;
-    private String lastLogin;
-    private UserStatus userStatus;
+    private String lastLogin;       // TODO: change to lastActivity?
+    private UserStatus userStatus;  // TODO: deprecate
     private String profilePicture;  // URL to the profile picture
     private String bio;
 
