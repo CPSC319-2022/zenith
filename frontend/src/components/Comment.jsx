@@ -29,9 +29,12 @@ const Comment = ({ comment, onUpvote, onDownvote, onEdit, onDelete }) => {
     setEditing(false);
   };
 
-  const handleChange = (event) => {
-    setEditedContent(event.target.value);
+  const handleChange = (value) => {
+    console.log(value);
+    console.log("editedContent", editedContent);
+    setEditedContent(value);
   };
+  
 
   return (
       <Card className="mb-4">
