@@ -377,21 +377,22 @@ public class Database {
     }
 
     /**
-     * @param userID The user requesting a promotion.
-     * @param target The target user level to be promoted to.
-     * @param reason The reason for the request.
+     * @param userID      The user requesting a promotion.
+     * @param target      The target user level to be promoted to.
+     * @param requestTime The time that the request was made.
+     * @param reason      The reason for the request.
      * @throws DoesNotExistException If the user does not exist.
      */
-    public static void requestPromotion(String userID, UserLevel target, String reason) throws DoesNotExistException, BlogException {
+    public static void requestPromotion(String userID, UserLevel target, String requestTime, String reason) throws DoesNotExistException, BlogException {
         /*
         TODO: key should be userID
               inserts this row or if key exists, update the target and reason
               throw new DoesNotExistException("User does not exist.") if userID not in User table
 
               INSERT INTO table_name
-              VALUES (userID, target, reason)
+              VALUES (userID, target, requestTime, reason)
               ON DUPLICATE KEY
-              UPDATE target=target, reason=reason
+              UPDATE target=target, requestTime=requestTime, reason=reason
          */
         throw new BlogException("Not Implemented"); // TODO: remove throws BlogException from function declaration after done
     }

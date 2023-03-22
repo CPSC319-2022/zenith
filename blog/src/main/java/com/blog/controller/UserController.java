@@ -5,6 +5,7 @@ import com.blog.exception.*;
 import com.blog.model.User;
 import com.blog.model.UserLevel;
 import com.blog.model.UserStatus;
+import com.blog.utils.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -189,11 +190,14 @@ public class UserController {
 
         // Check whether this request is necessary
         if (!user.below(target)) {
-            throw new BlogException("User already has an equal or higher user level.");
+            throw new InvalidPermissionException("User already has an equal or higher user level.");
         }
 
+        // Determine the time of request
+        String currentTime = Utility.getCurrentTime();
+
         // Save the request to database
-        Database.requestPromotion(user.getUserID(), target, reason);
+        Database.requestPromotion(user.getUserID(), target, currentTime, reason);
     }
 
     /**
@@ -301,7 +305,7 @@ public class UserController {
         try {
             deleteUser(accessToken, userID);
             return ResponseEntity.noContent().build();
-        } catch (IsDeletedException e) {
+        } catch (IsDeletedException | InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
