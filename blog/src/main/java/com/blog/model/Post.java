@@ -53,14 +53,14 @@ public class Post extends Content {
     }
 
     /**
-     * Validates the length of the title field.
+     * Validates the given title.
      *
      * @param title The title to validate.
-     * @throws BlogException
+     * @throws BlogException If the title is invalid.
      */
     public static void validateTitle(String title) throws BlogException {
         if (title.length() < MIN_TITLE_LENGTH) {
-            throw new BlogException("Title length is too short.");
+            throw new BlogException("Title is too short.");
         }
     }
 
