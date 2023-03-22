@@ -2,16 +2,16 @@ package com.blog.controller;
 
 import com.blog.database.Database;
 import com.blog.exception.*;
-import com.blog.model.User;
-import com.blog.model.UserLevel;
-import com.blog.model.UserStatus;
+import com.blog.model.*;
 import com.blog.utils.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import static com.blog.model.PromotionRequest.NEW_PROMOTION_REQUEST_ID;
 import static com.blog.model.UserLevel.ADMIN;
 
 @RestController
@@ -167,9 +167,10 @@ public class UserController {
      *                    "target": String,  // The target user level to be promoted to.
      *                    "reason": String,  // The reason for the request.
      *                    }
+     * @return The JSON string representing the created promotion request.
      * @throws BlogException
      */
-    private static void requestPromotion(String accessToken, JSONObject input) throws BlogException {
+    private static String requestPromotion(String accessToken, JSONObject input) throws BlogException {
         UserLevel target;
         String reason;
 
@@ -193,11 +194,21 @@ public class UserController {
             throw new InvalidPermissionException("User already has an equal or higher user level.");
         }
 
-        // Determine the time of request
-        String currentTime = Utility.getCurrentTime();
+        // Create new promotion request
+        PromotionRequest request = new PromotionRequest(
+                NEW_PROMOTION_REQUEST_ID,
+                user.getUserID(),
+                target,
+                Utility.getCurrentTime(),
+                reason,
+                false
+        );
 
         // Save the request to database
-        Database.requestPromotion(user.getUserID(), target, currentTime, reason);
+        int requestID = Database.save(request);
+
+        // Return the created request
+        return PromotionRequest.retrieve(requestID).asJSONString();
     }
 
     /**
@@ -343,8 +354,7 @@ public class UserController {
     public ResponseEntity<String> requestPromotion(@RequestHeader("Authorization") String accessToken,
                                                    @RequestBody String body) {
         try {
-            requestPromotion(accessToken, new JSONObject(body));
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(requestPromotion(accessToken, new JSONObject(body)), HttpStatus.CREATED);
         } catch (IsDeletedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (LoginFailedException e) {
