@@ -57,19 +57,19 @@ public class PostController {
      * @param reverse     Whether to get posts incrementally or decrementally.
      * @return The JSON string representing the posts using the following syntax:
      * [
-     * {                           //
-     * "postID":        int,       //
-     * "authorID":      String,    //
-     * "title":         String,    //
-     * "content":       String,    //
-     * "creationDate":  String,    //
-     * "lastModified":  String,    // <--- This represents one post!
-     * "upvotes":       int,       //
-     * "downvotes":     int,       //
-     * "isDeleted":     boolean,   //
-     * "views":         int,       //
-     * "allowComments": boolean    //
-     * },                          //
+     * {                            //
+     * "postID":        int,        //
+     * "authorID":      String,     //
+     * "title":         String,     //
+     * "content":       String,     //
+     * "creationDate":  String,     //
+     * "lastModified":  String,     // <--- This represents one post!
+     * "upvotes":       int,        //
+     * "downvotes":     int,        //
+     * "isDeleted":     boolean,    //
+     * "views":         int,        //
+     * "allowComments": boolean     //
+     * },                           //
      * ...  // The JSON array will contain at most <code>count</code> number of post representations.
      * ]
      */
