@@ -376,6 +376,43 @@ public class Database {
         throw new BlogException("Not Implemented");
     }
 
+    /**
+     * @param userID The user requesting a promotion.
+     * @param target The target user level to be promoted to.
+     * @param reason The reason for the request.
+     * @throws DoesNotExistException If the user does not exist.
+     */
+    public static void requestPromotion(String userID, UserLevel target, String reason) throws DoesNotExistException, BlogException {
+        /*
+        TODO: key should be userID
+              inserts this row or if key exists, update the target and reason
+              throw new DoesNotExistException("User does not exist.") if userID not in User table
+
+              INSERT INTO table_name
+              VALUES (userID, target, reason)
+              ON DUPLICATE KEY
+              UPDATE target=target, reason=reason
+         */
+        throw new BlogException("Not Implemented"); // TODO: remove throws BlogException from function declaration after done
+    }
+
+    /**
+     * Promotes or demotes the given user to the target user level.
+     *
+     * @param userID The user to promote or demote.
+     * @param target The target user level.
+     * @throws DoesNotExistException If the user does not exist.
+     */
+    public static void promote(String userID, UserLevel target) throws DoesNotExistException, BlogException {
+        /*
+        TODO: Change user level of userID to the target.
+              throw new DoesNotExistException("User does not exist.") if userID not in User table
+              After changing user level, remove all promotion requests that
+              this user has that is not higher than their current new level.
+         */
+        throw new BlogException("Not Implemented"); // TODO: remove throws BlogException from function declaration after done
+    }
+
     private static String formInsert(User user, String id) {
         String profile = "DEFAULT";
         if (user.getProfilePicture() != null) {

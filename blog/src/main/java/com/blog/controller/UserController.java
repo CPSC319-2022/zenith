@@ -108,7 +108,7 @@ public class UserController {
      * Edits a user in the database.
      *
      * @param accessToken The access token of the user attempting to edit.
-     * @param input       A JSON containing the following key-value pairs:
+     * @param input       A JSON string containing the following key-value pairs:
      *                    {
      *                    "userID":         String,  // The user to edit.
      *                    "username":       String,  // The new username of the user.
@@ -155,6 +155,45 @@ public class UserController {
 
         // Save user to database
         Database.save(user);
+    }
+
+    /**
+     * Makes a request for a promotion.
+     *
+     * @param accessToken The user requesting for a promotion.
+     * @param input A JSON string containing the following key-value pairs:
+     *                    {
+     *                    "target": String,  // The target user level to be promoted to.
+     *                    "reason": String,  // The reason for the request.
+     *                    }
+     * @throws BlogException
+     */
+    private static void requestPromotion(String accessToken, JSONObject input) throws BlogException {
+        UserLevel target;
+        String reason;
+
+        // Read data from JSON
+        try {
+            target = UserLevel.valueOf(input.getString("target").toUpperCase());
+            reason = input.getString("reason");
+        } catch (JSONException e) {
+            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new BlogException("JSON object received is null. \n" + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new BlogException("Requested target user level is invalid. \n" + e.getMessage());
+        }
+
+        // Retrieve the user
+        User user = User.retrieveByAccessToken(accessToken);
+
+        // Check whether this request is necessary
+        if (!user.below(target)) {
+            throw new BlogException("User already has an equal or higher user level.");
+        }
+
+        // Save the request to database
+        Database.requestPromotion(user.getUserID(), target, reason);
     }
 
     /**
@@ -288,6 +327,28 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (InitializationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/requestPromotion")
+    @ResponseBody
+    public ResponseEntity<String> requestPromotion(@RequestHeader("Authorization") String accessToken,
+                                                   @RequestBody String body) {
+        try {
+            requestPromotion(accessToken, new JSONObject(body));
+            return ResponseEntity.ok().build();
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (DoesNotExistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
