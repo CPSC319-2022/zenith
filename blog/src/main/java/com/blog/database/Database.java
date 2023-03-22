@@ -301,9 +301,17 @@ public class Database {
         /* TODO: will also need new table with key (userID, postID)
                  also need column for whether they upvoted or downvoted (binary column)
 
-                 if user has neither upvoted nor downvoted, normal insert
-                 if user already downvoted, change downvote to upvote
-                 if user already upvoted, throw new BlogException("User already upvoted this post.")
+                 if user has neither upvoted nor downvoted
+                     normal insert
+                     increment upvote counter for the post
+                 else if user already downvoted
+                     change downvote to upvote
+                     increment upvote counter for the post
+                     decrement downvote counter for the post
+                 else if user already upvoted
+                     throw new BlogException("User already upvoted this post.")
+                 else
+                     unexpected
          */
         throw new BlogException("Not Implemented");
     }
@@ -331,9 +339,7 @@ public class Database {
         /* TODO: will also need new table with key (userID, postID, commentID)
                  also need column for whether they upvoted or downvoted (binary column)
 
-                 if user has neither upvoted nor downvoted, normal insert
-                 if user already downvoted, change downvote to upvote
-                 if user already upvoted, throw new BlogException("User already upvoted this comment.")
+                 similar behaviour as upvote post but for comments
          */
         throw new BlogException("Not Implemented");
     }
