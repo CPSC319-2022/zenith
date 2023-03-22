@@ -34,10 +34,12 @@ const Comment = ({ comment, onUpvote, onDownvote, onEdit, onDelete }) => {
     console.log("editedContent", editedContent);
     setEditedContent(value);
   };
-  
-// test comment to be deleted
+  // delete this comment
+
+
   return (
       <Card className="mb-4">
+        {/* card */}
         <Card.Body>
           <div className="d-flex justify-content-between">
             <div>
