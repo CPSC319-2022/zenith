@@ -594,6 +594,14 @@ public class Database {
         } catch (Exception e) {
             throw new DoesNotExistException("User does not exist.");
         }
+        int level = 1;
+        if (target == UserLevel.CONTRIBUTOR) {
+            level = 2;
+        } else if (target == UserLevel.ADMIN) {
+            level = 3;
+        }
+        String sql = "DELETE FROM Promotion_Request WHERE user_ID = " + userID + "AND target_level <= " + level;
+        jdbcTemplate.update(sql);
     }
 
     private static String formInsert(User user, String id) {
