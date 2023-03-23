@@ -62,4 +62,24 @@ steps:
     - '--quiet'
     id: Deploy Frontend
 
+
+  # Slackbot Notification
+  - name: 'curlimages/curl:7.78.0'
+    args:
+      - '-X'
+      - POST
+      - '-H'
+      - 'Content-Type: application/json'
+      - '-d'
+      - |
+        {
+          "projectId": "$PROJECT_ID",
+          "id": "$BUILD_ID",
+          "status": "$BUILD_STATUS"
+        }
+      - 'https://us-central1-blog-pipe.cloudfunctions.net/notifySlack'
+    id: Notify Slack
+    waitFor:
+      - '-'
+
 timeout: 500s
