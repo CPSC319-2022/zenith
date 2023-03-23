@@ -297,7 +297,7 @@ public class Database {
      * @throws BlogException If the user already upvoted this post.
      */
     public static void upvote(String userID, int postID) throws BlogException {
-        /* TODO: will also need new table with key (userID, postID)
+        /*       will also need new table with key (userID, postID)
                  also need column for whether they upvoted or downvoted (binary column)
 
                  if user has neither upvoted nor downvoted
@@ -312,7 +312,29 @@ public class Database {
                  else
                      unexpected
          */
-        throw new BlogException("Not Implemented");
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        String sql = "SELECT COUNT(*) FROM Vote_Post WHERE user_ID = " + userID + " AND post_ID = " + postID;
+        if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
+            sql = "INSERT INTO Vote_Post VALUES(" + postID + ", " + userID + ", true)";
+            jdbcTemplate.update(sql);
+            Post post = Post.retrieve(postID);
+            post.setUpvotes(post.getUpvotes() + 1);
+            save(post);
+        } else {
+            sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = " + userID + " AND post_ID = " + postID;
+            if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
+                throw new BlogException("User already upvoted this post.");
+            } else {
+                sql = "UPDATE Vote_Post SET is_deleted = true WHERE user_ID = " + userID + " AND post_ID = " + postID;
+                jdbcTemplate.update(sql);
+                Post post = Post.retrieve(postID);
+                post.setDownvotes(post.getDownvotes() - 1);
+                post.setUpvotes(post.getUpvotes() + 1);
+                save(post);
+            }
+        }
     }
 
     /**
@@ -321,20 +343,53 @@ public class Database {
      * @throws BlogException If the user already downvoted this post.
      */
     public static void downvote(String userID, int postID) throws BlogException {
-        /* TODO: should same table as upvote
-
+        /*       should same table as upvote
                  similar behaviour as upvote but flipped
          */
-        throw new BlogException("Not Implemented");
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        String sql = "SELECT COUNT(*) FROM Vote_Post WHERE user_ID = " + userID + " AND post_ID = " + postID;
+        if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
+            sql = "INSERT INTO Vote_Post VALUES(" + postID + ", " + userID + ", false)";
+            jdbcTemplate.update(sql);
+            Post post = Post.retrieve(postID);
+            post.setUpvotes(post.getDownvotes() + 1);
+            save(post);
+        } else {
+            sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = " + userID + " AND post_ID = " + postID;
+            if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
+                sql = "UPDATE Vote_Post SET is_deleted = false WHERE user_ID = " + userID + " AND post_ID = " + postID;
+                jdbcTemplate.update(sql);
+                Post post = Post.retrieve(postID);
+                post.setUpvotes(post.getUpvotes() - 1);
+                post.setDownvotes(post.getDownvotes() + 1);
+                save(post);
+            } else {
+                throw new BlogException("User already downvoted this post.");
+            }
+        }
     }
 
     /**
      * Increments the view counter of the given post.
      *
      * @param postID The post.
+     * @throws DoesNotExistException
      */
-    public static void view(int postID) {
-        // TODO
+    public static void view(int postID) throws DoesNotExistException {
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        try {
+            String sql = "SELECT views FROM Post WHERE post_ID = " + postID;
+            int view = jdbcTemplate.queryForObject(sql, Integer.class);
+            view++;
+            sql = "UPDATE Post SET views = " + view + " WHERE post_ID = " + postID;
+            jdbcTemplate.update(sql);
+        } catch (Exception e) {
+            throw new DoesNotExistException("Post does not exist.");
+        }
     }
 
     /**
@@ -354,12 +409,34 @@ public class Database {
      * @throws BlogException If the user already upvoted this post.
      */
     public static void upvote(String userID, int postID, int commentID) throws BlogException {
-        /* TODO: will also need new table with key (userID, postID, commentID)
+        /*       will also need new table with key (userID, postID, commentID)
                  also need column for whether they upvoted or downvoted (binary column)
 
                  similar behaviour as upvote post but for comments
          */
-        throw new BlogException("Not Implemented");
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        String sql = "SELECT COUNT(*) FROM Vote_Comment WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+        if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
+            sql = "INSERT INTO Vote_Comment VALUES(" + postID + ", " + userID + ", true)";
+            jdbcTemplate.update(sql);
+            Comment comment = Comment.retrieve(postID, commentID);
+            comment.setUpvotes(comment.getUpvotes() + 1);
+            save(comment);
+        } else {
+            sql = "SELECT is_upvoted FROM Vote_Comment WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+            if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
+                throw new BlogException("User already upvoted this comment.");
+            } else {
+                sql = "UPDATE Vote_Comment SET is_deleted = true WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+                jdbcTemplate.update(sql);
+                Comment comment = Comment.retrieve(postID, commentID);
+                comment.setDownvotes(comment.getDownvotes() - 1);
+                comment.setUpvotes(comment.getUpvotes() + 1);
+                save(comment);
+            }
+        }
     }
 
     /**
@@ -368,11 +445,33 @@ public class Database {
      * @throws BlogException If the user already downvoted this post.
      */
     public static void downvote(String userID, int postID, int commentID) throws BlogException {
-        /* TODO: should same table as upvote
+        /*       should same table as upvote
 
                  similar behaviour as upvote but flipped
          */
-        throw new BlogException("Not Implemented");
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        String sql = "SELECT COUNT(*) FROM Vote_Comment WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+        if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
+            sql = "INSERT INTO Vote_Comment VALUES(" + postID + ", " + userID + ", false)";
+            jdbcTemplate.update(sql);
+            Comment comment = Comment.retrieve(postID, commentID);
+            comment.setUpvotes(comment.getDownvotes() + 1);
+            save(comment);
+        } else {
+            sql = "SELECT is_upvoted FROM Vote_Comment WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+            if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
+                sql = "UPDATE Vote_Comment SET is_deleted = false WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+                jdbcTemplate.update(sql);
+                Comment comment = Comment.retrieve(postID, commentID);
+                comment.setUpvotes(comment.getUpvotes() - 1);
+                comment.setDownvotes(comment.getDownvotes() + 1);
+                save(comment);
+            } else {
+                throw new BlogException("User already downvoted this comment.");
+            }
+        }
     }
 
     /**
@@ -380,13 +479,35 @@ public class Database {
      * @return The requestID
      * @throws DoesNotExistException If the user does not exist.
      */
-    public static int save(PromotionRequest request) throws DoesNotExistException, BlogException {
+    public static int save(PromotionRequest request) throws DoesNotExistException {
         /*
-        TODO: if user has active request (not deleted), update and return the existing requestID
+              if user has active request (not deleted), update and return the existing requestID
               otherwise generate incrementing requestID then insert and return the generated requestID
               throw new DoesNotExistException("User does not exist.") if userID not in User table
          */
-        throw new BlogException("Not Implemented"); // TODO: remove throws BlogException from method signature after done
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        String userID = request.getUserID();
+        int requestID = 0;
+        String sql = "SELECT COUNT(*) FROM Promotion_Request WHERE user_ID = " + userID + " AND is_deleted = false";
+        if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
+            int maxID;
+            sql = "SELECT MAX(request_ID) FROM Promotion_Request";
+            try {
+                maxID = jdbcTemplate.queryForObject(sql, Integer.class);
+            } catch (Exception e) {
+                maxID = 0;
+            }
+            requestID = maxID + 1;
+            sql = formInsert(request, requestID);
+        } else {
+            sql = "SELECT request_ID FROM Promotion_Request WHERE user_ID = " + userID + " AND is_deleted = false";
+            requestID = jdbcTemplate.queryForObject(sql, Integer.class);
+            sql = formUpdate(request, requestID);
+        }
+        jdbcTemplate.update(sql);
+        return requestID;
     }
 
     /**
@@ -395,13 +516,23 @@ public class Database {
      *
      * @param request The <code>PromotionRequest</code> object to update. Contains the <code>requestID</code>.
      * @throws DoesNotExistException
+     * @throws IsDeletedException
      */
-    public static void retrieve(PromotionRequest request) throws DoesNotExistException {
+    public static void retrieve(PromotionRequest request) throws DoesNotExistException, IsDeletedException {
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
         int requestID = request.getRequestID();
-        /*
-        TODO: throw error if cannot find requestID
-         */
-        throw new DoesNotExistException("Not Implemented");
+        String sql = "SELECT * FROM Promotion_Request WHERE request_ID = " + requestID;
+        try {
+            PromotionRequest temp = jdbcTemplate.queryForObject(sql, new PromotionRequestRowMapper());
+            request.copy(temp);
+            if (Boolean.TRUE.equals(temp.isDeleted())) {
+                throw new IsDeletedException("Promotion request with ID " + requestID + " is deleted.");
+            }
+        } catch (EmptyResultDataAccessException e) {
+            throw new DoesNotExistException("Promotion request with ID " + requestID +  " does not exist.");
+        }
     }
 
     /**
@@ -414,14 +545,32 @@ public class Database {
      * @param reverse
      */
     public static void retrievePromotionRequests(ArrayList<PromotionRequest> requests, int requestIDStart, int count, boolean reverse) {
-        // TODO: Not Implemented
+        String sql;
+        if (reverse) {
+            sql = "SELECT * FROM Promotion_Request WHERE request_ID <= " + requestIDStart + " AND is_deleted = false ORDER BY request_ID DESC LIMIT " + count;
+        } else {
+            sql = "SELECT * FROM Promotion_Request WHERE request_ID >= " + requestIDStart + " AND is_deleted = false ORDER BY request_ID ASC LIMIT " + count;
+        }
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        List<PromotionRequest> temp = jdbcTemplate.query(sql, new PromotionRequestRowMapper());
+        for (PromotionRequest r : temp) {
+            requests.add(r);
+        }
     }
 
     /**
      * @param request
      */
     public static void delete(PromotionRequest request) {
-        // TODO: set deleted flag
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        int requestID = request.getRequestID();
+        String sql = "UPDATE Promotion_Request SET is_deleted = true WHERE request_ID = " + requestID;
+        jdbcTemplate.update(sql);
+        request.setDeleted(true);
     }
 
     /**
@@ -431,14 +580,20 @@ public class Database {
      * @param target The target user level.
      * @throws DoesNotExistException If the user does not exist.
      */
-    public static void promote(String userID, UserLevel target) throws DoesNotExistException, BlogException {
+    public static void promote(String userID, UserLevel target) throws DoesNotExistException {
         /*
-        TODO: Change user level of userID to the target.
+              Change user level of userID to the target.
               throw new DoesNotExistException("User does not exist.") if userID not in User table
               After changing user level, hard delete all promotion requests that
               this user has that is not higher than their current new level.
          */
-        throw new BlogException("Not Implemented"); // TODO: remove throws BlogException from method signature after done
+        try{
+            User user = User.retrieveByUserID(userID);
+            user.setUserLevel(target);
+            save(user);
+        } catch (Exception e) {
+            throw new DoesNotExistException("User does not exist.");
+        }
     }
 
     private static String formInsert(User user, String id) {
@@ -528,5 +683,29 @@ public class Database {
         return "UPDATE Comment SET user_ID = \"" + comment.getAuthorID() + "\", content = \"" + comment.getContent() + "\", creation_date = \"" + creationDate
                 + "\", last_modified = \"" + lastModified + "\", upvotes = " + comment.getUpvotes() + ", downvotes = " + comment.getDownvotes() + ", is_deleted = "
                 + comment.isDeleted() + " WHERE post_ID = " + comment.getPostID() + " AND comment_number = " + id;
+    }
+
+    private static String formInsert(PromotionRequest request, int id) {
+        String requestTime = request.getRequestTime();
+        int level = 1;
+        if (request.getTarget() == UserLevel.CONTRIBUTOR) {
+            level = 2;
+        } else if (request.getTarget() == UserLevel.ADMIN) {
+            level = 3;
+        }
+        return "INSERT INTO Promotion_Request VALUES(" + id + ", \"" + request.getUserID() + "\", " + level + ", \""
+                + requestTime + "\",  \"" + request.getReason() + "\", " + request.isDeleted() + ")";
+    }
+
+    private static String formUpdate(PromotionRequest request, int id) {
+        String requestTime = request.getRequestTime();
+        int level = 1;
+        if (request.getTarget() == UserLevel.CONTRIBUTOR) {
+            level = 2;
+        } else if (request.getTarget() == UserLevel.ADMIN) {
+            level = 3;
+        }
+        return "UPDATE Promotion_Request SET user_ID = \"" + request.getUserID() + "\", target_level = " + level + ", request_time = \"" + requestTime
+                + "\", reason = \"" + request.getReason() + "\", is_deleted = " + request.isDeleted() + " WHERE request_ID = " + id;
     }
 }

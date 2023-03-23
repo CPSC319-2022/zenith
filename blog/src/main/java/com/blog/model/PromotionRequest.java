@@ -2,6 +2,8 @@ package com.blog.model;
 
 import com.blog.database.Database;
 import com.blog.exception.DoesNotExistException;
+import com.blog.exception.IsDeletedException;
+
 import org.json.JSONObject;
 
 public class PromotionRequest extends Record {
@@ -36,8 +38,9 @@ public class PromotionRequest extends Record {
      *
      * @param requestID The promotion request to retrieve.
      * @return The promotion request with the given requestID.
+     * @throws IsDeletedException
      */
-    public static PromotionRequest retrieve(int requestID) throws DoesNotExistException {
+    public static PromotionRequest retrieve(int requestID) throws DoesNotExistException, IsDeletedException {
         PromotionRequest request = new PromotionRequest(requestID);
         Database.retrieve(request);
         return request;
@@ -55,6 +58,14 @@ public class PromotionRequest extends Record {
                 .put("target", target)
                 .put("requestTime", requestTime)
                 .put("reason", reason);
+    }
+
+    public void copy(PromotionRequest r) {
+        this.setUserID(r.getUserID());
+        this.setRequestTime(r.getRequestTime());
+        this.setTarget(r.getTarget());
+        this.setReason(r.getReason());
+        this.setDeleted(r.isDeleted());
     }
 
     /**
