@@ -17,7 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new CustomUserDetailsFilter(), OAuth2LoginAuthenticationFilter.class)
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/", "/getPost/**", "/getPosts/**", "/upvotePost/**","/editPost/**", "/downvotePost/**", "/getComments/**", "/getComment/**", "/upvoteComment/**", "/downvoteComment/**","/createComment/**", "/editComment/**", "/deleteComment/**", "/createPost/**","/getUser/**").permitAll()
+                .antMatchers("/","/post/gets/**", "/post/get/**", "/post/create/**", "/post/edit/**","/post/upvote/**", "/post/downvote/**", "/post/delete/**", "/comment/get/**", "/comment/gets/**", "/comment/upvote/**","/comment/downvote/**", "/comment/edit/**", "/comment/delete/**", "/createPost/**","/user/get**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
