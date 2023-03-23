@@ -1,0 +1,23 @@
+{
+  "name": "zenith-",
+  "version": "1.0.0",
+  "description": "This is the readme for CPSC 319 Project. The team members for the project are: 1. Muhammad Saad Shahid 2. Param Tully 3. Ruchir Malik 4. Shawn Zhu 5. Andrew Liu 6. Anusha Saleem 7. Cheryl Yu 8. Eric Wong 9. Anthony Baek",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CPSC319-2022/Zenith-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CPSC319-2022/Zenith-/issues"
+  },
+  "homepage": "https://github.com/CPSC319-2022/Zenith-#readme",
+  "dependencies": {
+    "axios": "^1.3.4"
+  }
+}
