@@ -63,7 +63,7 @@ steps:
     id: Deploy Frontend
 
 
-  # Slackbot Notification
+  # Slackbot Notification on Success
   - name: 'curlimages/curl:7.78.0'
     args:
       - '-X'
@@ -75,12 +75,33 @@ steps:
         {
           "projectId": "$PROJECT_ID",
           "id": "$BUILD_ID",
-          "result": "$BUILD_RESULT"
+          "status": "SUCCESS"
         }
       - 'https://us-central1-blog-pipe.cloudfunctions.net/notifySlack'
-    id: Notify Slack
+    id: Notify Slack Success
     waitFor:
       - Deploy Backend
       - Deploy Frontend
+
+  # Slackbot Notification on Failure
+  - name: 'curlimages/curl:7.78.0'
+    args:
+      - '-X'
+      - POST
+      - '-H'
+      - 'Content-Type: application/json'
+      - '-d'
+      - |
+        {
+          "projectId": "$PROJECT_ID",
+          "id": "$BUILD_ID",
+          "status": "FAILURE"
+        }
+      - 'https://us-central1-blog-pipe.cloudfunctions.net/notifySlack'
+    id: Notify Slack Failure
+    waitFor:
+      - Deploy Backend
+      - Deploy Frontend
+    allowFailure: true
 
 timeout: 500s
