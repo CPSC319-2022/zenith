@@ -75,11 +75,12 @@ steps:
         {
           "projectId": "$PROJECT_ID",
           "id": "$BUILD_ID",
-          "status": "$BUILD_STATUS"
+          "result": "$BUILD_RESULT"
         }
       - 'https://us-central1-blog-pipe.cloudfunctions.net/notifySlack'
     id: Notify Slack
     waitFor:
-      - '-'
+      - Deploy Backend
+      - Deploy Frontend
 
 timeout: 500s
