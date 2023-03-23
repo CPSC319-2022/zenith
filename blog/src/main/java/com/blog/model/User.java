@@ -1,10 +1,7 @@
 package com.blog.model;
 
 import com.blog.database.Database;
-import com.blog.exception.DoesNotExistException;
-import com.blog.exception.InitializationException;
-import com.blog.exception.IsDeletedException;
-import com.blog.exception.LoginFailedException;
+import com.blog.exception.*;
 import com.blog.utils.Utility;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -20,6 +17,9 @@ import java.util.Collections;
  * Class that stores the details of a user.
  */
 public class User extends Record {
+    private static final int MIN_USERNAME_LENGTH = 1;
+    private static final int MIN_BIO_LENGTH = 1;
+
     private static GoogleIdTokenVerifier VERIFIER;
 
     static {
@@ -39,8 +39,8 @@ public class User extends Record {
     private String username;
     private UserLevel userLevel;
     private String creationDate;
-    private String lastLogin;
-    private UserStatus userStatus;
+    private String lastLogin;       // TODO: change to lastActivity?
+    private UserStatus userStatus;  // TODO: deprecate
     private String profilePicture;  // URL to the profile picture
     private String bio;
 
@@ -119,6 +119,30 @@ public class User extends Record {
     }
 
     /**
+     * Validates the given username.
+     *
+     * @param username The username to validate.
+     * @throws BlogException If the username is invalid.
+     */
+    public static void validateUsername(String username) throws BlogException {
+        if (username.length() < MIN_USERNAME_LENGTH) {
+            throw new BlogException("Username is too short.");
+        }
+    }
+
+    /**
+     * Validates the given bio.
+     *
+     * @param bio The bio to validate.
+     * @throws BlogException If the bio is invalid.
+     */
+    public static void validateBio(String bio) throws BlogException {
+        if (bio.length() < MIN_BIO_LENGTH) {
+            throw new BlogException("Bio is too short.");
+        }
+    }
+
+    /**
      * Gets the payload from the given Google access token.
      *
      * @param accessToken The Google access token.
@@ -170,7 +194,14 @@ public class User extends Record {
      */
     public String asJSONString() {
         return asJSONObject().toString();
+    }
 
+    /**
+     * @param user The user to check against.
+     * @return Whether this user is the same user (same userID).
+     */
+    public boolean is(User user) {
+        return getUserID().equals(user.getUserID());
     }
 
     /**
@@ -178,7 +209,7 @@ public class User extends Record {
      * @return Whether this user is of the given user level.
      */
     public boolean is(UserLevel userLevel) {
-        return this.getUserLevel() == userLevel;
+        return getUserLevel() == userLevel;
     }
 
     /**
@@ -186,7 +217,7 @@ public class User extends Record {
      * @return Whether this user is below the given user level.
      */
     public boolean below(UserLevel userLevel) {
-        return this.getUserLevel().below(userLevel);
+        return getUserLevel().below(userLevel);
     }
 
     /**
@@ -194,7 +225,7 @@ public class User extends Record {
      * @return Whether this user is above the given user level.
      */
     public boolean above(UserLevel userLevel) {
-        return this.getUserLevel().above(userLevel);
+        return getUserLevel().above(userLevel);
     }
 
     public void copy(User u) {

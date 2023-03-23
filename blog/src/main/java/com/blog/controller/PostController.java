@@ -1,13 +1,9 @@
 package com.blog.controller;
 
 import com.blog.database.Database;
-import com.blog.exception.BlogException;
-import com.blog.exception.DoesNotExistException;
-import com.blog.exception.InvalidPermissionException;
-import com.blog.exception.LoginFailedException;
+import com.blog.exception.*;
 import com.blog.model.Post;
 import com.blog.model.User;
-import com.blog.model.UserLevel;
 import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,14 +19,12 @@ import static com.blog.model.UserLevel.ADMIN;
 import static com.blog.model.UserLevel.CONTRIBUTOR;
 
 @RestController
+@RequestMapping("/post")
 public class PostController {
     /**
-     * Returns a JSON containing the requested post.
+     * Returns a JSON string containing the requested post.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "postID":    int,  // The requested post.
-     *              }
+     * @param postID The requested post.
      * @return The JSON string representing the post using the following syntax:
      * {
      * "postID":        int,
@@ -45,60 +39,41 @@ public class PostController {
      * "views":         int,
      * "allowComments": boolean
      * }
-     * @throws BlogException
+     * @throws DoesNotExistException If the requested post does not exist.
      */
-    private static String getPost(JSONObject input) throws BlogException {
+    private static String getPost(int postID) throws DoesNotExistException {
         // Retrieve the post
-        Post post = retrievePost(input);
+        Post post = Post.retrieve(postID);
 
         // Return the JSON string
         return post.asJSONString();
     }
 
     /**
-     * Returns a JSON containing the requested posts.
+     * Returns a JSON string containing the requested posts.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "postIDStart": int,     // The first requested post.
-     *              "count":       int,     // The number of requested posts.
-     *              "reverse":     boolean  // Whether to get posts incrementally or decrementally.
-     *              }
+     * @param postIDStart The first requested post.
+     * @param count       The number of requested posts.
+     * @param reverse     Whether to get posts incrementally or decrementally.
      * @return The JSON string representing the posts using the following syntax:
      * [
-     * {                           //
-     * "postID":        int,       //
-     * "authorID":      String,    //
-     * "title":         String,    //
-     * "content":       String,    //
-     * "creationDate":  String,    //
-     * "lastModified":  String,    // <--- This represents one post!
-     * "upvotes":       int,       //
-     * "downvotes":     int,       //
-     * "isDeleted":     boolean,   //
-     * "views":         int,       //
-     * "allowComments": boolean    //
-     * },                          //
+     * {                            //
+     * "postID":        int,        //
+     * "authorID":      String,     //
+     * "title":         String,     //
+     * "content":       String,     //
+     * "creationDate":  String,     //
+     * "lastModified":  String,     // <--- This represents one post!
+     * "upvotes":       int,        //
+     * "downvotes":     int,        //
+     * "isDeleted":     boolean,    //
+     * "views":         int,        //
+     * "allowComments": boolean     //
+     * },                           //
      * ...  // The JSON array will contain at most <code>count</code> number of post representations.
      * ]
-     * @throws BlogException
      */
-    private static String getPosts(JSONObject input) throws BlogException {
-        int postIDStart;
-        int count;
-        boolean reverse;
-
-        // Read data from JSON
-        try {
-            postIDStart = input.getInt("postIDStart");
-            count = input.getInt("count");
-            reverse = input.getBoolean("reverse");
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
-
+    private static String getPosts(int postIDStart, int count, boolean reverse) {
         // Create array to store retrieved posts
         ArrayList<Post> posts = new ArrayList<>();
 
@@ -118,17 +93,17 @@ public class PostController {
     /**
      * Creates a new post in the database.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "accessToken":   String,   // The access token of the author of the post.
-     *              "title":         String,   // The title of the post.
-     *              "content":       String,   // The content of the post.
-     *              "allowComments": boolean,  // Whether to allow comments
-     *              }
-     * @return The JSON string representing the created post
+     * @param accessToken The access token of the user.
+     * @param input       A JSON containing the following key-value pairs:
+     *                    {
+     *                    "title":         String,  // The title of the post.
+     *                    "content":       String,  // The content of the post.
+     *                    "allowComments": boolean  // Whether to allow comments
+     *                    }
+     * @return The JSON string representing the created post.
      * @throws BlogException
      */
-    private static String createPost(JSONObject input) throws BlogException {
+    private static String createPost(String accessToken, JSONObject input) throws BlogException {
         String title;
         String content;
         boolean allowComments;
@@ -145,7 +120,7 @@ public class PostController {
         }
 
         // Retrieve the author
-        User author = UserController.retrieveUserByAccessToken(input);
+        User author = User.retrieveByAccessToken(accessToken);
 
         // Check whether the author has permission to make a post
         if (author.below(CONTRIBUTOR)) {
@@ -182,19 +157,16 @@ public class PostController {
     /**
      * Deletes a post in the database.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "postID":      int,     // The post to delete.
-     *              "accessToken": String,  // The access token of the user attempting to delete.
-     *              }
+     * @param accessToken The access token of the user.
+     * @param postID      The post to delete.
      * @throws BlogException
      */
-    private static void deletePost(JSONObject input) throws BlogException {
-        // Retrieve the post
-        Post post = retrievePost(input);
-
+    private static void deletePost(String accessToken, int postID) throws BlogException {
         // Retrieve the user
-        User user = UserController.retrieveUserByAccessToken(input);
+        User user = User.retrieveByAccessToken(accessToken);
+
+        // Retrieve the post
+        Post post = Post.retrieve(postID);
 
         // Check whether user has permission to delete post
         if (!post.isAuthoredBy(user) && !user.is(ADMIN)) {
@@ -208,23 +180,25 @@ public class PostController {
     /**
      * Edits a post in the database.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "postID":        int,     // The post to edit.
-     *              "title":         String   // The new title of the post.
-     *              "content":       String   // The new content of the post.
-     *              "allowComments": boolean  // Whether to allow comments.
-     *              "accessToken":   String,  // The access token of the user attempting to edit.
-     *              }
+     * @param accessToken The access token of the user.
+     * @param input       A JSON containing the following key-value pairs:
+     *                    {
+     *                    "postID":        int,     // The post to edit.
+     *                    "title":         String   // The new title of the post.
+     *                    "content":       String   // The new content of the post.
+     *                    "allowComments": boolean  // Whether to allow comments.
+     *                    }
      * @throws BlogException
      */
-    private static void editPost(JSONObject input) throws BlogException {
+    private static void editPost(String accessToken, JSONObject input) throws BlogException {
+        int postID;
         String title;
         String content;
         boolean allowComments;
 
         // Read data from JSON
         try {
+            postID = input.getInt("postID");
             title = input.getString("title");
             content = input.getString("content");
             allowComments = input.getBoolean("allowComments");
@@ -238,11 +212,11 @@ public class PostController {
         Post.validateTitle(title);
         Post.validateContent(content);
 
-        // Retrieve the post
-        Post post = retrievePost(input);
-
         // Retrieve the user
-        User user = UserController.retrieveUserByAccessToken(input);
+        User user = User.retrieveByAccessToken(accessToken);
+
+        // Retrieve the post
+        Post post = Post.retrieve(postID);
 
         // Check whether user has permission to edit post
         if (!post.isAuthoredBy(user)) {
@@ -252,7 +226,7 @@ public class PostController {
         // Apply edit to post
         post.setTitle(title);
         post.setContent(content);
-        post.setLastModified(Utility.getCurrentTime());
+        post.lastModifiedNow();
         post.setAllowComments(allowComments);
 
         // Save post to database
@@ -260,202 +234,179 @@ public class PostController {
     }
 
     /**
-     * Increments the upvote counter of the post in the database.
+     * Increments the upvote counter of a post in the database.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "postID": int,  // The post to upvote.
-     *              }
+     * @param accessToken The access token of the user.
+     * @param postID      The post to upvote.
      * @throws BlogException
      */
-    private static void upvotePost(JSONObject input) throws BlogException {
-        // Retrieve the comment
-        Post post = retrievePost(input);
+    private static void upvotePost(String accessToken, int postID) throws BlogException {
+        // Retrieve the user
+        User user = User.retrieveByAccessToken(accessToken);
 
-        // Apply upvote to post
-        post.upvote();
-
-        // Save post to database
-        Database.save(post);
+        // Upvote the post
+        Database.upvote(user.getUserID(), postID);
     }
 
     /**
-     * Increments the downvote counter of the post in the database.
+     * Increments the downvote counter of a post in the database.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "postID": int,  // The post to downvote.
-     *              }
+     * @param accessToken The access token of the user.
+     * @param postID      The post to upvote.
      * @throws BlogException
      */
-    private static void downvotePost(JSONObject input) throws BlogException {
-        // Retrieve the post
-        Post post = retrievePost(input);
+    private static void downvotePost(String accessToken, int postID) throws BlogException {
+        // Retrieve the user
+        User user = User.retrieveByAccessToken(accessToken);
 
-        // Apply downvote to post
-        post.downvote();
-
-        // Save post to database
-        Database.save(post);
+        // Downvote the post
+        Database.downvote(user.getUserID(), postID);
     }
 
     /**
      * Increments the view counter of the post in the database.
      *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "postID": int,  // The post to increment view counter.
-     *              }
+     * @param postID The post to upvote.
      * @throws BlogException
      */
-    private static void viewPost(JSONObject input) throws BlogException {
-        // Retrieve the post
-        Post post = retrievePost(input);
-
-        // Increment view counter of post
-        post.view();
-
-        // Save post to database
-        Database.save(post);
+    private static void viewPost(int postID) throws BlogException {
+        // View the post
+        Database.view(postID);
     }
 
-    /**
-     * Retrieves a post from the database.
-     *
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "postID":    int,  // The post to retrieve.
-     *              }
-     * @return The retrieved post.
-     * @throws BlogException
-     */
-    private static Post retrievePost(JSONObject input) throws BlogException {
-        int postID;
-
-        // Read data from JSON
-        try {
-            postID = input.getInt("postID");
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
-
-        // Return the retrieved post
-        return Post.retrieve(postID);
-    }
-
-    @GetMapping("/getPost")
+    @GetMapping("/get")
     @ResponseBody
-    public ResponseEntity<String> getPost(@RequestParam("postID") int postID) {
+    public ResponseEntity<String> get(@RequestParam("postID") int postID) {
         try {
-            JSONObject input = new JSONObject()
-                    .put("postID", postID);
-            return ResponseEntity.ok(getPost(input));
+            return ResponseEntity.ok(getPost(postID));
         } catch (DoesNotExistException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/getPosts")
+    @GetMapping("/gets")
     @ResponseBody
-    public ResponseEntity<String> getPosts(@RequestParam("postIDStart") int postIDStart,
-                                           @RequestParam("count") int count,
-                                           @RequestParam("reverse") boolean reverse) {
+    public ResponseEntity<String> gets(@RequestParam("postIDStart") int postIDStart,
+                                       @RequestParam("count") int count,
+                                       @RequestParam("reverse") boolean reverse) {
         try {
-            JSONObject input = new JSONObject()
-                    .put("postIDStart", postIDStart)
-                    .put("count", count)
-                    .put("reverse", reverse);
-            return ResponseEntity.ok(getPosts(input));
-        } catch (DoesNotExistException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(getPosts(postIDStart, count, reverse));
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/createPost")
+    @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<String> createPost(@RequestHeader("Authorization") String accessToken,
-                                             @RequestBody String body) {
+    public ResponseEntity<String> create(@RequestHeader("Authorization") String accessToken,
+                                         @RequestBody String body) {
         try {
-            JSONObject input = new JSONObject(body)
-                    .put("accessToken", accessToken);
-            return ResponseEntity.ok(createPost(input));
-        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(createPost(accessToken, new JSONObject(body)), HttpStatus.CREATED);
+        } catch (IsDeletedException | InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        } catch (InvalidPermissionException e) {
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/deletePost")
+    @DeleteMapping("/delete")
     @ResponseBody
-    public ResponseEntity<String> deletePost(@RequestHeader("Authorization") String accessToken,
-                                             @RequestBody String body) {
+    public ResponseEntity<String> delete(@RequestHeader("Authorization") String accessToken,
+                                         @RequestParam("postID") int postID) {
         try {
-            JSONObject input = new JSONObject(body)
-                    .put("accessToken", accessToken);
-            deletePost(input);
-            return ResponseEntity.ok().build();
-        } catch (InvalidPermissionException e) {
+            deletePost(accessToken, postID);
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException | InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/editPost")
+    @PutMapping("/edit")
     @ResponseBody
-    public ResponseEntity<String> editPost(@RequestHeader("Authorization") String accessToken,
-                                           @RequestBody String body) {
+    public ResponseEntity<String> edit(@RequestHeader("Authorization") String accessToken,
+                                       @RequestBody String body) {
         try {
-            JSONObject input = new JSONObject(body)
-                    .put("accessToken", accessToken);
-            editPost(input);
-            return ResponseEntity.ok().build();
-        } catch (InvalidPermissionException e) {
+            editPost(accessToken, new JSONObject(body));
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException | InvalidPermissionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/upvotePost")
+    @PutMapping("/upvote")
     @ResponseBody
-    public ResponseEntity<String> upvotePost(@RequestBody String body) {
+    public ResponseEntity<String> upvote(@RequestHeader("Authorization") String accessToken,
+                                         @RequestParam("postID") int postID) {
         try {
-            upvotePost(new JSONObject(body));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            upvotePost(accessToken, postID);
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/downvotePost")
+    @PutMapping("/downvote")
     @ResponseBody
-    public ResponseEntity<String> downvotePost(@RequestBody String body) {
+    public ResponseEntity<String> downvote(@RequestHeader("Authorization") String accessToken,
+                                           @RequestParam("postID") int postID) {
         try {
-            downvotePost(new JSONObject(body));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            downvotePost(accessToken, postID);
+            return ResponseEntity.noContent().build();
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/viewPost")
+    @PutMapping("/view")
     @ResponseBody
-    public ResponseEntity<String> viewPost(@RequestBody String body) {
+    public ResponseEntity<String> view(@RequestParam("postID") int postID) {
         try {
-            viewPost(new JSONObject(body));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
+            viewPost(postID);
+            return ResponseEntity.noContent().build();
+        } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
