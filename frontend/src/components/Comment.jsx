@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { AiFillLike, AiFillDislike, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
-
+import ReactQuill from 'react-quill';
 
 const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇'];
 
@@ -29,12 +29,17 @@ const Comment = ({ comment, onUpvote, onDownvote, onEdit, onDelete }) => {
     setEditing(false);
   };
 
-  const handleChange = (event) => {
-    setEditedContent(event.target.value);
+  const handleChange = (value) => {
+    console.log(value);
+    console.log("editedContent", editedContent);
+    setEditedContent(value);
   };
+  // delete this comment
+
 
   return (
       <Card className="mb-4">
+        {/* card */}
         <Card.Body>
           <div className="d-flex justify-content-between">
             <div>
@@ -45,7 +50,9 @@ const Comment = ({ comment, onUpvote, onDownvote, onEdit, onDelete }) => {
             </Card.Subtitle>
           </div>
           {editing ? (
-              <textarea value={editedContent} onChange={handleChange} />
+               <div className="editor-container">
+               <ReactQuill className="editor" theme="snow" value={editedContent} onChange={handleChange} />
+             </div>
           ) : (
               <Card.Text dangerouslySetInnerHTML={{ __html: comment.content }}></Card.Text>
           )}

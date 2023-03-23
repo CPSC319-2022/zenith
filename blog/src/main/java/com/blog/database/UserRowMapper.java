@@ -17,9 +17,9 @@ public class UserRowMapper implements RowMapper<User> {
 		String userId = rs.getString("user_ID");
 		String username = rs.getString("username");
 		UserLevel userLevel = UserLevel.READER;
-		if (rs.getInt("user_level") == 1) {
+		if (rs.getInt("user_level") == 2) {
 			userLevel = UserLevel.CONTRIBUTOR;
-		} else if (rs.getInt("user_level") == 2) {
+		} else if (rs.getInt("user_level") == 3) {
 			userLevel = UserLevel.ADMIN;
 		}
 		String creationDate = rs.getString("creation_date");
