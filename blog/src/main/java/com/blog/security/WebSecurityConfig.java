@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationF
 
 @Configuration
 @EnableWebSecurity
+//  delete comment
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
