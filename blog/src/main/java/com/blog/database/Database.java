@@ -354,7 +354,7 @@ public class Database {
             sql = "INSERT INTO Vote_Post VALUES(" + postID + ", \"" + userID + "\", false)";
             jdbcTemplate.update(sql);
             Post post = Post.retrieve(postID);
-            post.setUpvotes(post.getDownvotes() + 1);
+            post.setDownvotes(post.getDownvotes() + 1);
             save(post);
         } else {
             sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
@@ -457,7 +457,7 @@ public class Database {
             sql = "INSERT INTO Vote_Comment VALUES(" + postID + ", " + commentID + ", \"" + userID + "\", false)";
             jdbcTemplate.update(sql);
             Comment comment = Comment.retrieve(postID, commentID);
-            comment.setUpvotes(comment.getDownvotes() + 1);
+            comment.setDownvotes(comment.getDownvotes() + 1);
             save(comment);
         } else {
             sql = "SELECT is_upvoted FROM Vote_Comment WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
