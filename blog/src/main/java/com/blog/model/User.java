@@ -94,7 +94,7 @@ public class User extends Record {
      */
     public static User retrieveByAccessToken(String accessToken) throws IsDeletedException, LoginFailedException, InitializationException {
         if (accessToken!= null) {
-            throw new BlogException("The accessToken provided is null.")
+            throw new BlogException("The accessToken provided is null.");
         }
 
         GoogleIdToken.Payload payload = getPayload(accessToken);
