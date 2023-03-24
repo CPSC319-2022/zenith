@@ -8,6 +8,7 @@ const initialState = {
   user: {
     clientId: null,
   },
+  loading: false,
 };
 
 export const fetchCurrentUser = createAsyncThunk(
@@ -22,7 +23,8 @@ export const fetchCurrentUser = createAsyncThunk(
   }
 );
 
-export const authSlice = createSlice({
+// authSlice.jsx
+const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
@@ -38,11 +40,26 @@ export const authSlice = createSlice({
       localStorage.setItem('userId', action.payload);
       console.log('clientID:', state.user.clientId);
     },
+    resetAuth: () => {
+      // Reset the auth state to the initial state
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('auth');
+      return initialState;
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
-      state.user = action.payload;
-    });
+    builder
+      .addCase(fetchCurrentUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchCurrentUser.rejected, (state, action) => {
+        state.loading = false;
+      });
   },
 });
 
@@ -52,10 +69,8 @@ export const getAccessToken = () => {
   return auth ? { ...auth, userId: localStorage.getItem('userId') } : null;
 };
 
-
-export const { setAuthenticated, setUser, setClientId } = authSlice.actions;
-
+export const { setAuthenticated, setUser, setClientId, resetAuth } = authSlice.actions;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 export const selectUser = (state) => state.auth.user;
-
+export const selectLoading = (state) => state.auth.loading;
 export default authSlice.reducer;

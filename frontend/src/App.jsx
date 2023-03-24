@@ -12,6 +12,8 @@ import Header from "./common components/Header";
 import Footer from "./common components/Footer";
 import Profile from "./pages/Profile";
 import WIP from "./pages/WIP";
+import Admin from "./pages/Admin";
+import AdminWrapper from "./pages/AdminWrapper";
 
 // Layout function needed to apply the Nav and Footer to different child pages
 const Layout = ({ children }) => {
@@ -41,6 +43,8 @@ function App() {
                             <Route path="/wip" element={<WIP />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/login" element={<Login />} />
+                            {/* <Route path="/admin" element={<Admin />} /> */}
+                            <Route path="/admin" element={<AdminWrapper />} />
                         </Routes>
                     </Layout>
                 </BrowserRouter>

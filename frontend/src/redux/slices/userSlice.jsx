@@ -74,6 +74,7 @@ const userSlice = createSlice({
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.users = action.payload;
+                state.user.userLevel = action.payload.userLevel;
             })
             .addCase(fetchUsers.rejected, (state, action) => {
                 state.status = 'failed';
@@ -103,6 +104,7 @@ const userSlice = createSlice({
             })
             .addCase(fetchCurrentUserByToken.fulfilled, (state, action) => {
                 state.user = action.payload;
+                state.user.userLevel = action.payload.userLevel;
               });
     },
 });

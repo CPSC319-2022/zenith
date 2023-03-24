@@ -368,3 +368,56 @@ export const promoteUser = async ({ target, reason }) => {
     throw new Error(error.message);
   }
 };
+
+//admin related API functions
+export const getPromotionRequests = async (requestIDStart, count, reverse) => {
+  const token = getAccessToken();
+  try {
+    const response = await axios.get(`${apiUrl}/admin/gets`, {
+      params: { requestIDStart, count, reverse },
+      headers: {
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const promoteUserByAdmin = async (body) => {
+  const token = getAccessToken();
+  try {
+    const response = await axios.put(`${apiUrl}/admin/promote`, body, {
+      headers: {
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const deletePromotionRequest = async (requestID) => {
+  const token = getAccessToken();
+  try {
+    const response = await axios.delete(`${apiUrl}/admin/delete`, {
+      params: { requestID },
+      headers: {
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
