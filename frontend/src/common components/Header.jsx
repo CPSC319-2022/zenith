@@ -4,9 +4,10 @@ import blogImg from '../images/icon.png'
 import '../styles/Header.css';
 import { useSelector } from 'react-redux';
 
+// import { fetchUser } from '../redux/slices/userSlice'; 
+
 const Header = () => {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
     return (
         <Navbar className='nav-bar' expand="lg">
             <Container>
@@ -24,7 +25,9 @@ const Header = () => {
                     <Nav className="ms-auto" placement="end">
                         <Nav.Link href="/">HOME</Nav.Link>
                         <Nav.Link href="/create">CREATE</Nav.Link>
-                        {isAuthenticated && <Nav.Link href="/profile">PROFILE</Nav.Link>}                        <Nav.Link href="/wip">WIP</Nav.Link>
+                        {isAuthenticated && <Nav.Link href="/profile">PROFILE</Nav.Link>}     
+                        {isAuthenticated && <Nav.Link href="/admin">ADMIN</Nav.Link>}                
+                            <Nav.Link href="/wip">WIP</Nav.Link>
                         {
                             isAuthenticated ?
                             <Nav.Link href="/login">LOGOUT</Nav.Link> :
