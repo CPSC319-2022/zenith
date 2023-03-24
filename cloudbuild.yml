@@ -1,71 +1,91 @@
 steps:
 # Containerize (includes testing)
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    entrypoint: /bin/sh
-    args:
-      - '-c'
-      - 'echo "GCR_HOSTNAME: $_GCR_HOSTNAME, PROJECT_ID: $PROJECT_ID, REPO_NAME: $REPO_NAME, SERVICE_NAME: $_SERVICE_NAME, COMMIT_SHA: $COMMIT_SHA"'
-    id: Print Variables
   - name: gcr.io/cloud-builders/docker
     args: 
-    - 'build'
+    - build
     - '--no-cache'
     - '-t'
-    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/backend:$COMMIT_SHA'
+    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
     - '--file'
-    - './blog/Dockerfile'
-    - "./blog"
+    - blog/Dockerfile
+    - blog
+    waitFor: ['-']
     allowFailure: false
     timeout: 300s
     id: Containerize & Test Backend
 
   - name: gcr.io/cloud-builders/docker
     args: 
-    - 'build'
+    - build
     - '--no-cache'
     - '-t'
-    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/frontend:$COMMIT_SHA'
+    - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
     - '--file'
-    - './frontend/frontend.dockerfile'
-    - "./frontend"
+    - frontend/frontend.dockerfile
+    - frontend
+    waitFor: ['-']
     allowFailure: false
     timeout: 300s
     id: Containerize & Test Frontend
 
 # Push images to registery
   - name: gcr.io/cloud-builders/docker
-    args: ['push', '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/backend:$COMMIT_SHA']
-    id: Push Backend Container to Registery
+    args: ['push', '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA']
+    waitFor: ['Containerize & Test Backend', 'Containerize & Test Frontend']
+    id: Push Backend
 
   - name: gcr.io/cloud-builders/docker
-    args: ['push', '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/frontend:$COMMIT_SHA']
-    id: Push Frontend Container to Registery
+    args: ['push', '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA']
+    waitFor: ['Containerize & Test Backend', 'Containerize & Test Frontend']
+    id: Push Frontend
 
 # Deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    entrypoint: gcloud
     args:
-    - deploy
-    - $_SERVICE_NAME
-    - '--platform=managed'
-    - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/backend:$COMMIT_SHA'
-    - >-
-      --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
-    - '--region=$_DEPLOY_REGION'
-    - '--quiet'
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - '--platform=managed'
+      - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
+    entrypoint: gcloud
+    waitFor: ['Push Backend']
     id: Deploy Backend
   
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    entrypoint: gcloud
     args:
-    - deploy
-    - $_SERVICE_NAME
-    - '--platform=managed'
-    - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME/frontend:$COMMIT_SHA'
-    - >-
-      --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
-    - '--region=$_DEPLOY_REGION'
-    - '--quiet'
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - '--platform=managed'
+      - >-
+        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
+    entrypoint: gcloud
+    waitFor: ['Push Frontend']
     id: Deploy Frontend
-
+images:
+  - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+  - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+options:
+  substitutionOption: ALLOW_LOOSE
+substitutions:
+  _AR_HOSTNAME: us-central1-docker.pkg.dev
+  _GCR_HOSTNAME: us.gcr.io
+  _PLATFORM: managed
+  _SERVICE_NAME: zenith
+  _DEPLOY_REGION: us-central1
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - zenith
+    
 timeout: 500s
