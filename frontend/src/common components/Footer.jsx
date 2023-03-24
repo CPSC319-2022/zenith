@@ -5,7 +5,7 @@ const Footer = () => {
     return (
         <footer className="footer">
             <span>
-                Team Zenith CPSC 319
+                Team Zenith CPSC 319dewdwedw
             </span>
         </footer>
     );
