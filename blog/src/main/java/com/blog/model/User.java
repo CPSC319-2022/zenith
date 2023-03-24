@@ -93,6 +93,10 @@ public class User extends Record {
      * @throws InitializationException Unable to create GoogleIDTokenVerifier.
      */
     public static User retrieveByAccessToken(String accessToken) throws IsDeletedException, LoginFailedException, InitializationException {
+        if (accessToken!= null) {
+            throw new BlogException("The accessToken provided is null.")
+        }
+
         GoogleIdToken.Payload payload = getPayload(accessToken);
 
         String userID = payload.getSubject();
