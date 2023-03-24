@@ -8,6 +8,7 @@ import { postSliceActions } from '../redux/slices/postSlice';
 import { Link } from 'react-router-dom';
 import { promoteUser } from '../api';
 
+
 const CreatePost = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

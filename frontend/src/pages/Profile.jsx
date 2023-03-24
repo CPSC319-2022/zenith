@@ -5,6 +5,8 @@ import { selectIsAuthenticated } from '../redux/slices/auth';
 import { userSliceActions, fetchCurrentUserByToken } from '../redux/slices/userSlice';
 import "../styles/Profile.css";
 import avatar from "../images/avatar.jpg";
+import UpgradeRequestForm from '../components/UpgradeRequestForm';
+import { Button } from 'react-bootstrap'; 
 
 const Profile = () => {
   const { id } = useParams();
@@ -28,9 +30,11 @@ const Profile = () => {
     }
   }, [id, dispatch, isAuthenticated]);
 
-  
-  // ...
-  
+  const [showForm, setShowForm] = useState(false);
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+  };
 
   const creationDate = user?.creationDate ? new Date(user.creationDate).toLocaleDateString() : '';
   const lastLogin = user?.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : '';
@@ -41,21 +45,24 @@ const Profile = () => {
 
   return (
     <div className="profile">
-      <img className="avatar"
-        src={user.profilePicture || avatar}
-        width= "190"
-        height="190"
-        alt="React Bootstrap logo"
-        referrerPolicy="no-referrer"
-      />
-      <br/>
-      <h3 className="name">{user.username}</h3>
-      <br/>
-      <h5>{user.userLevel}</h5>
-      <br/>
-      <p>Account creation date: {creationDate}</p>
-      <p>Last login: {lastLogin}</p>
-      {/* ... other elements */}
+      <div className="profile-container">
+        <img className="avatar"
+          src={user.profilePicture || avatar}
+          alt="User avatar"
+          referrerPolicy="no-referrer"
+        />
+        <h3 className="name">{user.username}</h3>
+        <h5>{user.userLevel}</h5>
+        <p>Account creation date: {creationDate}</p>
+        <p>Last login: {lastLogin}</p>
+        {(!id && (user.userLevel === 'READER' || user.userLevel === 'CONTRIBUTOR')) && (
+          showForm ? (
+            <UpgradeRequestForm user={user} onClose={handleCloseForm} />
+          ) : (
+            <Button variant="primary" onClick={() => setShowForm(true)}>Request Level Upgrade</Button>
+          )
+        )}
+      </div>
     </div>
   );
 };
