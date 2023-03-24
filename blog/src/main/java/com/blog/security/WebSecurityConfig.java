@@ -6,19 +6,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
-//  delete comment
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-
                 .addFilterAfter(new CustomUserDetailsFilter(), OAuth2LoginAuthenticationFilter.class)
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/","/post/gets/**", "/post/get/**", "/post/create/**", "/post/edit/**","/post/upvote/**", "/post/downvote/**", "/post/delete/**", "/comment/get/**", "/comment/gets/**", "/comment/upvote/**","/comment/downvote/**", "/comment/edit/**", "/comment/delete/**", "/createPost/**","/user/get**").permitAll()
+                .antMatchers("/", "/post/gets/**", "/post/get/**", "/post/create/**",
+                        "/post/edit/**", "/post/upvote/**", "/post/downvote/**",
+                        "/post/delete/**", "/comment/get/**", "/comment/gets/**", "/comment/create/**",
+                        "/comment/upvote/**", "/comment/downvote/**", "/comment/edit/**",
+                        "/comment/delete/**", "/user/get/**", "/user/requestPromotion/**", "/user/edit/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
