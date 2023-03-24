@@ -19,7 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/post/edit/**", "/post/upvote/**", "/post/downvote/**",
                         "/post/delete/**", "/comment/get/**", "/comment/gets/**", "/comment/create/**",
                         "/comment/upvote/**", "/comment/downvote/**", "/comment/edit/**",
-                        "/comment/delete/**", "/user/get/**", "/user/requestPromotion/**", "/user/edit/**").permitAll()
+                        "/comment/delete/**", "/user/get/**", "/user/requestPromotion/**", "/user/edit/**",).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
