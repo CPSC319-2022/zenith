@@ -18,7 +18,7 @@ const Home = () => {
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchPosts({ postIDStart: 20, count: 20, reverse: true }));
+      dispatch(fetchPosts({ postIDStart: 50, count: 50, reverse: true }));
     }
   }, [status, dispatch]);
 

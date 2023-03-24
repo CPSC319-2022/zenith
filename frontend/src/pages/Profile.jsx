@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { userSliceActions } from '../redux/slices/userSlice';
+import { selectIsAuthenticated } from '../redux/slices/auth';
+import { userSliceActions, fetchCurrentUserByToken } from '../redux/slices/userSlice';
 import "../styles/Profile.css";
 import avatar from "../images/avatar.jpg";
 
@@ -9,23 +10,34 @@ const Profile = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
-  const userData = useSelector((state) => state.user?.user);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   useEffect(() => {
-    dispatch(userSliceActions.fetchUser(id)).then((response) => {
-      if (response.meta.requestStatus === 'fulfilled') {
-        setUser(response.payload);
-      }
-    });
-  }, [id, dispatch]);
+    if (id) {
+      dispatch(userSliceActions.fetchUser(id)).then((response) => {
+        if (response.meta.requestStatus === 'fulfilled') {
+          setUser(response.payload);
+        }
+      });
+    } else if (isAuthenticated) {
+      dispatch(fetchCurrentUserByToken()).then((response) => {
+        if (response.meta.requestStatus === 'fulfilled') {
+          setUser(response.payload);
+        }
+      });
+    }
+  }, [id, dispatch, isAuthenticated]);
+
+  
+  // ...
+  
 
   const creationDate = user?.creationDate ? new Date(user.creationDate).toLocaleDateString() : '';
   const lastLogin = user?.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : '';
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <div>Please Log In to view Profile...</div>;
   }
-  
 
   return (
     <div className="profile">
@@ -34,6 +46,7 @@ const Profile = () => {
         width= "190"
         height="190"
         alt="React Bootstrap logo"
+        referrerPolicy="no-referrer"
       />
       <br/>
       <h3 className="name">{user.username}</h3>

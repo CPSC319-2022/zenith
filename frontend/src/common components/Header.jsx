@@ -24,8 +24,7 @@ const Header = () => {
                     <Nav className="ms-auto" placement="end">
                         <Nav.Link href="/">HOME</Nav.Link>
                         <Nav.Link href="/create">CREATE</Nav.Link>
-                        {/* <Nav.Link href="/profile">PROFILE</Nav.Link> */}
-                        <Nav.Link href="/wip">WIP</Nav.Link>
+                        {isAuthenticated && <Nav.Link href="/profile">PROFILE</Nav.Link>}                        <Nav.Link href="/wip">WIP</Nav.Link>
                         {
                             isAuthenticated ?
                             <Nav.Link href="/login">LOGOUT</Nav.Link> :

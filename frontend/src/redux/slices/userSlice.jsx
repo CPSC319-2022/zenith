@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getUsers, getUser, createUser as createUserAPI, editUser as editUserAPI } from '../../api';
+import { getUsers, getUser, editUser as editUserAPI } from '../../api';
+import { getAccessToken } from './auth';
+import axios from 'axios';
 
 export const fetchUsers = createAsyncThunk(
     'users/fetchUsers',
@@ -25,12 +27,12 @@ export const fetchUser = createAsyncThunk(
     }
 );
 
-export const createUser = createAsyncThunk(
-    'users/createUser',
-    async (userData, { rejectWithValue }) => {
+export const fetchCurrentUserByToken = createAsyncThunk(
+    'users/fetchCurrentUserByToken',
+    async (id, { rejectWithValue }) => {
         try {
-            await createUserAPI(userData);
-            return 'User created successfully';
+            const response = await getUser();
+            return response;
         } catch (err) {
             return rejectWithValue(err.message);
         }
@@ -52,6 +54,7 @@ export const editUser = createAsyncThunk(
 const initialState = {
     users: [],
     user: null,
+    currentUser: null,
     status: 'idle',
     error: null,
 };
@@ -59,7 +62,10 @@ const initialState = {
 const userSlice = createSlice({
     name: 'users',
     initialState,
-    reducers: {},
+    reducers: { setCurrentUser: (state, action) => {
+        state.currentUser = action.payload;
+    },
+},
     extraReducers: (builder) => {
         builder
             .addCase(fetchUsers.pending, (state) => {
@@ -84,16 +90,6 @@ const userSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.payload;
             })
-            .addCase(createUser.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(createUser.fulfilled, (state) => {
-                state.status = 'succeeded';
-            })
-            .addCase(createUser.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload;
-            })
             .addCase(editUser.pending, (state) => {
                 state.status = 'loading';
             })
@@ -104,7 +100,10 @@ const userSlice = createSlice({
             .addCase(editUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
-            });
+            })
+            .addCase(fetchCurrentUserByToken.fulfilled, (state, action) => {
+                state.user = action.payload;
+              });
     },
 });
 
@@ -112,7 +111,6 @@ export const userSliceActions = {
     ...userSlice.actions,
     fetchUsers,
     fetchUser,
-    createUser,
     editUser,
 };
 
