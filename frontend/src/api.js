@@ -24,11 +24,11 @@ export const getPosts = async ({ postIDStart, count, reverse }) => {
         count,
         reverse,
       },
-      headers: {
-        Authorization: `Bearer ${token.credential}`,
-        'X-Oauth-Provider': 'google',
-        'X-Oauth-Credential': JSON.stringify(token.credential),
-      },
+      // headers: {
+      //   Authorization: `Bearer ${token.credential}`,
+      //   'X-Oauth-Provider': 'google',
+      //   'X-Oauth-Credential': JSON.stringify(token.credential),
+      // },
     });
     return response.data;
   } catch (error) {
@@ -40,13 +40,14 @@ export const getPost = async ({postID}) => {
   const token = getAccessToken();
     console.log("getReq: ", postID);
     const response = await axios.get(`${apiUrl}/post/get`, {
-      params: { postID }, headers:
-      {
-        'Content-Type': 'application/json' ,
-          Authorization: `Bearer ${token.credential}`,
-          'X-Oauth-Provider': 'google',
-          'X-Oauth-Credential': JSON.stringify(token.credential),
-      },
+      params: { postID },
+      //  headers:
+      // {
+      //   'Content-Type': 'application/json' ,
+      //     Authorization: `Bearer ${token.credential}`,
+      //     'X-Oauth-Provider': 'google',
+      //     'X-Oauth-Credential': JSON.stringify(token.credential),
+      // },
     });
     return response.data;
 };
