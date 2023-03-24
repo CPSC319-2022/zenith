@@ -315,19 +315,19 @@ public class Database {
         if (jdbcTemplate == null) {
             createTemplate();
         }
-        String sql = "SELECT COUNT(*) FROM Vote_Post WHERE user_ID = " + userID + " AND post_ID = " + postID;
+        String sql = "SELECT COUNT(*) FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
         if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
-            sql = "INSERT INTO Vote_Post VALUES(" + postID + ", " + userID + ", true)";
+            sql = "INSERT INTO Vote_Post VALUES(" + postID + ", \"" + userID + "\", true)";
             jdbcTemplate.update(sql);
             Post post = Post.retrieve(postID);
             post.setUpvotes(post.getUpvotes() + 1);
             save(post);
         } else {
-            sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = " + userID + " AND post_ID = " + postID;
+            sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
             if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
                 throw new BlogException("User already upvoted this post.");
             } else {
-                sql = "UPDATE Vote_Post SET is_deleted = true WHERE user_ID = " + userID + " AND post_ID = " + postID;
+                sql = "UPDATE Vote_Post SET is_deleted = true WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
                 jdbcTemplate.update(sql);
                 Post post = Post.retrieve(postID);
                 post.setDownvotes(post.getDownvotes() - 1);
@@ -349,17 +349,17 @@ public class Database {
         if (jdbcTemplate == null) {
             createTemplate();
         }
-        String sql = "SELECT COUNT(*) FROM Vote_Post WHERE user_ID = " + userID + " AND post_ID = " + postID;
+        String sql = "SELECT COUNT(*) FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
         if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
-            sql = "INSERT INTO Vote_Post VALUES(" + postID + ", " + userID + ", false)";
+            sql = "INSERT INTO Vote_Post VALUES(" + postID + ", \"" + userID + "\", false)";
             jdbcTemplate.update(sql);
             Post post = Post.retrieve(postID);
-            post.setUpvotes(post.getDownvotes() + 1);
+            post.setDownvotes(post.getDownvotes() + 1);
             save(post);
         } else {
-            sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = " + userID + " AND post_ID = " + postID;
+            sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
             if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
-                sql = "UPDATE Vote_Post SET is_deleted = false WHERE user_ID = " + userID + " AND post_ID = " + postID;
+                sql = "UPDATE Vote_Post SET is_deleted = false WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
                 jdbcTemplate.update(sql);
                 Post post = Post.retrieve(postID);
                 post.setUpvotes(post.getUpvotes() - 1);
@@ -417,19 +417,19 @@ public class Database {
         if (jdbcTemplate == null) {
             createTemplate();
         }
-        String sql = "SELECT COUNT(*) FROM Vote_Comment WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+        String sql = "SELECT COUNT(*) FROM Vote_Comment WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
         if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
-            sql = "INSERT INTO Vote_Comment VALUES(" + postID + ", " + userID + ", true)";
+            sql = "INSERT INTO Vote_Comment VALUES(" + postID + ", " + commentID + ", \"" + userID + "\", true)";
             jdbcTemplate.update(sql);
             Comment comment = Comment.retrieve(postID, commentID);
             comment.setUpvotes(comment.getUpvotes() + 1);
             save(comment);
         } else {
-            sql = "SELECT is_upvoted FROM Vote_Comment WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+            sql = "SELECT is_upvoted FROM Vote_Comment WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
             if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
                 throw new BlogException("User already upvoted this comment.");
             } else {
-                sql = "UPDATE Vote_Comment SET is_deleted = true WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+                sql = "UPDATE Vote_Comment SET is_deleted = true WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
                 jdbcTemplate.update(sql);
                 Comment comment = Comment.retrieve(postID, commentID);
                 comment.setDownvotes(comment.getDownvotes() - 1);
@@ -452,17 +452,17 @@ public class Database {
         if (jdbcTemplate == null) {
             createTemplate();
         }
-        String sql = "SELECT COUNT(*) FROM Vote_Comment WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+        String sql = "SELECT COUNT(*) FROM Vote_Comment WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
         if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
-            sql = "INSERT INTO Vote_Comment VALUES(" + postID + ", " + userID + ", false)";
+            sql = "INSERT INTO Vote_Comment VALUES(" + postID + ", " + commentID + ", \"" + userID + "\", false)";
             jdbcTemplate.update(sql);
             Comment comment = Comment.retrieve(postID, commentID);
-            comment.setUpvotes(comment.getDownvotes() + 1);
+            comment.setDownvotes(comment.getDownvotes() + 1);
             save(comment);
         } else {
-            sql = "SELECT is_upvoted FROM Vote_Comment WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+            sql = "SELECT is_upvoted FROM Vote_Comment WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
             if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
-                sql = "UPDATE Vote_Comment SET is_deleted = false WHERE user_ID = " + userID + " AND post_ID = " + postID + " AND comment_number = " + commentID;
+                sql = "UPDATE Vote_Comment SET is_deleted = false WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
                 jdbcTemplate.update(sql);
                 Comment comment = Comment.retrieve(postID, commentID);
                 comment.setUpvotes(comment.getUpvotes() - 1);
@@ -490,7 +490,7 @@ public class Database {
         }
         String userID = request.getUserID();
         int requestID = 0;
-        String sql = "SELECT COUNT(*) FROM Promotion_Request WHERE user_ID = " + userID + " AND is_deleted = false";
+        String sql = "SELECT COUNT(*) FROM Promotion_Request WHERE user_ID = \"" + userID + "\" AND is_deleted = false";
         if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
             int maxID;
             sql = "SELECT MAX(request_ID) FROM Promotion_Request";
@@ -502,7 +502,7 @@ public class Database {
             requestID = maxID + 1;
             sql = formInsert(request, requestID);
         } else {
-            sql = "SELECT request_ID FROM Promotion_Request WHERE user_ID = " + userID + " AND is_deleted = false";
+            sql = "SELECT request_ID FROM Promotion_Request WHERE user_ID = \"" + userID + "\" AND is_deleted = false";
             requestID = jdbcTemplate.queryForObject(sql, Integer.class);
             sql = formUpdate(request, requestID);
         }
@@ -594,6 +594,14 @@ public class Database {
         } catch (Exception e) {
             throw new DoesNotExistException("User does not exist.");
         }
+        int level = 1;
+        if (target == UserLevel.CONTRIBUTOR) {
+            level = 2;
+        } else if (target == UserLevel.ADMIN) {
+            level = 3;
+        }
+        String sql = "DELETE FROM Promotion_Request WHERE user_ID = \"" + userID + "\" AND target_level <= " + level;
+        jdbcTemplate.update(sql);
     }
 
     private static String formInsert(User user, String id) {
