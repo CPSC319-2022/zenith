@@ -327,7 +327,7 @@ public class Database {
             if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
                 throw new BlogException("User already upvoted this post.");
             } else {
-                sql = "UPDATE Vote_Post SET is_deleted = true WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
+                sql = "UPDATE Vote_Post SET is_upvoted = true WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
                 jdbcTemplate.update(sql);
                 Post post = Post.retrieve(postID);
                 post.setDownvotes(post.getDownvotes() - 1);
@@ -359,7 +359,7 @@ public class Database {
         } else {
             sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
             if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
-                sql = "UPDATE Vote_Post SET is_deleted = false WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
+                sql = "UPDATE Vote_Post SET is_upvoted = false WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
                 jdbcTemplate.update(sql);
                 Post post = Post.retrieve(postID);
                 post.setUpvotes(post.getUpvotes() - 1);
@@ -429,7 +429,7 @@ public class Database {
             if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
                 throw new BlogException("User already upvoted this comment.");
             } else {
-                sql = "UPDATE Vote_Comment SET is_deleted = true WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
+                sql = "UPDATE Vote_Comment SET is_upvoted = true WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
                 jdbcTemplate.update(sql);
                 Comment comment = Comment.retrieve(postID, commentID);
                 comment.setDownvotes(comment.getDownvotes() - 1);
@@ -462,7 +462,7 @@ public class Database {
         } else {
             sql = "SELECT is_upvoted FROM Vote_Comment WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
             if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
-                sql = "UPDATE Vote_Comment SET is_deleted = false WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
+                sql = "UPDATE Vote_Comment SET is_upvoted = false WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID + " AND comment_number = " + commentID;
                 jdbcTemplate.update(sql);
                 Comment comment = Comment.retrieve(postID, commentID);
                 comment.setUpvotes(comment.getUpvotes() - 1);
