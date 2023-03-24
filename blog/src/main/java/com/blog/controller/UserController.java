@@ -287,10 +287,10 @@ public class UserController {
     public ResponseEntity<String> get(@RequestHeader(value = "Authorization", required = false) String accessToken,
                                       @RequestParam(value = "userID", required = false) String userID) {
         try {
-            if (accessToken != null) {
-                return ResponseEntity.ok(getUserByAccessToken(accessToken));
-            } else if (userID != null) {
+            if (userID != null) {
                 return ResponseEntity.ok(getUserByUserID(userID));
+            } else if (accessToken != null) {
+                return ResponseEntity.ok(getUserByAccessToken(accessToken));
             } else {
                 throw new BlogException("Neither accessToken nor userID was provided.");
             }
