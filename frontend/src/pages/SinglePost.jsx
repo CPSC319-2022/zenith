@@ -159,7 +159,7 @@ const SinglePost = () => {
                 {/* <img src={authorPicture} alt="Profile Picture" /> <p>{authorUsername} | {new Date(post.creationDate).toLocaleString().split(',')[0]}</p> */}
                 <div className="author-info">
         <Link to={`/profile/${post.authorID}`}>
-          <img className="author-picture" src={authorPicture} alt={authorUsername} />
+          <img className="author-picture" src={authorPicture} alt={authorUsername} referrerpolicy="no-referrer"/>
           <h4>{authorUsername}</h4>
         </Link>
       </div>

@@ -13,14 +13,21 @@ const getApiUrl = () => {
 };
 
 const apiUrl = getApiUrl();
-console.log("apiUrl: ", apiUrl);
+console.log('apiUrl: ', apiUrl);
 export const getPosts = async ({ postIDStart, count, reverse }) => {
+  const token = getAccessToken();
+
   try {
     const response = await axios.get(`${apiUrl}/post/gets`, {
       params: {
         postIDStart,
         count,
         reverse,
+      },
+      headers: {
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
       },
     });
     return response.data;
@@ -30,9 +37,16 @@ export const getPosts = async ({ postIDStart, count, reverse }) => {
 };
 
 export const getPost = async ({postID}) => {
+  const token = getAccessToken();
     console.log("getReq: ", postID);
     const response = await axios.get(`${apiUrl}/post/get`, {
-      params: { postID },
+      params: { postID }, headers:
+      {
+        'Content-Type': 'application/json' ,
+          Authorization: `Bearer ${token.credential}`,
+          'X-Oauth-Provider': 'google',
+          'X-Oauth-Credential': JSON.stringify(token.credential),
+      },
     });
     return response.data;
 };
@@ -48,7 +62,7 @@ export const createPost = async ({ title, content, allowComments }) => {
     title,
     content,
     allowComments,
-  }, {
+  },  {
     headers: {
       Authorization: `Bearer ${token.credential}`,
       'X-Oauth-Provider': 'google',
@@ -100,19 +114,26 @@ export const getComments = async ({ postID, commentIDStart, count, reverse }) =>
     }
 };
 
-export const getComment = async ({postID, commentID}) => {
-    //console.log("getReq: ", postID);
-    const response = await axios.get(`${apiUrl}/comment/get`, {
-      params: { postID, commentID },
-    });
-    return response.data;
+export const getComment = async ({ postID, commentID }) => {
+  const token = getAccessToken();
+
+  const response = await axios.get(`${apiUrl}/comment/get`, {
+    params: { postID, commentID },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token.credential}`,
+      'X-Oauth-Provider': 'google',
+      'X-Oauth-Credential': JSON.stringify(token.credential),
+    },
+  });
+  return response.data;
 };
 
 export const createComment = async ({ postID, content }) => {
   const token = getAccessToken();
 
   console.log("createComment: ", postID, content);
-    const response = await axios.post(`${apiUrl}/createComment`, {
+    const response = await axios.post(`${apiUrl}/comment/create`, {
       postID,
       content,
     },{
@@ -125,12 +146,22 @@ export const createComment = async ({ postID, content }) => {
     return response.data;
 };
 
-export const upvotePost = async ({postID}) => {
-  console.log("upvotePost: ", postID);
+export const upvotePost = async ({ postID }) => {
+  const token = getAccessToken();
+
   try {
-    const response = await axios.put(`${apiUrl}/post/upvote`, JSON.stringify({ postID }), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const response = await axios.put(
+      `${apiUrl}/post/upvote?postID=${postID}`,
+      null,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token.credential}`,
+          'X-Oauth-Provider': 'google',
+          'X-Oauth-Credential': JSON.stringify(token.credential),
+        },
+      },
+    );
     if (response.status !== 200) {
       throw new Error('Server Error');
     }
@@ -140,48 +171,74 @@ export const upvotePost = async ({postID}) => {
   }
 };
 
-export const downvotePost = async ( {postID} ) => {
+export const downvotePost = async ({ postID }) => {
+  const token = getAccessToken();
   try {
-    const response = await axios.put(`${apiUrl}/post/downvote`, JSON.stringify({ postID: postID }), {
-      headers: { 'Content-Type': 'application/json' },
+    const response = await axios.put(`${apiUrl}/post/downvote?postID=${postID}`, null, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+      },
     });
-    if (response.status !== 200) {
+    if (response.status !== 204) {
       throw new Error('Server Error');
     }
-    return response.data;
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
 
 export const upvoteComment = async ({ postID, commentID }) => {
+  const token = getAccessToken();
+
   try {
-    console.log("upvoteComment: ", postID, commentID);
-    const response = await axios.put(`${apiUrl}/comment/upvote`, JSON.stringify({ postID: postID, commentID: commentID }), {
-      headers: { 'Content-Type': 'application/json' },
-    });
-    if (response.status !== 200) {
+    const response = await axios.put(
+      `${apiUrl}/comment/upvote?postID=${postID}&commentID=${commentID}`,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token.credential}`,
+          'X-Oauth-Provider': 'google',
+          'X-Oauth-Credential': JSON.stringify(token.credential),
+        },
+      }
+    );
+
+    if (response.status !== 204) {
       throw new Error('Server Error');
     }
-    return response.data;
+
+    return true;
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
+
 export const downvoteComment = async ({ postID, commentID }) => {
+  const token = getAccessToken();
+
   try {
-    const response = await axios.put(`${apiUrl}/comment/downvote`, JSON.stringify({ postID: postID, commentID: commentID }), {
-      headers: { 'Content-Type': 'application/json' },
+    const response = await axios.put(`${apiUrl}/comment/downvote?postID=${postID}&commentID=${commentID}`, null, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+      },
     });
-    if (response.status !== 200) {
+    if (response.status !== 204) {
       throw new Error('Server Error');
     }
-    return response.data;
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
 
 export const deleteComment = async ({ postID, commentID }) => {
   const token = getAccessToken();
@@ -251,27 +308,17 @@ export const getUsers = async ({ userIDStart, count, reverse }) => {
 };
 
 export const getUser = async (userID) => {
+  const token = getAccessToken();
+
   try {
     const response = await axios.get(`${apiUrl}/user/get`, {
       params: { userID },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
-export const createUser = async ({ name, email }) => {
-  const token = getAccessToken();
-  try {
-    const response = await axios.post(`${apiUrl}/createUser`, {
-      name,
-      email,
-    }, {
-      headers: {
-        Authorization: `Bearer ${token.credential}`,
-        'X-Oauth-Provider': 'google',
-        'X-Oauth-Credential': JSON.stringify(token.credential),
+      headers:
+      {
+        'Content-Type': 'application/json' ,
+          Authorization: `Bearer ${token.credential}`,
+          'X-Oauth-Provider': 'google',
+          'X-Oauth-Credential': JSON.stringify(token.credential),
       },
     });
     return response.data;
@@ -279,6 +326,7 @@ export const createUser = async ({ name, email }) => {
     throw new Error(error.message);
   }
 };
+
 
 export const editUser = async ({ userID, name, email }) => {
   const token = getAccessToken();
@@ -303,7 +351,7 @@ export const editUser = async ({ userID, name, email }) => {
 export const promoteUser = async ({ target, reason }) => {
   const token = getAccessToken();
   try {
-    const response = await axios.put(`${apiUrl}/user/edit`, {
+    const response = await axios.put(`${apiUrl}/user/requestPromotion`, {
       target,
       reason,
       
