@@ -169,7 +169,7 @@ public class Database {
             sql = formInsert(comment, commentID);
         }
         jdbcTemplate.update(sql);
-        return postID;
+        return commentID;
         /*
               if keys already exist in database, update
               if postID does not exist throw error
