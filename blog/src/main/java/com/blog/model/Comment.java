@@ -5,7 +5,7 @@ import com.blog.exception.DoesNotExistException;
 import org.json.JSONObject;
 
 /**
- * Class that stores the details of a comment..
+ * Class that stores the details of a comment.
  */
 public class Comment extends Content {
     public static final int NEW_COMMENT_ID = 0;
