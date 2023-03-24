@@ -409,4 +409,17 @@ public class PostController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/search")
+    @ResponseBody
+    public ResponseEntity<String> search(@RequestParam(value = "pattern", defaultValue = "") String pattern,
+                                         @RequestParam(value = "start", defaultValue = "1") int start,
+                                         @RequestParam(value = "count", defaultValue = "100") int count,
+                                         @RequestParam(value = "sortBy", defaultValue = "new") String sortBy) {
+        try {
+            return new ResponseEntity<>("Not implemented by the server yet.", HttpStatus.NOT_IMPLEMENTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
