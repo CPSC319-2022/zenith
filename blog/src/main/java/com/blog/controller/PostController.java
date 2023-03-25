@@ -320,6 +320,15 @@ public class PostController {
         return response.toString();
     }
 
+    /**
+     * Returns the highest postID currently in the database.
+     *
+     * @return The highest postID.
+     */
+    private static String highestPostID() {
+        return String.valueOf(Database.highestPostID());
+    }
+
     @GetMapping("/get")
     @ResponseBody
     public ResponseEntity<String> get(@RequestParam("postID") int postID) {
@@ -464,6 +473,16 @@ public class PostController {
                                          @RequestParam(value = "sortBy", defaultValue = "new") String sortBy) {
         try {
             return ResponseEntity.ok(searchPosts(pattern, start, count, sortBy));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/highest")
+    @ResponseBody
+    public ResponseEntity<String> highest() {
+        try {
+            return ResponseEntity.ok(highestPostID());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
