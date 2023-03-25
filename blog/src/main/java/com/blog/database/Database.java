@@ -646,6 +646,7 @@ public class Database {
         /*
         TODO: easy function, just return the largest postID number that is in the database
          */
+        return -1;
     }
 
     private static String formInsert(User user, String id) {
