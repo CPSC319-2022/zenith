@@ -637,6 +637,17 @@ public class Database {
          */
     }
 
+    /**
+     * Returns the highest postID currently in the database.
+     *
+     * @return The highest postID.
+     */
+    public static int highestPostID() {
+        /*
+        TODO: easy function, just return the largest postID number that is in the database
+         */
+    }
+
     private static String formInsert(User user, String id) {
         String profile = "DEFAULT";
         if (user.getProfilePicture() != null) {
