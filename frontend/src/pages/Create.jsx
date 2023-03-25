@@ -38,14 +38,7 @@ const CreatePost = () => {
     if (!isAuthenticated) {
       return alert('Please login to create a post.');
     }
-    if (user.userLevel !== 'ADMIN' || user.userLevel !== 'CONTRIBUTOR') {
-      return (
-        <div>
-          <h1>Not Authorized</h1>
-          <p> You need to be a Contributor or an Admin to create a post. See Profile Page for applying to become one!</p>
-        </div>
-      )
-    }
+   
    
 
     // Replace authorID with the clientID of the currently logged-in user
@@ -71,6 +64,15 @@ const CreatePost = () => {
       </div>
     );
   }
+
+   if (user.userLevel !== 'ADMIN' || user.userLevel !== 'CONTRIBUTOR') {
+      return (
+        <div>
+          <h1>Not Authorized</h1>
+          <p> You need to be a Contributor or an Admin to create a post. See Profile Page for applying to become one!</p>
+        </div>
+      )
+    }
 
   return (
     <>
