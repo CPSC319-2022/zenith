@@ -393,16 +393,6 @@ public class Database {
     }
 
     /**
-     * Increments the view counter of the given comment.
-     *
-     * @param postID    The post.
-     * @param commentID The comment.
-     */
-    public static void view(int postID, int commentID) {
-        // TODO
-    }
-
-    /**
      * @param userID    The user trying to upvote.
      * @param postID    The post to upvote.
      * @param commentID The post to upvote.
@@ -635,6 +625,26 @@ public class Database {
                   LIMIT (start - 1), count
               It might be a bit difficult to see bugs in this query, so probably want to have some different test cases.
          */
+        String sql;
+        start--;
+        if (sortBy.equals("new")) {
+            sql = "SELECT * FROM Post WHERE (title LIKE \"%" + pattern + "%\" OR content LIKE \"%" + pattern + "%\") AND is_deleted = false ORDER BY creation_date DESC LIMIT " + start + ", " + count;
+        } else if (sortBy.equals("old")) {
+            sql = "SELECT * FROM Post WHERE (title LIKE \"%" + pattern + "%\" OR content LIKE \"%" + pattern + "%\") AND is_deleted = false ORDER BY creation_date ASC LIMIT " + start + ", " + count;
+        } else if (sortBy.equals("top")) {
+            sql = "SELECT *, upvotes - downvotes as top FROM Post WHERE (title LIKE \"%" + pattern + "%\" OR content LIKE \"%" + pattern + "%\") AND is_deleted = false ORDER BY top DESC LIMIT " + start + ", " + count;
+        } else if (sortBy.equals("view")) {
+            sql = "SELECT * FROM Post WHERE (title LIKE \"%" + pattern + "%\" OR content LIKE \"%" + pattern + "%\") AND is_deleted = false ORDER BY views DESC LIMIT " + start + ", " + count;
+        } else {
+            throw new Error("Unexpected soryBy string.");
+        }
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        List<Post> temp = jdbcTemplate.query(sql, new PostRowMapper());
+        for (Post p : temp) {
+            posts.add(p);
+        }
     }
 
     /**
