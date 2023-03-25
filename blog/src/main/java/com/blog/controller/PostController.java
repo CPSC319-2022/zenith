@@ -274,6 +274,52 @@ public class PostController {
         Database.view(postID);
     }
 
+    /**
+     * Returns a JSON string containing the requested posts.
+     *
+     * @param pattern The string to search for.
+     * @param start   The row to start returning after sorted.
+     * @param count   The number of requested posts.
+     * @param sortBy  The method of sorting:
+     *                "new":  newest post first
+     *                "old":  oldest post first
+     *                "top":  top-rated post first (upvote - downvote)
+     *                "view": top-viewed post first
+     * @return The JSON string representing the posts using the following syntax:
+     * [
+     * {                            //
+     * "postID":        int,        //
+     * "authorID":      String,     //
+     * "title":         String,     //
+     * "content":       String,     //
+     * "creationDate":  String,     //
+     * "lastModified":  String,     // <--- This represents one post!
+     * "upvotes":       int,        //
+     * "downvotes":     int,        //
+     * "isDeleted":     boolean,    //
+     * "views":         int,        //
+     * "allowComments": boolean     //
+     * },                           //
+     * ...  // The JSON array will contain at most <code>count</code> number of post representations.
+     * ]
+     */
+    private static String searchPosts(String pattern, int start, int count, String sortBy) {
+        // Create array to store retrieved posts
+        ArrayList<Post> posts = new ArrayList<>();
+
+        // Retrieve the posts
+        Database.search(posts, pattern, start, count, sortBy);
+
+        // Build the JSON response
+        JSONArray response = new JSONArray();
+        for (Post post : posts) {
+            response.put(post.asJSONObject());
+        }
+
+        // Return the JSON response
+        return response.toString();
+    }
+
     @GetMapping("/get")
     @ResponseBody
     public ResponseEntity<String> get(@RequestParam("postID") int postID) {
@@ -417,7 +463,7 @@ public class PostController {
                                          @RequestParam(value = "count", defaultValue = "100") int count,
                                          @RequestParam(value = "sortBy", defaultValue = "new") String sortBy) {
         try {
-            return new ResponseEntity<>("Not implemented by the server yet.", HttpStatus.NOT_IMPLEMENTED);
+            return ResponseEntity.ok(searchPosts(pattern, start, count, sortBy));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
