@@ -43,7 +43,6 @@ const UpgradeRequestForm = ({ user, onClose }) => {
               {user.userLevel === 'READER' } 
                 <option>Contributor</option>
                <option>Admin</option>
-
             
             </Form.Select>
           </Form.Group>
