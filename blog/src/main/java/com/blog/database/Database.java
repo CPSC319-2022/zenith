@@ -653,10 +653,11 @@ public class Database {
      * @return The highest postID.
      */
     public static int highestPostID() {
-        /*
-        TODO: easy function, just return the largest postID number that is in the database
-         */
-        return -1;
+        String sql = "SELECT MAX(post_id) FROM Post";
+        if (jdbcTemplate == null) {
+            createTemplate();
+        }
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
     private static String formInsert(User user, String id) {
