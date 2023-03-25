@@ -531,7 +531,7 @@ public class Database {
                 throw new IsDeletedException("Promotion request with ID " + requestID + " is deleted.");
             }
         } catch (EmptyResultDataAccessException e) {
-            throw new DoesNotExistException("Promotion request with ID " + requestID +  " does not exist.");
+            throw new DoesNotExistException("Promotion request with ID " + requestID + " does not exist.");
         }
     }
 
@@ -587,7 +587,7 @@ public class Database {
               After changing user level, hard delete all promotion requests that
               this user has that is not higher than their current new level.
          */
-        try{
+        try {
             User user = User.retrieveByUserID(userID);
             user.setUserLevel(target);
             save(user);
@@ -602,6 +602,39 @@ public class Database {
         }
         String sql = "DELETE FROM Promotion_Request WHERE user_ID = \"" + userID + "\" AND target_level <= " + level;
         jdbcTemplate.update(sql);
+    }
+
+    /**
+     * @param posts   The array that stores the posts.
+     * @param pattern The string to search for.
+     * @param start   The row to start returning after sorted.
+     * @param count   The number of requested posts.
+     * @param sortBy  The method of sorting:
+     *                "new":  newest post first
+     *                "old":  oldest post first
+     *                "top":  top-rated post first (upvote - downvote)
+     *                "view": top-viewed post first
+     */
+    public static void search(ArrayList<Post> posts, String pattern, int start, int count, String sortBy) {
+        /*
+        TODO: results should be stored in posts, like it was done for retrieve posts
+              Of course, beginning of query will have something like:
+                  SELECT * FROM post_table
+              pattern is the string we want to match, you might have something like this next in the query
+                  WHERE title LIKE %pattern% OR content LIKE %pattern%
+              sortBy is the method of sorting, next in query will depend on which sortBy was passed in
+                  "new":  ORDER BY creation_date DESC
+                  "old":  ORDER BY creation_date ASC
+                  "top":  ORDER BY (upvotes-downvotes) DESC  // might want to double check syntax for this one
+                  "view": ORDER BY views DESC
+              after this, sql will have a list of all matching posts in the correct order
+              but you only want a subset of them, specifically [start, start+count)
+              I'm pretty sure you can achieve this by doing:
+                  LIMIT count OFFSET (start - 1)
+              I can't remember which syntax our database uses, it could instead be:
+                  LIMIT (start - 1), count
+              It might be a bit difficult to see bugs in this query, so probably want to have some different test cases.
+         */
     }
 
     private static String formInsert(User user, String id) {
