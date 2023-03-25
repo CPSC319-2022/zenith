@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { fetchPosts } from '../redux/slices/postSlice';
 import { postSliceActions } from '../redux/slices/postSlice';
 import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import { Button, Carousel } from 'react-bootstrap';
 import '../styles/Home.css';
+import '../styles/Carousel.css';
+
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,7 +58,28 @@ const Home = () => {
   }
 
   return (
+
+
     <div className="home">
+       {posts.length > 0 && (
+        <Carousel>
+        {posts.slice(0, 3).map((post) => (
+          <Carousel.Item key={post.postID}>
+            <div className="carousel-background"></div>
+            <Carousel.Caption>
+              <Link to={`/single-post/${post.postID}`} className="carousel-title">
+                <h3>{post.title}</h3>
+              </Link>
+              <div
+                className="carousel-content"
+                dangerouslySetInnerHTML={{ __html: post.content.substring(0, 50) + '...' }}
+              ></div>
+            </Carousel.Caption>
+          </Carousel.Item>
+        ))}
+      </Carousel>
+      )}
+
       <div className="posts">
         {posts.map((post) => (
           <div className="post" key={post.postID}>
