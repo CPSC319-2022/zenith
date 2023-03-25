@@ -6,110 +6,12 @@
 /*--paynes-gray: #4f5d75ff;*/
 
 
-
-.posts {
-    margin-top: 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 150px;
+.post-area {
+    margin-top: 2rem;
 }
-
-.post-title {
-    font-size: 36px;
-    font-weight: 300;
-    font-family: 'Montserrat', sans-serif;
+.post-cards{
+    transition: transform .2s;
 }
-
-.post {
-    display: flex;
-    gap: 100px;
-    background-image: linear-gradient(to right, rgba(205, 250, 245, 0),rgba(205, 250, 245, 0.1), rgba(205, 250, 245, 0.25),rgba(205, 250, 245, 0.1),rgba(205, 250, 245, 0));
-
+.post-cards:hover {
+    transform: scale(1.1);
 }
-.post-content {
-    font-family: 'Roboto', sans-serif;
-
-}
-
-.post:nth-child(2n+1) {
-    flex-direction: row-reverse;
-    margin-left: 50px;
-}
-
-.link {
-    text-decoration: none;
-    color: inherit;
-}
-
-.read-button {
-    width: max-content;
-    padding: 10px 20px;
-    background-color: #ffffff;
-    border: 1px solid #ef8354ff;
-    cursor: pointer;
-    color: #4f5d75ff;
-}
-
-.read-button:hover {
-    color: #ffffff;
-    border: 1px solid #ef8354ff;
-    background-color: #ef8354ff;
-}
-
-.img{
-    margin-left: 60px;
-    flex: 2;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform .2s; 
-}
-.img:hover{
-   transform:scale(1.2);
-}
-
-.img::after {
-    content: '';
-    position: absolute;
-    width: 80%;
-    height: 100%;
-    background-color: #ef8354ff;
-    top: 20px;
-    left: -20px;
-    z-index: -1;
-}
-
-.content {
-    flex:3;
-}
-
-
-/* write media query for mobile view where content and img are stacked in column */
-@media screen and (max-width: 768px) {
-    .posts {
-        flex-direction: column;
-        text-align: center;
-        position: relative;
-    }
-    .post {
-        position: relative;
-        gap: 50px;
-        padding: 5%;
-        text-align: center;
-    }
-    .content {
-        text-align: center;
-    }
-
-    .img {
-        margin-left: 0;
-        
-    }
-    .img::after{
-        display: none;
-    }
-
-
-}
-    
