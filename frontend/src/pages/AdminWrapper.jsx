@@ -4,14 +4,12 @@ import { useSelector,useDispatch } from 'react-redux';
 import { selectIsAuthenticated } from '../redux/slices/auth';
 import { userSliceActions, fetchCurrentUserByToken } from '../redux/slices/userSlice';
 import AdminPage from './Admin';
-import UpgradeRequestForm from '../components/UpgradeRequestForm';
-import { Button } from 'react-bootstrap';
+
 
 const AdminWrapper = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [user, setUser] = useState(null);
-    const [showRequestForm, setShowRequestForm] = useState(false);
     const isAuthenticated = useSelector(selectIsAuthenticated);
   
     useEffect(() => {

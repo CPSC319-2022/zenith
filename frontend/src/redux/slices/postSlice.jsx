@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {getPosts, getPost, createPost as createPostAPI, editComment as editCommentApi} from '../../api';
+import {getPosts, getPost, createPost as createPostAPI} from '../../api';
 import { editPost as editPostAPI } from '../../api'
 import { upvotePost as upvotePostApi, downvotePost as downvotePostApi } from '../../api';
 
@@ -101,7 +101,11 @@ const initialState = {
 const postSlice = createSlice({
     name: 'posts',
     initialState,
-    reducers: {},
+    reducers: { 
+        resetStatus: (state) => {
+        state.status = 'idle';
+    },
+},
     extraReducers: (builder) => {
         builder
             .addCase(fetchPosts.pending, (state) => {
@@ -158,6 +162,7 @@ export const postSliceActions = {
     editPost,
     upvotePost,
     downvotePost,
+    resetStatus: postSlice.actions.resetStatus,
 };
 
 export default postSlice.reducer;

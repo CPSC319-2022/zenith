@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import { promoteUser } from '../api';
 import '../styles/UpgradeRequestForm.css';
