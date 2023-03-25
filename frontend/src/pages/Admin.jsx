@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPromotionRequests, promoteUser, deleteRequest } from '../redux/slices/adminSlice';
-import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import { Button } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 
 const AdminPage = () => {
   const dispatch = useDispatch();
@@ -16,72 +14,55 @@ const AdminPage = () => {
     dispatch(fetchPromotionRequests({requestIDStart:0, count:10, reverse:false}));
   }, [dispatch]);
 
-  const columns = [
-    {
-      dataField: 'requestID',
-      text: 'Request ID',
-    },
-    {
-      dataField: 'userID',
-      text: 'User ID',
-    },
-    {
-      dataField: 'target',
-      text: 'Target',
-    },
-    {
-      dataField: 'requestTime',
-      text: 'Request Time',
-    },
-    {
-      dataField: 'reason',
-      text: 'Reason',
-    },
-    {
-      dataField: 'actions',
-      text: 'Actions',
-      isDummyField: true,
-      editable: false,
-      formatter: (cell, row) => (
-        <>
-          <Button
-            variant="success"
-            size="sm"
-            onClick={() => {
-              // Promote user
-              dispatch(promoteUser({ userID: row.userID, target: row.target }));
-            }}
-          >
-            Approve
-          </Button>{' '}
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={() => {
-              // Delete promotion request
-              dispatch(deleteRequest(row.requestID));
-            }}
-          >
-            Deny
-          </Button>
-        </>
-      ),
-    },
-  ];
-
   return (
     <div>
       {loading && <div>Loading...</div>}
       {error && <div>{error}</div>}
-      <BootstrapTable
-        keyField="requestID"
-        data={promotionRequests}
-        columns={columns}
-        cellEdit={cellEditFactory({ mode: 'click', blurToSave: true })}
-        striped
-        hover
-        condensed
-      />
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>User ID</th>
+            <th>Target</th>
+            <th>Request Time</th>
+            <th>Reason</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {promotionRequests.map((row) => (
+            <tr key={row.requestID}>
+              <td>{row.requestID}</td>
+              <td>{row.userID}</td>
+              <td>{row.target}</td>
+              <td>{row.requestTime}</td>
+              <td>{row.reason}</td>
+              <td>
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={() => {
+                    // Promote user
+                    dispatch(promoteUser({ userID: row.userID, target: row.target }));
+                  }}
+                >
+                  Approve
+                </Button>{' '}
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => {
+                    // Delete promotion request
+                    dispatch(deleteRequest(row.requestID));
+                  }}
+                >
+                  Deny
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 };
