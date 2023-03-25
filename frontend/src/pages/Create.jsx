@@ -17,21 +17,43 @@ const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
+  console.log('id:',id);
+
   useEffect(() => {
-      if (id) {
-        dispatch(userSliceActions.fetchUser(id)).then((response) => {
-          if (response.meta.requestStatus === 'fulfilled') {
-            setUser(response.payload);
-          }
-        });
-      } else if (isAuthenticated) {
-        dispatch(fetchCurrentUserByToken()).then((response) => {
-          if (response.meta.requestStatus === 'fulfilled') {
-            setUser(response.payload);
-          }
-        });
+    if (id) {
+      dispatch(userSliceActions.fetchUser(id)).then((response) => {
+        if (response.meta.requestStatus === 'fulfilled') {
+          setUser(response.payload);
+        }
+      });
+    } else if (isAuthenticated) {
+      dispatch(fetchCurrentUserByToken()).then((response) => {
+        if (response.meta.requestStatus === 'fulfilled') {
+          setUser(response.payload);
+        }
+      });
+    }
+  }, [id, dispatch, isAuthenticated]);
+
+    if (!isAuthenticated) {
+      return (
+        <div className="login-button">
+          <Link to="/login">
+            <Button variant="primary">Login to Create a Post</Button>
+          </Link>
+        </div>
+      );
+    }
+  
+    if (user&&user.userLevel === 'READER') {
+      console.log('this:',user.userLevel);
+        return (
+          <div>
+            <h1>Not Authorized</h1>
+            <p> You need to be a Contributor or an Admin to create a post. See Profile Page for applying to become one!</p>
+          </div>
+        )
       }
-    }, [id, dispatch, isAuthenticated]);
 
   const handleCreatePost = (e) => {
     e.preventDefault();
@@ -55,56 +77,45 @@ const CreatePost = () => {
     setTitle('');
     setBody('');
   };
-  if (!isAuthenticated) {
+
+
+
     return (
-      <div className="login-button">
-        <Link to="/login">
-          <Button variant="primary">Login to Create a Post</Button>
-        </Link>
-      </div>
+      <>
+        {user && (user.userLevel === 'ADMIN' || user.userLevel === 'CONTRIBUTOR') ? ( 
+          <>
+            <h1 className="create-title">Create a Post</h1>
+            <div className="create">
+              <form id="new_post" onSubmit={handleCreatePost}>
+                <div className="content">
+                  <input
+                    type="text"
+                    id="name"
+                    name="title"
+                    placeholder="Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <div className="editor-container">
+                    <ReactQuill className="editor" theme="snow" value={body} onChange={setBody} />
+                  </div>
+                </div>
+                <div className="menu">
+                  <div className="menu-item col-md-auto">
+                    <Button as="input" type="submit" value="Publish" variant="primary" size="lg" />{' '}
+                    {/* <Form.Group controlId="formFile">
+                      <Form.Control type="file" />
+                    </Form.Group> */}
+                    {/* <Button variant="outline-success">Update</Button>{''} */}
+                  </div>
+                </div>
+              </form>
+            </div>
+          </>
+        ) : (<div>Not Authorized</div>)}
+      </>
     );
-  }
-
-   if (user.userLevel !== 'ADMIN' || user.userLevel !== 'CONTRIBUTOR') {
-      return (
-        <div>
-          <h1>Not Authorized</h1>
-          <p> You need to be a Contributor or an Admin to create a post. See Profile Page for applying to become one!</p>
-        </div>
-      )
-    }
-
-  return (
-    <>
-      <h1 className="create-title">Create a Post</h1>
-      <div className="create">
-        <form id="new_post" onSubmit={handleCreatePost}>
-          <div className="content">
-            <input
-              type="text"
-              id="name"
-              name="title"
-              placeholder="Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <div className="editor-container">
-              <ReactQuill className="editor" theme="snow" value={body} onChange={setBody} />
-            </div>
-          </div>
-          <div className="menu">
-            <div className="menu-item col-md-auto">
-              <Button as="input" type="submit" value="Publish" variant="primary" size="lg" />{' '}
-              {/* <Form.Group controlId="formFile">
-                <Form.Control type="file" />
-              </Form.Group> */}
-              {/* <Button variant="outline-success">Update</Button>{''} */}
-            </div>
-          </div>
-        </form>
-      </div>
-    </>
-  );
+    
 };
 
 export default CreatePost;
