@@ -6,6 +6,7 @@
 /*--paynes-gray: #4f5d75ff;*/
 
 
+
 .posts {
     margin-top: 80px;
     display: flex;
@@ -82,6 +83,7 @@
 .content {
     flex:3;
 }
+
 
 /* write media query for mobile view where content and img are stacked in column */
 @media screen and (max-width: 768px) {

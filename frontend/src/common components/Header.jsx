@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 const Header = () => {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     return (
-        <Navbar className='nav-bar' expand="lg">
+        <Navbar className='nav-bar' bg="light" expand="lg">
             <Container>
                 <Navbar.Brand href="/">
                     <img
