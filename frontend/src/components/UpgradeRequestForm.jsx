@@ -40,8 +40,11 @@ const UpgradeRequestForm = ({ user, onClose }) => {
               value={promotionLevel}
               onChange={(e) => setPromotionLevel(e.target.value)}
             >
-              {user.userLevel === 'READER' && <option>Contributor</option>}
-              <option>Admin</option>
+              {user.userLevel === 'READER' } 
+                <option>Contributor</option>
+               <option>Admin</option>
+
+            
             </Form.Select>
           </Form.Group>
         </Row>
