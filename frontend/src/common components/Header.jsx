@@ -3,7 +3,6 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import blogImg from '../images/icon.png'
 import '../styles/Header.css';
 import { useSelector } from 'react-redux';
-
 // import { fetchUser } from '../redux/slices/userSlice'; 
 
 const Header = () => {

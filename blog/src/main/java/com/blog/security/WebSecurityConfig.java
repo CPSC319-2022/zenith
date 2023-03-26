@@ -17,7 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/post/gets/**", "/post/get/**", "/post/create/**",
                         "/post/edit/**", "/post/upvote/**", "/post/downvote/**",
-                        "/post/delete/**", "/comment/get/**", "/comment/gets/**", "/comment/create/**",
+                        "/post/delete/**", "/post/search/**", "/comment/get/**", "/comment/gets/**", "/comment/create/**",
                         "/comment/upvote/**", "/comment/downvote/**", "/comment/edit/**",
                         "/comment/delete/**", "/user/get/**", "/user/requestPromotion/**", "/user/edit/**","/admin/gets/**",
                         "/admin/delete/**","/admin/promote/**").permitAll()

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {getPosts, getPost, createPost as createPostAPI} from '../../api';
+import {getPosts, getPost, createPost as createPostAPI, filterPosts as filterPostsAPI} from '../../api';
 import { editPost as editPostAPI } from '../../api'
 import { upvotePost as upvotePostApi, downvotePost as downvotePostApi } from '../../api';
 
@@ -53,18 +53,6 @@ export const editPost = createAsyncThunk(
         }
     }
 );
-// export const editPost = createAsyncThunk(
-//     'posts/editPost',
-//     async ({ postID, title, content, allowComments }, { rejectWithValue }) => {
-//         console.log('within thunk', postID, title, content, allowComments);
-//         try {
-//             await editPostAPI({postID, title, content, allowComments});
-//             return 'Post created successfully';
-//         } catch (err) {
-//             return rejectWithValue(err.message);
-//         }
-//     }
-// );
 
 // Async thunk for upvoting a post
 export const upvotePost = createAsyncThunk(
@@ -91,6 +79,21 @@ export const downvotePost = createAsyncThunk(
         }
     }
 );
+
+export const filterPosts = createAsyncThunk(
+    'posts/filter',
+    async ({searchQuery, sortBy}, { rejectWithValue }) => {
+        try {
+            console.log("about to call api");
+            const response = await filterPostsAPI({searchQuery, sortBy})
+            console.log(response);
+            return response;
+        } catch (err) {
+            return rejectWithValue(err.message);
+        }
+    }
+);
+
 const initialState = {
     posts: [],
     post: null,
@@ -162,6 +165,7 @@ export const postSliceActions = {
     editPost,
     upvotePost,
     downvotePost,
+    filterPosts,
     resetStatus: postSlice.actions.resetStatus,
 };
 

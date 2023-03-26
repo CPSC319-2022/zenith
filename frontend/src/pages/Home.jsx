@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { Button, Carousel, Card } from 'react-bootstrap';
 import '../styles/Home.css';
 import '../styles/Carousel.css';
+import Searchbar from '../components/Searchbar';
 
 
 const Home = () => {
@@ -84,7 +85,9 @@ const Home = () => {
   </Carousel>
       )}
 
-        
+    <div>
+      <Searchbar />
+    </div>
 
 <div className="container post-area">
         <div className="row">
