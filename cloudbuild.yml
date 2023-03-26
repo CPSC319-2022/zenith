@@ -12,6 +12,7 @@ steps:
     waitFor:
       - '-'
     timeout: 300s
+
   - name: gcr.io/cloud-builders/docker
     args:
       - build
@@ -26,6 +27,7 @@ steps:
     waitFor:
       - '-'
     timeout: 300s
+
   - name: gcr.io/cloud-builders/docker
     args:
       - push
@@ -34,6 +36,7 @@ steps:
     waitFor:
       - Containerize & Test Backend
       - Containerize & Test Frontend
+
   - name: gcr.io/cloud-builders/docker
     args:
       - push
@@ -43,6 +46,7 @@ steps:
     waitFor:
       - Containerize & Test Backend
       - Containerize & Test Frontend
+
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
       - run
@@ -60,6 +64,7 @@ steps:
     waitFor:
       - Push Backend
     entrypoint: gcloud
+
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
       - run
@@ -77,12 +82,30 @@ steps:
     waitFor:
       - Push Frontend
     entrypoint: gcloud
+
+  - name: curlimages/curl
+    args:
+      - -X
+      - POST
+      - -H
+      - "Content-Type: application/json"
+      - -d
+      - >-
+        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "SUCCESS"}
+      - https://REGION-PROJECT_ID.cloudfunctions.net/notifySlack
+    id: Notify Slack
+    waitFor:
+      - Deploy Backend
+      - Deploy Frontend
+
 images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
   - >-
     $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+
 options:
   substitutionOption: ALLOW_LOOSE
+
 substitutions:
   _PLATFORM: managed
   _AR_HOSTNAME: us-central1-docker.pkg.dev
@@ -90,7 +113,9 @@ substitutions:
   _DEPLOY_REGION: us-central1
   _GCR_HOSTNAME: us.gcr.io
   _TRIGGER_ID: bc8f33b4-744d-4d6a-b59c-e863024b2504
+
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
   - zenith-backend
+
