@@ -92,7 +92,7 @@ steps:
       - -d
       - >-
         {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "SUCCESS"}
-      - https://REGION-PROJECT_ID.cloudfunctions.net/notifySlack
+      - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
     id: Notify Slack
     waitFor:
       - Deploy Backend
