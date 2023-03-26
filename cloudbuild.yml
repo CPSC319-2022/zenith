@@ -76,7 +76,7 @@ steps:
     args: 
     - 'run'
     - 'deploy'
-    - '$_SERVICE_NAME'
+    - '$_SERVICE_NAME-backend'
     - '--image'
     - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
     - '--region'
@@ -115,5 +115,5 @@ tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
   - zenith  
-  
+
 timeout: 500s
