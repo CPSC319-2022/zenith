@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { Button, Carousel, Card } from 'react-bootstrap';
 import '../styles/Home.css';
 import '../styles/Carousel.css';
-import Searchbar from '../components/Searchbar';
 import { highestPostIndex } from '../api';
 
 const Home = () => {
@@ -100,10 +99,6 @@ console.log('highestIndex:',highestIndex);
     ))}
   </Carousel>
       )}
-
-    <div>
-      <Searchbar />
-    </div>
 
 <div className="container post-area">
         <div className="row">
