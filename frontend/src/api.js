@@ -38,7 +38,6 @@ export const getPosts = async ({ postIDStart, count, reverse }) => {
 
 export const getPost = async ({postID}) => {
   const token = getAccessToken();
-    console.log("getReq: ", postID);
     const response = await axios.get(`${apiUrl}/post/get`, {
       params: { postID },
       //  headers:
@@ -93,6 +92,32 @@ export const editPost = async ({ postID, title, content, allowComments }) => {
     },
   });
   return response.data;
+};
+
+
+export const deletePost = async ({ postID }) => {
+  const token = getAccessToken();
+
+  try {
+    console.log('api.js deletePost: ',{postID});
+    const response = await axios.delete(`${apiUrl}/post/delete`, {
+      params: { postID },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 
@@ -416,6 +441,15 @@ export const deletePromotionRequest = async (requestID) => {
         'Content-Type': 'application/json',
       },
     });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const highestPostIndex = async() => {
+  try {
+    const response = await axios.get(`${apiUrl}/post/highest`);
     return response.data;
   } catch (error) {
     throw new Error(error.message);
