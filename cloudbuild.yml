@@ -5,7 +5,7 @@ steps:
     - build
     - '--no-cache'
     - '-t'
-    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME_BE:$COMMIT_SHA'
     - '--file'
     - blog/Dockerfile
     - blog
@@ -19,7 +19,7 @@ steps:
     - build
     - '--no-cache'
     - '-t'
-    - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+    - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME_FE:$COMMIT_SHA'
     - '--file'
     - frontend/frontend.dockerfile
     - frontend
@@ -30,12 +30,12 @@ steps:
 
 # Push images to registery
   - name: gcr.io/cloud-builders/docker
-    args: ['push', '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA']
+    args: ['push', '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME_BE:$COMMIT_SHA']
     waitFor: ['Containerize & Test Backend', 'Containerize & Test Frontend']
     id: Push Backend
 
   - name: gcr.io/cloud-builders/docker
-    args: ['push', '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA']
+    args: ['push', '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME_FE:$COMMIT_SHA']
     waitFor: ['Containerize & Test Backend', 'Containerize & Test Frontend']
     id: Push Frontend
 
@@ -78,7 +78,7 @@ steps:
     - 'deploy'
     - '$_SERVICE_NAME'
     - '--image'
-    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME_BE:$COMMIT_SHA'
     - '--region'
     - '$_DEPLOY_REGION'
     - '--platform'
@@ -92,7 +92,7 @@ steps:
     - 'deploy'
     - '$_SERVICE_NAME'
     - '--image'
-    - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+    - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME_FE:$COMMIT_SHA'
     - '--region'
     - '$_DEPLOY_REGION'
     - '--platform'
@@ -101,15 +101,16 @@ steps:
     waitFor: ['Push Frontend']
     id: Deploy Frontend
 images:
-  - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
-  - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+  - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME_BE:$COMMIT_SHA'
+  - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME_FE:$COMMIT_SHA'
 options:
   substitutionOption: ALLOW_LOOSE
 substitutions:
   _AR_HOSTNAME: us-central1-docker.pkg.dev
   _GCR_HOSTNAME: us.gcr.io
   _PLATFORM: managed
-  _SERVICE_NAME: cloudrunservice
+  _SERVICE_NAME_BE: zenith_backend
+  _SERVICE_NAME_FE: zenith
   _DEPLOY_REGION: us-central1
 tags:
   - gcp-cloud-build-deploy-cloud-run
