@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {getPosts, getPost, createPost as createPostAPI, filterPosts as filterPostsAPI} from '../../api';
 import { editPost as editPostAPI } from '../../api'
 import { upvotePost as upvotePostApi, downvotePost as downvotePostApi } from '../../api';
-
+import { deletePost as deletePostAPI } from '../../api';
 
 export const fetchPosts = createAsyncThunk(
     'posts/fetchPosts',
@@ -80,6 +80,7 @@ export const downvotePost = createAsyncThunk(
     }
 );
 
+<<<<<<< HEAD
 export const filterPosts = createAsyncThunk(
     'posts/filter',
     async ({searchQuery, sortBy}, { rejectWithValue }) => {
@@ -94,6 +95,21 @@ export const filterPosts = createAsyncThunk(
     }
 );
 
+=======
+// Async thunk for deleting a post
+export const deletePost = createAsyncThunk(
+    'posts/deletePost',
+    async (postID, { rejectWithValue }) => {
+      try {
+        await deletePostAPI({ postID });
+        return { postID };
+      } catch (error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  );
+  
+>>>>>>> acab3017822d7f2e82d06df29e5c744054e5d2ff
 const initialState = {
     posts: [],
     post: null,
@@ -153,7 +169,18 @@ const postSlice = createSlice({
             .addCase(editPost.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
-            });
+            })
+            .addCase(deletePost.pending, (state) => {
+                state.loading = true;
+              });
+              builder.addCase(deletePost.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = state.posts.filter((post) => post.id !== action.payload.postID);
+              });
+              builder.addCase(deletePost.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+              });
     },
 });
 
@@ -165,7 +192,11 @@ export const postSliceActions = {
     editPost,
     upvotePost,
     downvotePost,
+<<<<<<< HEAD
     filterPosts,
+=======
+    deletePost,
+>>>>>>> acab3017822d7f2e82d06df29e5c744054e5d2ff
     resetStatus: postSlice.actions.resetStatus,
 };
 

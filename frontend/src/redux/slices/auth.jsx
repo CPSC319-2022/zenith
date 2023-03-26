@@ -63,6 +63,15 @@ const authSlice = createSlice({
   },
 });
 
+export const selectClientID = (state) => {
+  if (state.auth.user) {
+    return state.auth.user.clientID;
+  } else {
+    return undefined;
+  }
+};
+
+
 export const getAccessToken = () => {
   const auth = JSON.parse(localStorage.getItem('auth'));
   console.log('authAccTok:', auth);
