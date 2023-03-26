@@ -115,5 +115,4 @@ tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
   - zenith  
-
 timeout: 500s
