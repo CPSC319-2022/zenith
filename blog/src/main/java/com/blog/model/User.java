@@ -93,10 +93,6 @@ public class User extends Record {
      * @throws InitializationException Unable to create GoogleIDTokenVerifier.
      */
     public static User retrieveByAccessToken(String accessToken) throws IsDeletedException, LoginFailedException, InitializationException {
-        if (accessToken == null) {
-            throw new LoginFailedException("The accessToken provided is null.");
-        }
-
         GoogleIdToken.Payload payload = getPayload(accessToken);
 
         String userID = payload.getSubject();
@@ -155,6 +151,10 @@ public class User extends Record {
      * @throws InitializationException Unable to create GoogleIDTokenVerifier.
      */
     private static GoogleIdToken.Payload getPayload(String accessToken) throws LoginFailedException, InitializationException {
+        if (accessToken == null) {
+            throw new LoginFailedException("The access token provided is null.");
+        }
+
         // Remove the "Bearer " prefix from the access token
         if (accessToken.startsWith("Bearer ")) {
             accessToken = accessToken.substring("Bearer ".length());
@@ -168,6 +168,11 @@ public class User extends Record {
             throw new LoginFailedException("Invalid access token.");
         } catch (NullPointerException e) {
             throw new InitializationException("Unable to create GoogleIDTokenVerifier.");
+        }
+
+        // Check if verification succeeded
+        if (idToken == null) {
+            throw new LoginFailedException("Failed to verify access token.");
         }
 
         // Return the userID
