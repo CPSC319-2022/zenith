@@ -7,12 +7,8 @@ import { Link } from 'react-router-dom';
 import { Button, Carousel, Card } from 'react-bootstrap';
 import '../styles/Home.css';
 import '../styles/Carousel.css';
-<<<<<<< HEAD
 import Searchbar from '../components/Searchbar';
-=======
 import { highestPostIndex } from '../api';
->>>>>>> acab3017822d7f2e82d06df29e5c744054e5d2ff
-
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);

@@ -80,7 +80,6 @@ export const downvotePost = createAsyncThunk(
     }
 );
 
-<<<<<<< HEAD
 export const filterPosts = createAsyncThunk(
     'posts/filter',
     async ({searchQuery, sortBy}, { rejectWithValue }) => {
@@ -95,7 +94,6 @@ export const filterPosts = createAsyncThunk(
     }
 );
 
-=======
 // Async thunk for deleting a post
 export const deletePost = createAsyncThunk(
     'posts/deletePost',
@@ -109,7 +107,7 @@ export const deletePost = createAsyncThunk(
     }
   );
   
->>>>>>> acab3017822d7f2e82d06df29e5c744054e5d2ff
+
 const initialState = {
     posts: [],
     post: null,
@@ -192,11 +190,8 @@ export const postSliceActions = {
     editPost,
     upvotePost,
     downvotePost,
-<<<<<<< HEAD
     filterPosts,
-=======
     deletePost,
->>>>>>> acab3017822d7f2e82d06df29e5c744054e5d2ff
     resetStatus: postSlice.actions.resetStatus,
 };
 
