@@ -113,6 +113,7 @@ const initialState = {
     post: null,
     status: 'idle',
     error: null,
+    searchResults: [],
 };
 
 const postSlice = createSlice({
@@ -146,6 +147,17 @@ const postSlice = createSlice({
             .addCase(fetchPost.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+            })
+            .addCase(filterPosts.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(filterPosts.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.searchResults = action.payload;
+            })
+            .addCase(filterPosts.rejected, (state, action) => {
+                state.status = 'failed';
+                state.posts = action.payload;
             })
             .addCase(createPost.pending, (state) => {
                 state.status = 'loading';

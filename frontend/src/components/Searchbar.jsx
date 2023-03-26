@@ -3,13 +3,16 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { InputGroup } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { postSliceActions } from '../redux/slices/postSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Searchbar() {
     const [searchQuery, setSearchQuery] = useState('');
-    const [sortBy, setSortBy] = useState('New');
+    const [sortBy, setSortBy] = useState('new');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleSearchQuery = (e) => {
         setSearchQuery(e.target.value.trimStart());
@@ -24,38 +27,32 @@ function Searchbar() {
         if (searchQuery.trim().length !== 0) {
             console.log({searchQuery, sortBy});
             dispatch(postSliceActions.filterPosts({ searchQuery, sortBy }));
+            navigate(`/searchResults`);
+            //navigate(`/post?searchQuery=${searchQuery}&sortBy=${sortBy}`);
         }
     };
 
     return (
-        <div>
+        <div className="searchForm">
             <Form onSubmit={handleSearchQuerySumbit}>
-                <Row>
-                    <Col xs={'auto'}>
-
-                            <Form.Control onChange={handleSearchQuery} />
-
-                    </Col>
-                    <Col xs={'auto'}> 
-                        <Form.Group className="mb-0">
-                            <Form.Label column="sm" lg={5}>Sort By</Form.Label>
-                            <Form.Select size="sm" onChange={handleSortBy}>
-                            <option>new</option>
-                            <option>old</option>
-                            <option>top</option>
-                            <option>view</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </Col>
-                    <Col>
-                        <Button variant="primary" type="submit">
-                            Search
-                        </Button>
-                    </Col>
-                </Row>
+                <InputGroup >
+                    <Form.Control onChange={handleSearchQuery} />
+                    <Form.Group className="mb-0">
+                        <Form.Select variant="outline-secondary" onChange={handleSortBy}>
+                            <option value={'new'}>New</option>
+                            <option value={'old'}>Old</option>
+                            <option value={'top'}>Top</option>
+                            <option value={'view'}>Views</option>
+                        </Form.Select>
+                    </Form.Group>
+                    <Button variant="outline-secondary" id="button-addon2" type="submit">
+                        Search
+                    </Button>
+                </InputGroup>
             </Form>
         </div>
     );
 }
+//<Form.Label column="sm" lg={5}>Sort By</Form.Label>
 
 export default Searchbar;

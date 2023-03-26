@@ -120,8 +120,22 @@ export const deletePost = async ({ postID }) => {
   }
 };
 
-
-
+export const filterPosts = async ({ searchQuery, sortBy }) => {
+  const token = getAccessToken();
+  try {
+    const response = await axios.get(`${apiUrl}/post/search`, {
+      params: {
+        pattern: searchQuery,
+        sortBy: sortBy,
+        count: 90,
+      },
+    });
+    console.log("api works", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 //Comments
 export const getComments = async ({ postID, commentIDStart, count, reverse }) => {
@@ -215,24 +229,6 @@ export const downvotePost = async ({ postID }) => {
     throw new Error(error.message);
   }
 };
-
-export const filterPosts = async ({ searchQuery, sortBy }) => {
-  const token = getAccessToken();
-  try {
-    const response = await axios.get(`${apiUrl}/post/search}`, {
-      params: {
-        pattern: searchQuery,
-        sortBy: sortBy,
-      },
-    });
-    console.log("api works", response.data);
-    return response.data;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-
-
-}
 
 export const upvoteComment = async ({ postID, commentID }) => {
   const token = getAccessToken();
