@@ -1,5 +1,4 @@
 import React from 'react';
-import Searchbar from '../components/Searchbar';
 
 const WorkInProgress = () => {
     return (
@@ -12,9 +11,7 @@ const WorkInProgress = () => {
 <p>Work in progress for Slackbot</p>
 <p>Work in progress for Unit testing. 79% coverage for Model package.</p>
 
-            <div>
-                <Searchbar />
-            </div>
+
         </div>
     );
 };
