@@ -58,8 +58,7 @@ steps:
       - '--quiet'
     id: Deploy Backend
     waitFor:
-      - '-'
-      # - Push Backend
+      - Push Backend
     entrypoint: gcloud
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
@@ -76,8 +75,7 @@ steps:
       - '--quiet'
     id: Deploy Frontend
     waitFor:
-      - '-'
-      # - Push Frontend
+      - Push Frontend
     entrypoint: gcloud
 images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
