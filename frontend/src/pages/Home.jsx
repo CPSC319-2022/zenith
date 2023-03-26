@@ -7,10 +7,12 @@ import { Link } from 'react-router-dom';
 import { Button, Carousel, Card } from 'react-bootstrap';
 import '../styles/Home.css';
 import '../styles/Carousel.css';
+import { highestPostIndex } from '../api';
 
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [highestIndex, setHighestIndex] = useState(null);
   const postsPerPage = 9;
   const { resetStatus } = postSliceActions;
 
@@ -26,10 +28,24 @@ const Home = () => {
         dispatch(fetchPosts({ postIDStart, count: postsPerPage, reverse: false }));
       }
     };
-  
+
+    const fetchHighestIndex = async () => {
+      try {
+        const index = await highestPostIndex();
+        setHighestIndex(index);
+      } catch (error) {
+        console.error('Failed to fetch the highest post index:', error.message);
+      }
+    };
+
     fetchCurrentPosts();
+    if (highestIndex === null) {
+      fetchHighestIndex();
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, status, dispatch]);
+  }, [currentPage, status, dispatch, highestIndex]);
+
   
 
   const nextPage = () => {
@@ -56,7 +72,8 @@ const Home = () => {
   if (status === 'failed') {
     return <div>Error: {error}</div>;
   }
-
+console.log('highestIndex:',highestIndex);
+  const isLastPage = currentPage * postsPerPage >= highestIndex;
   return (
 
 
@@ -71,11 +88,11 @@ const Home = () => {
           className="d-block w-100"
         />
         <Carousel.Caption>
-          <Link to={`/single-post/${post.postID}`} className="carousel-title">
+          <Link to={`/single-post/${post.postID}`} className="carousel-title carousel-post-title-home">
             <h3>{post.title}</h3>
           </Link>
           <div
-            className="carousel-content"
+            className="carousel-content carousel-post-content-home"
             dangerouslySetInnerHTML={{ __html: post.content.substring(0, 50) + '...' }}
           ></div>
         </Carousel.Caption>
@@ -89,7 +106,7 @@ const Home = () => {
 <div className="container post-area">
         <div className="row">
           {posts.map((post) => (
-            <div className="col-md-4 col-sm-6 mb-4 post-cards" key={post.postID}>
+            <div className="col-md-4 col-sm-6 mb-4 post-cards " key={post.postID}>
               <Card style={{ width: '18rem' }}>
                 <Card.Img variant="top" src={`https://source.unsplash.com/random/300x200?sig=${post.postID}`} />
                 <Card.Body>
@@ -115,9 +132,11 @@ const Home = () => {
       <div className="container">
       <div className="row">
         <div className="col-12 d-flex flex-column align-items-center gap-2">
-          <Button className="next-button btn-lg mb-2" style={{ width: '200px' }} onClick={nextPage}>
+          {!isLastPage && (
+          <Button className="next-button btn-lg mb-2" style={{ width: '200px' }} onClick={nextPage} disabled={isLastPage}>
             Next
           </Button>
+          )}
           {currentPage > 1 && (
             <Button className="prev-button btn-lg mb-2" style={{ width: '200px' }} onClick={prevPage}>
               Previous
