@@ -12,7 +12,6 @@ import Header from "./common components/Header";
 import Footer from "./common components/Footer";
 import Profile from "./pages/Profile";
 import WIP from "./pages/WIP";
-import Admin from "./pages/Admin";
 import AdminWrapper from "./pages/AdminWrapper";
 
 // Layout function needed to apply the Nav and Footer to different child pages
