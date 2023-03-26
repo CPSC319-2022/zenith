@@ -40,35 +40,59 @@ steps:
     id: Push Frontend
 
 # Deploy
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    args:
-      - run
-      - services
-      - update
-      - $_SERVICE_NAME
-      - '--platform=managed'
-      - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
-      - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
-      - '--region=$_DEPLOY_REGION'
-      - '--quiet'
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  #   args:
+  #   - run
+  #   - services
+  #   - update
+  #   - $_SERVICE_NAME
+  #   - '--platform=managed'
+  #   - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+  #   - >-
+  #     --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
+  #   - '--region=$_DEPLOY_REGION'
+  #   - '--quiet'
+  #   entrypoint: gcloud
+  #   waitFor: ['Push Backend']
+  #   id: Deploy Backend
+
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  #   args:
+  #   - run
+  #   - services
+  #   - update
+  #   - $_SERVICE_NAME
+  #   - '--platform=managed'
+  #   - >-
+  #     --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+  #   - >-
+  #     --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
+  #   - '--region=$_DEPLOY_REGION'
+  #   - '--quiet'
+  #   entrypoint: gcloud
+  #   waitFor: ['Push Frontend']
+  #   id: Deploy Frontend
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: 
+    - 'run'
+    - 'deploy'
+    - 'SERVICE-NAME'
+    - '--image'
+    - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+    - '--region'
+    - '$_DEPLOY_REGION'
     entrypoint: gcloud
     waitFor: ['Push Backend']
     id: Deploy Backend
-  
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    args:
-      - run
-      - services
-      - update
-      - $_SERVICE_NAME
-      - '--platform=managed'
-      - >-
-        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
-      - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
-      - '--region=$_DEPLOY_REGION'
-      - '--quiet'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: 
+    - 'run'
+    - 'deploy'
+    - 'SERVICE-NAME'
+    - '--image'
+    - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+    - '--region'
+    - '$_DEPLOY_REGION'
     entrypoint: gcloud
     waitFor: ['Push Frontend']
     id: Deploy Frontend
@@ -86,4 +110,6 @@ substitutions:
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
-  - zenith   
+  - zenith  
+
+timeout: 500s
