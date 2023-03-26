@@ -81,6 +81,8 @@ steps:
     - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
     - '--region'
     - '$_DEPLOY_REGION'
+    - '--platform'
+    - '$_PLATFORM'
     entrypoint: gcloud
     waitFor: ['Push Backend']
     id: Deploy Backend
@@ -93,6 +95,8 @@ steps:
     - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
     - '--region'
     - '$_DEPLOY_REGION'
+    - '--platform'
+    - '$_PLATFORM'
     entrypoint: gcloud
     waitFor: ['Push Frontend']
     id: Deploy Frontend
@@ -105,7 +109,7 @@ substitutions:
   _AR_HOSTNAME: us-central1-docker.pkg.dev
   _GCR_HOSTNAME: us.gcr.io
   _PLATFORM: managed
-  _SERVICE_NAME: zenith
+  _SERVICE_NAME: cloudrunservice
   _DEPLOY_REGION: us-central1
 tags:
   - gcp-cloud-build-deploy-cloud-run
