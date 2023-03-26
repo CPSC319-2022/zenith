@@ -13,6 +13,7 @@ const WorkInProgress = () => {
 <p>Work in progress for Unit testing. 79% coverage for Model package.</p>
 
     <div>
+        <p>This is here temporarily purely for testing purposes</p>
         <Searchbar />
     </div>
         </div>
