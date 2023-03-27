@@ -96,7 +96,7 @@ steps:
           STATUS="FAILURE"
         fi
         
-        curl -X POST -H "Content-Type: application/json" -d '{"projectId": "'"$PROJECT_ID"'", "id": "'"$BUILD_ID"'", "stepId": "Notify Slack", "status": "'"$STATUS"'"}' https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
+        curl -X POST -H "Content-Type: application/json" -d '{"projectId": "'"$PROJECT_ID"'", "id": "'"$BUILD_ID"'", "stepId": "Notify Slack", "status": "'"'$STATUS'"'"}' https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
 
 
     waitFor:
