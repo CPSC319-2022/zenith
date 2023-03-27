@@ -85,11 +85,12 @@ steps:
           STATUS="FAILURE"
         fi
         
-        curl -X POST -H "Content-Type: application/json" -d '{"projectId": "'"$PROJECT_ID"'", "id": "'"$BUILD_ID"'", "status": "'"$STATUS"'"}' https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
+        curl -X POST -H "Content-Type: application/json" -d '{"projectId": "'"$PROJECT_ID"'", "id": "'"$BUILD_ID"'", "status": "'$$STATUS'"}' https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
     waitFor:
       - Deploy Backend
       - Deploy Frontend
     id: Notify Slack
+
 
 
 
