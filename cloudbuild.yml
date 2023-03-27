@@ -80,11 +80,12 @@ steps:
       - "Content-Type: application/json"
       - -d
       - >-
-        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "$(if [ $(( ${Build_Deploy_Backend_RESULT:-1} * ${Build_Deploy_Frontend_RESULT:-1} )) -eq 0 ]; then echo SUCCESS; else echo FAILURE; fi)"}
+        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "$(if [ ${Build_Deploy_Backend_RESULT:-1} -eq 0 ] && [ ${Build_Deploy_Frontend_RESULT:-1} -eq 0 ]; then echo SUCCESS; else echo FAILURE; fi)"}
       - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
     id: Notify Slack
     waitFor:
       - '-'
+
 
 
 images:
