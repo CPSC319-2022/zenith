@@ -80,36 +80,34 @@ steps:
 
   - name: 'curlimages/curl:7.78.0'
     args:
+      - '--fail' # This flag causes curl to return an error on HTTP 4xx and 5xx status codes
       - '-X'
       - 'POST'
       - '-H'
       - 'Content-Type: application/json'
       - '-d'
-      - '{"buildId":"$BUILD_ID","projectId":"$PROJECT_ID","stepId":"Deploy Frontend and Backend","status":"SUCCESS"}'
+      - '{"buildId":"$BUILD_ID","projectId":"$PROJECT_ID","stepId":"Deploy Frontend and Backend","status":"SUCCESS","isFinalStep":true}'
       - 'https://us-central1-blog-pipe.cloudfunctions.net/notifySlack'
-    id: Notify Slack on Success
+    id: Notify Slack on Deployment Success
     waitFor:
       - Deploy Frontend
       - Deploy Backend
     entrypoint: curl
-    when: ON_SUCCESS
   - name: 'curlimages/curl:7.78.0'
     args:
+      - '--fail' # This flag causes curl to return an error on HTTP 4xx and 5xx status codes
       - '-X'
       - 'POST'
       - '-H'
       - 'Content-Type: application/json'
       - '-d'
-      - '{"buildId":"$BUILD_ID","projectId":"$PROJECT_ID","stepId":"Deploy Frontend and Backend","status":"FAILURE"}'
+      - '{"buildId":"$BUILD_ID","projectId":"$PROJECT_ID","stepId":"Deploy Frontend and Backend","status":"FAILURE","isFinalStep":true}'
       - 'https://us-central1-blog-pipe.cloudfunctions.net/notifySlack'
-    id: Notify Slack on Failure
+    id: Notify Slack on Deployment Failure
     waitFor:
-      - '-'
+      - Deploy Frontend
+      - Deploy Backend
     entrypoint: curl
-    when: ON_ERROR
-
-
-
 
 
 
