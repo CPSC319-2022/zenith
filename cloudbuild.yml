@@ -49,39 +49,28 @@ steps:
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
-      - run
-      - services
-      - update
-      - $_SERVICE_NAME-backend
-      - '--platform=managed'
-      - >-
-        --image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA
-      - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
-      - '--region=$_DEPLOY_REGION'
-      - '--quiet'
+      - bash
+      - -c
+      - |
+        gcloud run services update $_SERVICE_NAME-backend --platform=managed --image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID --region=$_DEPLOY_REGION --quiet
+        export Build_Deploy_Backend_RESULT=$?
     id: Deploy Backend
     waitFor:
       - Push Backend
-    entrypoint: gcloud
+    entrypoint: null
+
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
-      - run
-      - services
-      - update
-      - $_SERVICE_NAME
-      - '--platform=managed'
-      - >-
-        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
-      - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
-      - '--region=$_DEPLOY_REGION'
-      - '--quiet'
+      - bash
+      - -c
+      - |
+        gcloud run services update $_SERVICE_NAME --platform=managed --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID --region=$_DEPLOY_REGION --quiet
+        export Build_Deploy_Frontend_RESULT=$?
     id: Deploy Frontend
     waitFor:
       - Push Frontend
-    entrypoint: gcloud
+    entrypoint: null
 
   - name: curlimages/curl
     args:
@@ -91,28 +80,12 @@ steps:
       - "Content-Type: application/json"
       - -d
       - >-
-        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "SUCCESS"}
+        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "$(if [ $(( ${Build_Deploy_Backend_RESULT:-1} * ${Build_Deploy_Frontend_RESULT:-1} )) -eq 0 ]; then echo SUCCESS; else echo FAILURE; fi)"}
       - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
     id: Notify Slack
     waitFor:
-      - Deploy Backend
-      - Deploy Frontend
+      - '-'
 
-  - name: curlimages/curl
-    args:
-      - -X
-      - POST
-      - -H
-      - "Content-Type: application/json"
-      - -d
-      - >-
-        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "FAILURE"}
-      - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
-    id: Notify Slack Failure
-    waitFor:
-      - Deploy Backend
-      - Deploy Frontend
-    onFailure: [ ]
 
 images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
