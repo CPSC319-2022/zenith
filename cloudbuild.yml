@@ -86,13 +86,13 @@ steps:
   - name: curlimages/curl
     args:
         - -X
-          - POST
-          - -H
-          - "Content-Type: application/json"
-          - -d
-          - >-
-            {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "SUCCESS"}
-          - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
+        - POST
+        - -H
+        - "Content-Type: application/json"
+        - -d
+        - >-
+          {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "SUCCESS"}
+        - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
     id: Notify Slack Success
     waitFor:
       - Deploy Backend
