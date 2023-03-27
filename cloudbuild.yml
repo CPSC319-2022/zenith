@@ -76,10 +76,10 @@ steps:
     args:
       - '-c'
       - |
-        STATUS_BACKEND=$(cat backend_exit_code.txt)
-        STATUS_FRONTEND=$(cat frontend_exit_code.txt)
+        EXIT_CODE_BACKEND=$(cat backend_exit_code.txt)
+        EXIT_CODE_FRONTEND=$(cat frontend_exit_code.txt)
         
-        if [ "$STATUS_BACKEND" == "0" ] && [ "$STATUS_FRONTEND" == "0" ]; then
+        if [ "$EXIT_CODE_BACKEND" == "0" ] && [ "$EXIT_CODE_FRONTEND" == "0" ]; then
           STATUS="SUCCESS"
         else
           STATUS="FAILURE"
@@ -90,6 +90,7 @@ steps:
       - Deploy Backend
       - Deploy Frontend
     id: Notify Slack
+
 
 
 
