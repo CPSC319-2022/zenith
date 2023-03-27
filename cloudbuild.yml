@@ -1,5 +1,6 @@
 steps:
   - name: gcr.io/cloud-builders/docker
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
@@ -12,6 +13,7 @@ steps:
 
 
   - name: gcr.io/cloud-builders/docker
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
@@ -23,7 +25,9 @@ steps:
     timeout: 300s
 
 
+
   - name: gcr.io/cloud-builders/docker
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
@@ -35,7 +39,9 @@ steps:
       - Containerize & Test Frontend
 
 
+
   - name: gcr.io/cloud-builders/docker
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
@@ -45,6 +51,7 @@ steps:
     waitFor:
       - Containerize & Test Backend
       - Containerize & Test Frontend
+
 
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
