@@ -13,7 +13,7 @@ import 'react-quill/dist/quill.snow.css';
 import Comment from '../components/Comment';
 import Filter from 'bad-words';
 import { AiFillLike, AiFillDislike, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
-import { current } from '@reduxjs/toolkit';
+
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -50,7 +50,21 @@ const SinglePost = () => {
   }, [id, dispatch]);
 
   useEffect(() => {
-    dispatch(fetchComments({ postID: id, commentIDStart: 0, count: 10, reverse: false }));
+    dispatch(fetchComments({ postID: id, commentIDStart: 0, count: 10, reverse: false }))
+      .unwrap()
+      .then((fetchedComments) => {
+        fetchedComments.forEach((comment) => {
+          dispatch(userSliceActions.fetchUser(comment.authorID))
+            .then((response) => {
+              if (response.meta.requestStatus === 'fulfilled') {
+                console.log('picture:', response.payload.profilePicture);
+                console.log('author:', response.payload.username);
+                comment.authorUsername = response.payload.username;
+                comment.authorProfilePicture = response.payload.profilePicture;
+              }
+            });
+        });
+      });
   }, [id, dispatch, updateComments]);
 
   useEffect(() => {
@@ -168,6 +182,7 @@ const SinglePost = () => {
   return (
     <Container>
       {console.log(currentUser)}
+      
       <Row>
         <Col xs={12} md={10} lg={8} className="mx-auto">
           <div className="single-post">
@@ -243,15 +258,23 @@ const SinglePost = () => {
                   <Button onClick={handleCommentSubmit} className="mt-2" variant="primary">
                     Submit Comment
                   </Button>
+                  
                   {profanityError && <div className="profanity-error">{profanityError}</div>}
                 </div>
                 {commentsStatus === 'loading' && <div>Loading comments...</div>}
                 {commentsStatus === 'failed' && <div>Error: {commentsError}</div>}
                 {commentsStatus === 'succeeded' &&
+          
                   comments.map((comment) => (
                     <Comment
                       key={comment.id}
                       comment={comment}
+                      currentUser={currentUser}
+                      authorUsername={comment.authorUsername} // Add this line
+                      authorProfilePicture={comment.authorProfilePicture} // Add this line
+                      creationDate={comment.creationDate} // Add this line
+                      userIsCommentAuthor={currentUser&&currentUser.userID === comment.authorID}
+                      userIsAdmin={currentUser&&currentUser.userLevel === 'ADMIN'}
                       onUpvote={() => handleUpvoteComment(comment.postID, comment.commentID)}
                       onDownvote={() => handleDownvoteComment(comment.postID, comment.commentID)}
                       onEdit={(editedContent) => handleEditComment(comment.postID, comment.commentID, comment.content, editedContent)}

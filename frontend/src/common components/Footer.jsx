@@ -5,7 +5,7 @@ const Footer = () => {
     return (
         <footer className="footer">
             <span>
-                Team Zenith CPSC 319dewdwedwgere;k;k
+                Team Zenith CPSC 319 - we all want to break free
             </span>
         </footer>
     );
