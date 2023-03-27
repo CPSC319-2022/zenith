@@ -212,22 +212,22 @@ export const downvotePost = async ({ postID }) => {
 };
 
 
-export const filterPosts = async ({ searchQuery, sortBy }) => {
-  try {
-    const response = await axios.get(`${apiUrl}/post/search}`, {
-      params: {
-        pattern: searchQuery,
-        sortBy: sortBy,
-      },
-    });
-    console.log("api works", response.data);
-    return response.data;
-  } catch (error) {
-    throw new Error(error.message);
-  }
+// export const filterPosts = async ({ searchQuery, sortBy }) => {
+//   try {
+//     const response = await axios.get(`${apiUrl}/post/search}`, {
+//       params: {
+//         pattern: searchQuery,
+//         sortBy: sortBy,
+//       },
+//     });
+//     console.log("api works", response.data);
+//     return response.data;
+//   } catch (error) {
+//     throw new Error(error.message);
+//   }
 
 
-}
+// }
 
 export const upvoteComment = async ({ postID, commentID }) => {
   const token = getAccessToken();
