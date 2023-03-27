@@ -92,20 +92,21 @@ steps:
       - Deploy Frontend
       - Deploy Backend
     entrypoint: curl
-  - name: 'curlimages/curl:7.78.0'
-    args:
-      - '-X'
-      - 'POST'
-      - '-H'
-      - 'Content-Type: application/json'
-      - '-d'
-      - '{"buildId":"$BUILD_ID","projectId":"$PROJECT_ID","stepId":"Deploy Frontend and Backend","status":"FAILURE"}'
-      - 'https://us-central1-blog-pipe.cloudfunctions.net/notifySlack'
-    id: Notify Slack on Failure
-    waitFor:
-      - '-'
-    entrypoint: curl
-    when: ON_ERROR
+    when: ON_SUCCESS
+      - name: 'curlimages/curl:7.78.0'
+        args:
+          - '-X'
+          - 'POST'
+          - '-H'
+          - 'Content-Type: application/json'
+          - '-d'
+          - '{"buildId":"$BUILD_ID","projectId":"$PROJECT_ID","stepId":"Deploy Frontend and Backend","status":"FAILURE"}'
+          - 'https://us-central1-blog-pipe.cloudfunctions.net/notifySlack'
+        id: Notify Slack on Failure
+        waitFor:
+          - '-'
+        entrypoint: curl
+        when: ON_ERROR
 
 
 images:
