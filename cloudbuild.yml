@@ -87,9 +87,14 @@ steps:
         
         curl -X POST -H "Content-Type: application/json" -d '{"projectId": "'"$PROJECT_ID"'", "id": "'"$BUILD_ID"'", "status": "'$$STATUS'"}' https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
     waitFor:
+      - Containerize & Test Backend
+      - Containerize & Test Frontend
+      - Push Backend
+      - Push Frontend
       - Deploy Backend
       - Deploy Frontend
     id: Notify Slack
+
 
 
 
