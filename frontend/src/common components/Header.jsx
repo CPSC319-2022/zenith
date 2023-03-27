@@ -3,6 +3,7 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import blogImg from '../images/icon.png'
 import '../styles/Header.css';
 import { useSelector } from 'react-redux';
+import Searchbar from '../components/Searchbar';
 // import { fetchUser } from '../redux/slices/userSlice'; 
 
 const Header = () => {
@@ -21,6 +22,7 @@ const Header = () => {
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
+                    <Searchbar />
                     <Nav className="ms-auto" placement="end">
                         <Nav.Link href="/">HOME</Nav.Link>
                         <Nav.Link href="/create">CREATE</Nav.Link>
@@ -33,6 +35,7 @@ const Header = () => {
                             <Nav.Link href="/login">LOGIN</Nav.Link>
                         }
                     </Nav>
+                    
                 </Navbar.Collapse>
             </Container>
         </Navbar>
