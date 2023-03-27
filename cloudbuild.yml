@@ -64,6 +64,9 @@ steps:
     waitFor:
       - Push Backend
     entrypoint: gcloud
+    dir: backend
+    env:
+      - 'BUILD_STATUS_DEPLOY_BACKEND=$BUILD_STATUS'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
@@ -82,34 +85,30 @@ steps:
     waitFor:
       - Push Frontend
     entrypoint: gcloud
+    dir: frontend
+    env:
+      - 'BUILD_STATUS_DEPLOY_FRONTEND=$BUILD_STATUS'
 
-  - name: curlimages/curl
+  - name: curlimages/curl:latest
+    entrypoint: 'bash'
     args:
-        - -X
-        - POST
-        - -H
-        - "Content-Type: application/json"
-        - -d
-        - >-
-          {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "SUCCESS"}
-        - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
-    id: Notify Slack Success
+      - '-c'
+      - |
+        if [ "$STATUS_BACKEND" == "0" ] && [ "$STATUS_FRONTEND" == "0" ]; then
+          STATUS="SUCCESS"
+        else
+          STATUS="FAILURE"
+        fi
+        
+        curl -X POST -H "Content-Type: application/json" -d '{"projectId": "'"$PROJECT_ID"'", "id": "'"$BUILD_ID"'", "status": "'"$STATUS"'"}' https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
     waitFor:
       - Deploy Backend
       - Deploy Frontend
+    env:
+      - 'STATUS_BACKEND=$BUILD_STATUS_DEPLOY_BACKEND'
+      - 'STATUS_FRONTEND=$BUILD_STATUS_DEPLOY_FRONTEND'
+    id: Notify Slack
 
-  - name: curlimages/curl
-    args:
-      - -X
-      - POST
-      - -H
-      - "Content-Type: application/json"
-      - -d
-      - >-
-        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "FAILURE"}
-      - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
-    id: Notify Slack Failure
-    onFailure: []
 
 images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
