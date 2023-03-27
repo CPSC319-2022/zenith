@@ -44,14 +44,14 @@ const Login = () => {
           <Card.Title>Welcome to Zenith Blog</Card.Title>
           {isAuthenticated ? (
             <div>
-              <p>You are already signed in.</p>
+              <p>To Log Out Click the Red Button.</p>
               <Button variant="danger" onClick={handleSignOut}>
                 Logout
               </Button>
             </div>
           ) : (
             <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} cookiePolicy={'single_host_origin'}>
-              <GoogleLogin onSuccess={handleSuccess} onFailure={handleFailure}>
+              <GoogleLogin onSuccess={handleSuccess} onFailure={handleFailure}  isSignedIn={true}>
                 <Button variant="primary" className="rounded-pill">
                   Sign In with Google
                 </Button>
