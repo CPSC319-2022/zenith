@@ -1,113 +1,102 @@
 steps:
   - name: gcr.io/cloud-builders/docker
-    entrypoint: 'bash'
     args:
-      - '-c'
-      - |
-        docker build --no-cache -t $_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA --file blog/Dockerfile blog
-        echo $? > backend_build_exit_code.txt
+      - build
+      - '--no-cache'
+      - '-t'
+      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
+      - '--file'
+      - blog/Dockerfile
+      - blog
     id: Containerize & Test Backend
     waitFor:
       - '-'
     timeout: 300s
 
-
   - name: gcr.io/cloud-builders/docker
-    entrypoint: 'bash'
     args:
-      - '-c'
-      - |
-        docker build --no-cache -t $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA --file frontend/frontend.dockerfile frontend
-        echo $? > frontend_build_exit_code.txt
+      - build
+      - '--no-cache'
+      - '-t'
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - '--file'
+      - frontend/frontend.dockerfile
+      - frontend
     id: Containerize & Test Frontend
     waitFor:
       - '-'
     timeout: 300s
 
-
-
   - name: gcr.io/cloud-builders/docker
-    entrypoint: 'bash'
     args:
-      - '-c'
-      - |
-        docker push $_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA
-        echo $? > backend_push_exit_code.txt
+      - push
+      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
     id: Push Backend
     waitFor:
       - Containerize & Test Backend
       - Containerize & Test Frontend
 
-
-
   - name: gcr.io/cloud-builders/docker
-    entrypoint: 'bash'
     args:
-      - '-c'
-      - |
-        docker push $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
-        echo $? > frontend_push_exit_code.txt
+      - push
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
     id: Push Frontend
     waitFor:
       - Containerize & Test Backend
       - Containerize & Test Frontend
 
-
-
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME-backend
+      - '--platform=managed'
+      - >-
+        --image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
     id: Deploy Backend
     waitFor:
       - Push Backend
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gcloud run services update $_SERVICE_NAME-backend --platform=managed --image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID --region=$_DEPLOY_REGION --quiet
-        echo $? > backend_exit_code.txt
-
+    entrypoint: gcloud
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - '--platform=managed'
+      - >-
+        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
     id: Deploy Frontend
     waitFor:
       - Push Frontend
-    entrypoint: 'bash'
+    entrypoint: gcloud
+
+  - name: curlimages/curl
     args:
-      - '-c'
-      - |
-        gcloud run services update $_SERVICE_NAME --platform=managed --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID --region=$_DEPLOY_REGION --quiet
-        echo $? > frontend_exit_code.txt
-
-
-  - name: curlimages/curl:latest
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        EXIT_CODE_BACKEND_BUILD=$$(cat backend_build_exit_code.txt)
-        EXIT_CODE_FRONTEND_BUILD=$$(cat frontend_build_exit_code.txt)
-        EXIT_CODE_BACKEND_PUSH=$$(cat backend_push_exit_code.txt)
-        EXIT_CODE_FRONTEND_PUSH=$$(cat frontend_push_exit_code.txt)
-        EXIT_CODE_BACKEND_DEPLOY=$$(cat backend_exit_code.txt)
-        EXIT_CODE_FRONTEND_DEPLOY=$$(cat frontend_exit_code.txt)
-        
-        if [ "$$EXIT_CODE_BACKEND_BUILD" == "0" ] && [ "$$EXIT_CODE_FRONTEND_BUILD" == "0" ] && [ "$$EXIT_CODE_BACKEND_PUSH" == "0" ] && [ "$$EXIT_CODE_FRONTEND_PUSH" == "0" ] && [ "$$EXIT_CODE_BACKEND_DEPLOY" == "0" ] && [ "$$EXIT_CODE_FRONTEND_DEPLOY" == "0" ]; then
-          STATUS="SUCCESS"
-        else
-          STATUS="FAILURE"
-        fi
-        
-        curl -X POST -H "Content-Type: application/json" -d '{"projectId": "'"$PROJECT_ID"'", "id": "'"$BUILD_ID"'", "stepId": "Notify Slack", "status": "'"'$$STATUS'"'"}' https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
-
-
+      - -X
+      - POST
+      - -H
+      - "Content-Type: application/json"
+      - -d
+      - >-
+        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "SUCCESS"}
+      - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
+    id: Notify Slack
     waitFor:
-      - Containerize & Test Backend
-      - Containerize & Test Frontend
-      - Push Backend
-      - Push Frontend
       - Deploy Backend
       - Deploy Frontend
-    id: Notify Slack
-
 
 images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
