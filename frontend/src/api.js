@@ -15,8 +15,6 @@ const getApiUrl = () => {
 const apiUrl = getApiUrl();
 console.log('apiUrl: ', apiUrl);
 export const getPosts = async ({ postIDStart, count, reverse }) => {
-  const token = getAccessToken();
-
   try {
     const response = await axios.get(`${apiUrl}/post/gets`, {
       params: {
@@ -24,11 +22,6 @@ export const getPosts = async ({ postIDStart, count, reverse }) => {
         count,
         reverse,
       },
-      // headers: {
-      //   Authorization: `Bearer ${token.credential}`,
-      //   'X-Oauth-Provider': 'google',
-      //   'X-Oauth-Credential': JSON.stringify(token.credential),
-      // },
     });
     return response.data;
   } catch (error) {
@@ -37,16 +30,8 @@ export const getPosts = async ({ postIDStart, count, reverse }) => {
 };
 
 export const getPost = async ({postID}) => {
-  const token = getAccessToken();
     const response = await axios.get(`${apiUrl}/post/get`, {
       params: { postID },
-      //  headers:
-      // {
-      //   'Content-Type': 'application/json' ,
-      //     Authorization: `Bearer ${token.credential}`,
-      //     'X-Oauth-Provider': 'google',
-      //     'X-Oauth-Credential': JSON.stringify(token.credential),
-      // },
     });
     return response.data;
 };
@@ -56,8 +41,6 @@ export const createPost = async ({ title, content, allowComments }) => {
   const token = getAccessToken();
   console.log("createPost token: ", token);
   console.log("typeof token.credential: ", typeof token.credential);
-  // const cred = (token.credential);
-  // console.log("createPost credential: ", cred);
   const response = await axios.post(`${apiUrl}/post/create`, {
     title,
     content,
@@ -77,8 +60,6 @@ export const editPost = async ({ postID, title, content, allowComments }) => {
   const token = getAccessToken();
   console.log("editPost token: ", token);
   console.log("typeof token.credential: ", typeof token.credential);
-  // const cred = (token.credential);
-  // console.log("editPost credential: ", cred);
   const response = await axios.put(`${apiUrl}/post/edit`, {
     postID,
     title,
@@ -230,6 +211,24 @@ export const downvotePost = async ({ postID }) => {
   }
 };
 
+
+export const filterPosts = async ({ searchQuery, sortBy }) => {
+  try {
+    const response = await axios.get(`${apiUrl}/post/search}`, {
+      params: {
+        pattern: searchQuery,
+        sortBy: sortBy,
+      },
+    });
+    console.log("api works", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+
+
+}
+
 export const upvoteComment = async ({ postID, commentID }) => {
   const token = getAccessToken();
 
@@ -348,21 +347,35 @@ export const getUsers = async ({ userIDStart, count, reverse }) => {
 
 export const getUser = async (userID) => {
   const token = getAccessToken();
-
-  try {
-    const response = await axios.get(`${apiUrl}/user/get`, {
-      params: { userID },
-      headers:
-      {
-        'Content-Type': 'application/json' ,
-          Authorization: `Bearer ${token.credential}`,
-          'X-Oauth-Provider': 'google',
-          'X-Oauth-Credential': JSON.stringify(token.credential),
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.message);
+  if (token === null || token === undefined) {
+    try {
+      const response = await axios.get(`${apiUrl}/user/get`, {
+        params: { userID },
+        headers:
+        {
+          'Content-Type': 'application/json' ,
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  } else {
+    try {
+      const response = await axios.get(`${apiUrl}/user/get`, {
+        params: { userID },
+        headers:
+        {
+          'Content-Type': 'application/json' ,
+            Authorization: `Bearer ${token.credential}`,
+            'X-Oauth-Provider': 'google',
+            'X-Oauth-Credential': JSON.stringify(token.credential),
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 };
 
