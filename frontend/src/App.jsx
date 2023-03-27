@@ -6,6 +6,7 @@ import './styles/App.css';
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import SearchResults from "./pages/SearchResults";
 import Create from "./pages/Create";
 import SinglePost from "./pages/SinglePost";
 import Header from "./common components/Header";
@@ -35,6 +36,7 @@ function App() {
                     <Layout>
                         <Routes>
                             <Route path="/" element={<Home />} />
+                            <Route path="/searchResults" element={<SearchResults />} />
                             <Route path="/single-post/:id" element={<SinglePost />} />
                             <Route path="/create" element={<Create />} />
                             <Route path="/profile/:id" element={<Profile />} />

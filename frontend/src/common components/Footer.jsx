@@ -5,10 +5,12 @@ const Footer = () => {
     return (
         <footer className="footer">
             <span>
-                Team Zenith CPSC 319 - we all want to break free
+
+                Team Zenith CPSC 319 i need vacayy
+
             </span>
         </footer>
     );
 };
 
-export default Footer;
+// export default Footer;
