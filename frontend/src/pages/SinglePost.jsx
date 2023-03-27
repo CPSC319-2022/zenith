@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { Container, Row, Col, Button, ButtonGroup } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 import { fetchComments, upvoteComment, downvoteComment, editComment, deleteComment } from '../redux/slices/commentSlice';
@@ -23,7 +23,7 @@ const SinglePost = () => {
   const error = useSelector((state) => state.posts.error);
   // const currentUser = useSelector((state) => state.users.currentUser);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  console.log('isAuthenticated:', isAuthenticated);
+
 
   const comments = useSelector((state) => state.comments.comments, shallowEqual);
   const commentsStatus = useSelector((state) => state.comments.status);
@@ -34,10 +34,14 @@ const SinglePost = () => {
   const [commentBody, setCommentBody] = useState('');
   const [profanityError, setProfanityError] = useState('');
   const [updateComments, setUpdateComments] = useState(false);
-
+  const [postDeleted, setPostDeleted] = useState(false);
   const [editingPost, setEditingPost] = useState(false);
   const [editedPostContent, setEditedPostContent] = useState('');
   const [postUpdated, setPostUpdated] = useState(false);
+  const [postVoteErrorMessage, setPostVoteErrorMessage] = useState('');
+  const [commentVoteErrorMessage, setCommentVoteErrorMessage] = useState('');
+
+
 
 
   useEffect(() => {
@@ -81,6 +85,7 @@ const SinglePost = () => {
     const filter = new Filter();
     return filter.isProfane(text);
   };
+
   useEffect(() => {
     if (post) {
       dispatch(userSliceActions.fetchUser(post.authorID))
@@ -95,14 +100,30 @@ const SinglePost = () => {
 
 
   const handleUpvotePost = async (postID) => {
-    await dispatch(upvotePost(postID));
-    dispatch(fetchPost({ postID: id }));
+    setPostVoteErrorMessage('');
+    const result = await dispatch(upvotePost(postID));
+    if (result.error) {
+      console.log('error: ', result.error);
+      setPostVoteErrorMessage('Already upvoted');
+    } else {
+      dispatch(fetchPost({ postID: id }));
+    }
+
   };
 
   const handleDownvotePost = async (postID) => {
-    await dispatch(downvotePost(postID));
+    setPostVoteErrorMessage('');
+    const result = await dispatch(downvotePost(postID));
     dispatch(fetchPost({ postID: id }));
+    if (result.error) {
+      console.log('error: ', result.error);
+      setPostVoteErrorMessage('Already downvoted');
+    } else {
+      dispatch(fetchPost({ postID: id }));
+    }
   };
+
+
 
   const handleEditPost = () => {
     setEditingPost(true);
@@ -111,7 +132,9 @@ const SinglePost = () => {
 
   const handleDeletePost = async (postID) => {
     await dispatch(deletePost(postID));
+    setPostDeleted(true);
   };
+
 
   const handleSave = async (postID, title, content, allowComments) => {
     if (editingPost) {
@@ -127,14 +150,28 @@ const SinglePost = () => {
   };
 
 
+
+
+
   const handleUpvoteComment = async (postID, commentID) => {
-    await dispatch(upvoteComment({ postID, commentID }));
-    setUpdateComments(!updateComments);
+    setCommentVoteErrorMessage('');
+    const result = await dispatch(upvoteComment({ postID, commentID }));
+    if (result.error) {
+      setCommentVoteErrorMessage('Already upvoted');
+    } else {
+      setUpdateComments(!updateComments);
+    }
   };
 
   const handleDownvoteComment = async (postID, commentID) => {
-    await dispatch(downvoteComment({ postID, commentID }));
-    setUpdateComments(!updateComments);
+    setCommentVoteErrorMessage('');
+    const result = await dispatch(downvoteComment({ postID, commentID }));
+    if (result.error) {
+      setCommentVoteErrorMessage('Already downvoted');
+    } else {
+
+      setUpdateComments(!updateComments);
+    }
   };
 
   const handleDeleteComment = async (postID, commentID) => {
@@ -180,113 +217,145 @@ const SinglePost = () => {
     return <div>Loading user data...</div>; // or render a login prompt
   }
   return (
-    <Container>
-      {console.log(currentUser)}
-      
-      <Row>
-        <Col xs={12} md={10} lg={8} className="mx-auto">
-          <div className="single-post">
-            {/* Render post title, author username, creation date, and content */}
-            {post && (
-              <>
-                <h1>{post.title}</h1>
-                {/* <img src={authorPicture} alt="Profile Picture" /> <p>{authorUsername} | {new Date(post.creationDate).toLocaleString().split(',')[0]}</p> */}
-                <div className="author-info">
-                  <Link to={`/profile/${post.authorID}`}>
-                    <img className="author-picture" src={authorPicture} alt={authorUsername} referrerpolicy="no-referrer" />
-                    <h4>{authorUsername}</h4>
-                  </Link>
-                </div>
-                {editingPost ? (
-                  <ReactQuill
-                    className="editor"
-                    theme="snow"
-                    value={editedPostContent}
-                    onChange={(content) => setEditedPostContent(content)}
-                  />
-                ) : (
-                  <div
-                    className="post-content"
-                    dangerouslySetInnerHTML={{ __html: post.content }}
-                  ></div>
-                )}
-              </>
-            )}
-
-            {/* Add upvote, downvote, edit, and delete buttons for the post */}
-            {post && (
-              <div className="post-votes">
-                <Button variant="outline-primary" onClick={() => handleUpvotePost(post.postID)}>
-                  <AiFillLike /> {post.upvotes}
-                </Button>
-                <Button variant="outline-danger" onClick={() => handleDownvotePost(post.postID)}>
-                  <AiFillDislike /> {post.downvotes}
-                </Button>
-                {isAuthenticated && (
-                  editingPost ? (
-                    <>
-                      <Button variant="success" onClick={() => handleSave(post.postID, post.title, post.content, post.allowComments)}>
-                        Save
-                      </Button>
-                      <Button variant="secondary" onClick={handleCancel}>
-                        Cancel
-                      </Button>
-                    </>
-                  ) :
-                    ((currentUser.userID === post.authorID) &&
-                      <Button variant="outline-info" onClick={handleEditPost}>
-                        <AiOutlineEdit />
-                      </Button>
-                    )
+    <>
+      {postDeleted && (window.location.href = '/')}
+      {!postDeleted && (
+        <Container>
+          <Row>
+            <Col xs={12} md={10} lg={8} className="mx-auto">
+              <div className="single-post">
+                {/* Render post title, author username, creation date, and content */}
+                {post && (
+                  <>
+                    <h1>{post.title}</h1>
+                    {/* <img src={authorPicture} alt="Profile Picture" /> <p>{authorUsername} | {new Date(post.creationDate).toLocaleString().split(',')[0]}</p> */}
+                    <div className="author-info">
+                      <Link to={`/profile/${post.authorID}`}>
+                        <img className="author-picture" src={authorPicture} alt={authorUsername} referrerpolicy="no-referrer" />
+                        <h4>{authorUsername}</h4>
+                      </Link>
+                    </div>
+                    {editingPost ? (
+                      <ReactQuill
+                        className="editor"
+                        theme="snow"
+                        value={editedPostContent}
+                        onChange={(content) => setEditedPostContent(content)}
+                      />
+                    ) : (
+                      <div
+                        className="post-content"
+                        dangerouslySetInnerHTML={{ __html: post.content }}
+                      ></div>
+                    )}
+                  </>
                 )}
 
-                {isAuthenticated && (
-                  ((currentUser !== (null || undefined)) && (currentUser.userID === post.authorID) || (currentUser.userLevel === 'ADMIN')) &&
-                  <Button variant="danger" onClick={() => handleDeletePost(post.postID)}>
-                    <AiOutlineDelete />
-                  </Button>
-                )}
+                {/* Add upvote, downvote, edit, and delete buttons for the post */}
+                {post && (
+                  <div className="post-votes">
+                    {isAuthenticated && (
+                      <Button
+                        variant="outline-primary"
+                        onClick={() => handleUpvotePost(post.postID)}
+                      >
+                        <AiFillLike /> {post.upvotes}
+                      </Button>
+                    )}
+                    {isAuthenticated && (
+                      <Button
+                        variant="outline-danger"
+                        onClick={() => handleDownvotePost(post.postID)}
+                      >
+                        <AiFillDislike /> {post.downvotes}
+                      </Button>
+                    )}
+                    {isAuthenticated && (
+                      editingPost ? (
+                        <>
+                          <Button variant="success" onClick={() => handleSave(post.postID, post.title, post.content, post.allowComments)}>
+                            Save
+                          </Button>
+                          <Button variant="secondary" onClick={handleCancel}>
+                            Cancel
+                          </Button>
+                        </>
+                      ) :
+                        ((currentUser.userID === post.authorID) &&
+                          <Button variant="outline-info" onClick={handleEditPost}>
+                            <AiOutlineEdit />
+                          </Button>
+                        )
+                    )}
 
-                <div className="comment-box my-4">
-                  <h3>Leave a comment:</h3>
-                  <ReactQuill
-                    className="editor"
-                    theme="snow"
-                    value={commentBody}
-                    onChange={(content) => setCommentBody(content)}
-                  />
-                  <Button onClick={handleCommentSubmit} className="mt-2" variant="primary">
-                    Submit Comment
-                  </Button>
-                  
-                  {profanityError && <div className="profanity-error">{profanityError}</div>}
-                </div>
-                {commentsStatus === 'loading' && <div>Loading comments...</div>}
-                {commentsStatus === 'failed' && <div>Error: {commentsError}</div>}
-                {commentsStatus === 'succeeded' &&
-          
-                  comments.map((comment) => (
-                    <Comment
-                      key={comment.id}
-                      comment={comment}
-                      currentUser={currentUser}
-                      authorUsername={comment.authorUsername} // Add this line
-                      authorProfilePicture={comment.authorProfilePicture} // Add this line
-                      creationDate={comment.creationDate} // Add this line
-                      userIsCommentAuthor={currentUser&&currentUser.userID === comment.authorID}
-                      userIsAdmin={currentUser&&currentUser.userLevel === 'ADMIN'}
-                      onUpvote={() => handleUpvoteComment(comment.postID, comment.commentID)}
-                      onDownvote={() => handleDownvoteComment(comment.postID, comment.commentID)}
-                      onEdit={(editedContent) => handleEditComment(comment.postID, comment.commentID, comment.content, editedContent)}
-                      onDelete={() => handleDeleteComment(comment.postID, comment.commentID)}
-                    />
-                  ))}
+                    {isAuthenticated && (
+                      ((currentUser !== (null || undefined)) && (currentUser.userID === post.authorID) || (currentUser.userLevel === 'ADMIN')) &&
+                      <Button variant="danger" onClick={() => handleDeletePost(post.postID)}>
+                        <AiOutlineDelete />
+                      </Button>
+                    )}
+
+                    {postVoteErrorMessage && <div className="post-vote-error">{postVoteErrorMessage}</div>}
+
+
+
+
+                    {/* comments */}
+                    <div className="my-4">
+                      {isAuthenticated ? (
+                        <div className="comment-box">
+                          <h3>Leave a comment:</h3>
+                          <ReactQuill
+                            className="editor"
+                            theme="snow"
+                            value={commentBody}
+                            onChange={(content) => setCommentBody(content)}
+                          />
+                          <Button onClick={handleCommentSubmit} className="mt-2" variant="primary">
+                            Submit Comment
+                          </Button>
+                          {profanityError && <div className="profanity-error">{profanityError}</div>}
+                        </div>
+                      ) : (
+                        <div className="login-button-container">
+                          <Link to="/Login">
+                            <Button variant="primary">Login to comment</Button>
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                    {commentVoteErrorMessage && <div className="comment-vote-error">{commentVoteErrorMessage}</div>}
+
+                    {commentsStatus === 'loading' && <div>Loading comments...</div>}
+                    {commentsStatus === 'failed' && <div>Error: {commentsError}</div>}
+                    {commentsStatus === 'succeeded' &&
+
+                      comments.map((comment) => (
+                        <Comment
+                          key={comment.id}
+                          comment={comment}
+                          userIsLoggedIn={isAuthenticated}
+                          currentUser={currentUser}
+                          authorUsername={comment.authorUsername}
+                          authorProfilePicture={comment.authorProfilePicture}
+                          creationDate={comment.creationDate}
+                          userIsCommentAuthor={currentUser && currentUser.userID === comment.authorID}
+                          userIsAdmin={currentUser && currentUser.userLevel === 'ADMIN'}
+                          onUpvote={() => handleUpvoteComment(comment.postID, comment.commentID)}
+                          onDownvote={() => handleDownvoteComment(comment.postID, comment.commentID)}
+                          onEdit={(editedContent) => handleEditComment(comment.postID, comment.commentID, comment.content, editedContent)}
+                          onDelete={() => handleDeleteComment(comment.postID, comment.commentID)}
+
+                        />
+                      ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </Col>
-      </Row>
-    </Container>
+            </Col>
+          </Row>
+        </Container>
+      )}
+    </>
   );
 };
 
