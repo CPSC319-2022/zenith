@@ -627,6 +627,7 @@ public class Database {
          */
         String sql;
         start--;
+        sortBy = sortBy.toLowerCase();
         if (sortBy.equals("new")) {
             sql = "SELECT * FROM Post WHERE (title LIKE \"%" + pattern + "%\" OR content LIKE \"%" + pattern + "%\") AND is_deleted = false ORDER BY creation_date DESC LIMIT " + start + ", " + count;
         } else if (sortBy.equals("old")) {
