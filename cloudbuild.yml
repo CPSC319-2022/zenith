@@ -84,7 +84,8 @@ steps:
       - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
     id: Notify Slack
     waitFor:
-      - '-'
+      - Deploy Backend
+      - Deploy Frontend
 
 
 
