@@ -8,6 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 const Comment = ({
   comment,
   onUpvote,
+  userIsLoggedIn,
   onDownvote,
   handleEdit,
   handleSave,
@@ -18,6 +19,7 @@ const Comment = ({
   handleChange,
   userIsCommentAuthor,
   userIsAdmin,
+ 
 }) => {
   return (
     
@@ -26,7 +28,7 @@ const Comment = ({
       <Card.Body>
         <Row className="align-items-center">
           <Col xs={2} md={1} className="text-center">
-            <Image src={comment.authorProfilePicture} roundedCircle className="comment-thumbnail" />
+            <Image src={comment.authorProfilePicture} roundedCircle className="comment-thumbnail" referrerpolicy="no-referrer"/>
           </Col>
           <Col>
             <Card.Title className="comment-author">{comment.authorUsername}</Card.Title>
@@ -44,12 +46,17 @@ const Comment = ({
         )}
   
         <div className="d-flex justify-content-between">
+          {userIsLoggedIn && (
           <Button variant="outline-primary" onClick={onUpvote}>
             <AiFillLike /> {comment.upvotes}
           </Button>
+          )}
+          {userIsLoggedIn && (
           <Button variant="outline-danger" onClick={onDownvote}>
             <AiFillDislike /> {comment.downvotes}
           </Button>
+          )}
+             
           {editing ? (
             <>
               <Button variant="success" onClick={handleSave}>

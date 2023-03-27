@@ -80,6 +80,7 @@ export const downvotePost = createAsyncThunk(
     }
 );
 
+
 export const filterPosts = createAsyncThunk(
     'posts/filter',
     async ({searchQuery, sortBy}, { rejectWithValue }) => {

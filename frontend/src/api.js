@@ -169,24 +169,18 @@ export const createComment = async ({ postID, content }) => {
 
 export const upvotePost = async ({ postID }) => {
   const token = getAccessToken();
-
   try {
-    const response = await axios.put(
-      `${apiUrl}/post/upvote?postID=${postID}`,
-      null,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token.credential}`,
-          'X-Oauth-Provider': 'google',
-          'X-Oauth-Credential': JSON.stringify(token.credential),
-        },
+    const response = await axios.put(`${apiUrl}/post/upvote?postID=${postID}`, null, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
       },
-    );
-    if (response.status !== 200) {
+    });
+    if (response.status !== 204) {
       throw new Error('Server Error');
     }
-    return response.data;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -283,7 +277,11 @@ export const deleteComment = async ({ postID, commentID }) => {
   try {
     const body = JSON.stringify({ postID, commentID });
     const response = await axios.delete(`${apiUrl}/comment/delete`, {
-      data: body,
+      params: {
+        postID,
+        commentID,
+      }
+        ,
       headers: {
         'Content-Type': 'application/json' ,
         Authorization: `Bearer ${token.credential}`,
