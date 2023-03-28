@@ -8,6 +8,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +20,16 @@ import java.util.List;
  */
 
 public class Database {
+    private static Connection connection;
+
+    static {
+        // Create the connection to the database
+        try {
+            connection = DatabaseConfig.dataSource().getConnection();
+        } catch (SQLException e) {
+            connection = null;
+        }
+    }
 
     private static JdbcTemplate jdbcTemplate;
 
@@ -48,6 +62,44 @@ public class Database {
      * @param post
      */
     public static void retrieve(Post post) throws DoesNotExistException {
+        try {
+            String sql = """
+                SELECT *
+                FROM   Post
+                WHERE  post_ID = ?
+                """;
+
+            // Set up the prepared statement
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, post.getPostID());
+
+            // Execute the query
+            ResultSet rs = ps.executeQuery();
+
+            // Check that we got a result
+            if (!rs.next()) {
+                throw new DoesNotExistException("Post with postID " + post.getPostID() + " does not exist.");
+            }
+
+            // Retrieve the data from the result
+            post.setAuthorID(rs.getString("user_ID"));
+            post.setTitle(rs.getString("title"));
+            post.setContent(rs.getString("content"));
+            post.setCreationDate(rs.getString("creation_date"));
+            post.setLastModified(rs.getString("last_modified"));
+            post.setUpvotes(rs.getInt("upvotes"));
+            post.setDownvotes(rs.getInt("downvotes"));
+            post.setDeleted(rs.getBoolean("is_deleted"));
+            post.setViews(rs.getInt("views"));
+            post.setAllowComments(rs.getBoolean("allow_comments"));
+
+            // TODO remove next line
+            post.setViews(10000);
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
+        }
+
+        /*
         int postID = post.getPostID();
         String sql = "SELECT * FROM Post WHERE post_ID = " + postID;
         if (jdbcTemplate == null) {
@@ -59,6 +111,7 @@ public class Database {
         } catch (EmptyResultDataAccessException e) {
             throw new DoesNotExistException("Post with postID " + postID + " does not exist.");
         }
+         */
     }
 
     /**
