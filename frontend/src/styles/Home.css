@@ -22,3 +22,8 @@
 .carousel-post-content-home{
     text-shadow: 5px 5px 8px black;
 }
+.switch-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px;
+  }
