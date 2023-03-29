@@ -4,7 +4,6 @@ import com.blog.exception.BlogException;
 import com.blog.exception.DoesNotExistException;
 import com.blog.exception.IsDeletedException;
 import com.blog.model.*;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -13,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class handles all calls to the database related to the blog application.
@@ -30,6 +28,8 @@ public class Database {
             connection = null;
         }
     }
+    
+    // TODO: before using this code, change table from cloud shell (necessary)
 
     private static JdbcTemplate jdbcTemplate;
 
@@ -42,18 +42,33 @@ public class Database {
      * @param comment
      */
     public static void retrieve(Comment comment) throws DoesNotExistException {
-        int postID = comment.getPostID();
-        int commentID = comment.getCommentID();
-        String sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number = " + commentID;
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
         try {
-            Comment temp = jdbcTemplate.queryForObject(sql, new CommentRowMapper());
-            comment.copy(temp);
-        } catch (EmptyResultDataAccessException e) {
-            throw new DoesNotExistException(
-                    "Comment with postID " + postID + " and commentID " + commentID + " does not exist.");
+            String sql = """
+                    SELECT *
+                    FROM Comment
+                    WHERE post_ID = ? AND comment_number = ?
+                    """;
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, comment.getPostID());
+            ps.setInt(2, comment.getCommentID());
+
+            ResultSet rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                throw new DoesNotExistException(
+                        "Comment with postID " + comment.getPostID() + " and commentID " + comment.getCommentID()
+                                + " does not exist.");
+            }
+            comment.setAuthorID(rs.getString("user_ID"));
+            comment.setContent(rs.getString("content"));
+            comment.setCreationDate(rs.getString("creation_date"));
+            comment.setLastModified(rs.getString("last_modified"));
+            comment.setUpvotes(rs.getInt("upvotes"));
+            comment.setDownvotes(rs.getInt("downvotes"));
+            comment.setDeleted(rs.getBoolean("is_deleted"));
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
     }
 
@@ -111,28 +126,38 @@ public class Database {
      * @throws IsDeletedException
      */
     public static void retrieve(User user) throws DoesNotExistException, IsDeletedException {
-        String userID = user.getUserID();
-        String sql = "SELECT * FROM User WHERE user_ID = \"" + userID + "\"";
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
         try {
-            User temp = jdbcTemplate.queryForObject(sql, new UserRowMapper());
-            user.copy(temp);
-            if (temp.isDeleted()) {
-                throw new IsDeletedException("User with ID " + userID + " is deleted.");
-            }
-        } catch (EmptyResultDataAccessException e) {
-            throw new DoesNotExistException("User with ID " + userID + " does not exist.");
-        }
+            String sql = """
+                    SELECT *
+                    FROM User
+                    WHERE user_ID = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user.getUserID());
 
-        /*
-         * Use userID to select corresponding user record from database.
-         * Then use setter functions from User to fill out the private fields
-         * Maybe throw an exception if user does not exist, e.g. throw new
-         * UserDoesNotExistException()
-         * If user is deleted maybe throw new UserIsDeletedException()
-         */
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new DoesNotExistException("User with ID " + user.getUserID() + " does not exist.");
+            }
+            user.setUsername(rs.getString("username"));
+            user.setCreationDate(rs.getString("creation_date"));
+            user.setLastLogin(rs.getString("last_active"));
+            user.setProfilePicture(rs.getString("profile_picture"));
+            if (rs.getInt("user_level") == 1) {
+                user.setUserLevel(UserLevel.READER);
+            } else if (rs.getInt("user_level") == 2) {
+                user.setUserLevel(UserLevel.CONTRIBUTOR);
+            } else if (rs.getInt("user_level") == 3) {
+                user.setUserLevel(UserLevel.ADMIN);
+            }
+            user.setDeleted(rs.getBoolean("is_deleted"));
+            user.setBio(rs.getString("bio"));
+            if (user.isDeleted()) {
+                throw new IsDeletedException("User with ID " + user.getUserID() + " is deleted.");
+            }
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
+        }
     }
 
     /**
@@ -147,20 +172,44 @@ public class Database {
      */
     public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count,
             boolean reverse) {
-        String sql;
-        if (reverse) {
-            sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number <= " + commentIDStart
-                    + " AND is_deleted = false ORDER BY comment_number DESC LIMIT " + count;
-        } else {
-            sql = "SELECT * FROM Comment WHERE post_ID = " + postID + " AND comment_number >= " + commentIDStart
-                    + " AND is_deleted = false ORDER BY comment_number ASC LIMIT " + count;
-        }
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
-        List<Comment> temp = jdbcTemplate.query(sql, new CommentRowMapper());
-        for (Comment c : temp) {
-            comments.add(c);
+        try {
+            String sql;
+
+            if (reverse) {
+                sql = """
+                        SELECT *
+                        FROM Comment
+                        WHERE post_ID = ? AND comment_number <= ? AND is_deleted = false
+                        ORDER BY comment_number DESC
+                        LIMIT ?
+                        """;
+            } else {
+                sql = """
+                        SELECT *
+                        FROM Comment
+                        WHERE post_ID = ? AND comment_number >= ? AND is_deleted = false
+                        ORDER BY comment_number ASC
+                        LIMIT ?
+                        """;
+            }
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, postID);
+            ps.setInt(2, commentIDStart);
+            ps.setInt(3, count);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Comment comment = new Comment(rs.getInt("post_ID"), rs.getInt("comment_number"));
+                comment.setAuthorID(rs.getString("user_ID"));
+                comment.setContent(rs.getString("content"));
+                comment.setCreationDate(rs.getString("creation_date"));
+                comment.setLastModified(rs.getString("last_modified"));
+                comment.setUpvotes(rs.getInt("upvotes"));
+                comment.setDownvotes(rs.getInt("downvotes"));
+                comment.setDeleted(rs.getBoolean("is_deleted"));
+                comments.add(comment);
+            }
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
     }
 
@@ -178,19 +227,27 @@ public class Database {
         try {
             String sql;
             if (reverse) {
-                sql = "SELECT * FROM Post WHERE post_ID <= ? AND is_deleted = false ORDER BY post_ID DESC LIMIT ?";
+                sql = """
+                        SELECT *
+                        FROM Post
+                        WHERE post_ID <= ? AND is_deleted = false
+                        ORDER BY post_ID DESC
+                        LIMIT ?
+                        """;
             } else {
-                sql = "SELECT * FROM Post WHERE post_ID >= ? AND is_deleted = false ORDER BY post_ID ASC LIMIT ?";
+                sql = """
+                        SELECT *
+                        FROM Post
+                        WHERE post_ID >= ? AND is_deleted = false
+                        ORDER BY post_ID ASC
+                        LIMIT ?
+                        """;
             }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, postIDStart);
             ps.setInt(2, count);
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                // throw new DoesNotExistException("Post does not exist.");
-                // need change in controller
-            }
-            do {
+            while (rs.next()) {
                 Post post = new Post(rs.getInt("post_ID"));
                 post.setAuthorID(rs.getString("user_ID"));
                 post.setTitle(rs.getString("title"));
@@ -204,7 +261,7 @@ public class Database {
                 post.setAllowComments(rs.getBoolean("allow_comments"));
                 post.setThumbnailURL(rs.getString("thumbnail_url"));
                 posts.add(post);
-            } while (rs.next());
+            }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
         }
@@ -215,37 +272,60 @@ public class Database {
      * @return the commentID
      */
     public static int save(Comment comment) {
-        int postID = comment.getPostID();
-        int commentID = comment.getCommentID();
-        String sql = "SELECT MAX(comment_number) FROM Comment";
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
-        int maxID;
         try {
-            maxID = jdbcTemplate.queryForObject(sql, Integer.class);
-        } catch (Exception e) {
-            maxID = 0;
+            int commentID = comment.getCommentID();
+            String sql = """
+                    SELECT COALESCE(MAX(comment_number), 0) AS max
+                    FROM Comment
+                    WHERE post_ID = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, comment.getPostID());
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int maxID = rs.getInt("max");
+            if (maxID != 0 && commentID > maxID) {
+                throw new Error("Invalid comment ID.");
+            }
+            if (commentID != 0) {
+                int id = commentID;
+                sql = """
+                        UPDATE Comment
+                        SET user_ID = ?, content = ?, creation_date = ?, last_modified = ?, upvotes = ?, downvotes = ?, is_deleted = ?
+                        WHERE post_ID = ? AND comment_number = ?
+                        """;
+                ps = connection.prepareStatement(sql);
+                ps.setString(1, comment.getAuthorID());
+                ps.setString(2, comment.getContent());
+                ps.setString(3, comment.getCreationDate());
+                ps.setString(4, comment.getLastModified());
+                ps.setInt(5, comment.getUpvotes());
+                ps.setInt(6, comment.getDownvotes());
+                ps.setBoolean(7, comment.isDeleted());
+                ps.setInt(8, comment.getPostID());
+                ps.setInt(9, id);
+                ps.executeUpdate();
+                return id;
+            } else {
+                int id = maxID + 1;
+                sql = "INSERT INTO Comment VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ps = connection.prepareStatement(sql);
+                ps.setInt(1, comment.getPostID());
+                ps.setInt(2, id);
+                ps.setString(3, comment.getAuthorID());
+                ps.setString(4, comment.getContent());
+                ps.setString(5, comment.getCreationDate());
+                ps.setString(6, comment.getLastModified());
+                ps.setInt(7, comment.getUpvotes());
+                ps.setInt(8, comment.getDownvotes());
+                ps.setBoolean(9, comment.isDeleted());
+                ps.executeUpdate();
+                // comment.setID(id);
+                return id;
+            }
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
-        if (maxID != 0 && commentID > maxID) {
-            throw new Error("Invalid comment ID.");
-        }
-        if (commentID != 0) {
-            sql = formUpdate(comment, commentID);
-        } else {
-            commentID = maxID + 1;
-            sql = formInsert(comment, commentID);
-        }
-        jdbcTemplate.update(sql);
-        return commentID;
-        /*
-         * if keys already exist in database, update
-         * if postID does not exist throw error
-         * if commentID == 0, create new record with commentID being next smallest
-         * assignable ID
-         * if commentID anything else throw error
-         * Note: commentID == 0 reserved for creating new record
-         */
     }
 
     /**
@@ -265,7 +345,11 @@ public class Database {
             }
             if (postID != 0) {
                 int id = postID;
-                sql = "UPDATE Post SET user_ID = ?, title = ?, content = ?, creation_date = ?, last_modified = ?, upvotes = ?, downvotes = ?, views = ?, is_deleted = ?, allow_comments = ?, thumbnail_url = ? WHERE post_ID = ?";
+                sql = """
+                        UPDATE Post
+                        SET user_ID = ?, title = ?, content = ?, creation_date = ?, last_modified = ?, upvotes = ?, downvotes = ?, views = ?, is_deleted = ?, allow_comments = ?, thumbnail_url = ?
+                        WHERE post_ID = ?
+                        """;
                 ps = connection.prepareStatement(sql);
                 ps.setString(1, post.getAuthorID());
                 ps.setString(2, post.getTitle());
@@ -314,27 +398,72 @@ public class Database {
      * @return the userID
      */
     public static String save(User user) {
-        String userID = user.getUserID();
-        String sql = "SELECT COUNT(*) FROM User WHERE user_ID = " + userID;
-        if (jdbcTemplate == null) {
-            createTemplate();
+        try {
+            int level = 1;
+            if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
+                level = 2;
+            } else if (user.getUserLevel() == UserLevel.ADMIN) {
+                level = 3;
+            }
+            String sql = """
+                    SELECT COUNT(*)
+                    FROM User
+                    WHERE user_ID = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user.getUserID());
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int count = rs.getInt("COUNT(*)");
+            if (count == 1) {
+                sql = """
+                        UPDATE User
+                        SET username = ?, creation_date = ?, last_active = ?, profile_picture = ?, bio = ?, user_level = ?, is_deleted = ?
+                        WHERE user_ID = ?
+                        """;
+                ps = connection.prepareStatement(sql);
+                ps.setString(1, user.getUsername());
+                ps.setString(2, user.getCreationDate());
+                ps.setString(3, user.getLastLogin());
+                if (user.getProfilePicture() != null) {
+                    ps.setString(4, user.getProfilePicture());
+                } else {
+                    ps.setNull(4, java.sql.Types.VARCHAR);
+                }
+                if (user.getBio() != null) {
+                    ps.setString(5, user.getBio());
+                } else {
+                    ps.setNull(5, java.sql.Types.VARCHAR);
+                }
+                ps.setInt(6, level);
+                ps.setBoolean(7, user.isDeleted());
+                ps.setString(8, user.getUserID());
+
+                return user.getUserID();
+            } else {
+                sql = "INSERT INTO User VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+                ps = connection.prepareStatement(sql);
+                ps.setString(1, user.getUserID());
+                ps.setString(2, user.getUsername());
+                ps.setString(3, user.getCreationDate());
+                ps.setString(4, user.getLastLogin());
+                if (user.getProfilePicture() != null) {
+                    ps.setString(5, user.getProfilePicture());
+                } else {
+                    ps.setNull(5, java.sql.Types.VARCHAR);
+                }
+                if (user.getBio() != null) {
+                    ps.setString(6, user.getBio());
+                } else {
+                    ps.setNull(6, java.sql.Types.VARCHAR);
+                }
+                ps.setInt(7, level);
+                ps.setBoolean(8, user.isDeleted());
+                return user.getUserID();
+            }
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
-        if (jdbcTemplate.queryForObject(sql, Integer.class) == 1) {
-            sql = formUpdate(user, userID);
-        } else {
-            sql = formInsert(user, userID);
-        }
-        jdbcTemplate.update(sql);
-        return userID;
-        // Note that since user ID is final, you will have to create a new user later
-        // for further use.
-        /*
-         * if key already exist in database, update
-         * if userID == 0, create new record with userID being next smallest assignable
-         * ID
-         * if userID anything else throw error
-         * Note: userID == 0 reserved for creating new record
-         */
     }
 
     /**
@@ -343,28 +472,39 @@ public class Database {
      * @param comment
      */
     public static void delete(Comment comment) {
-        int postID = comment.getPostID();
-        int commentID = comment.getCommentID();
-        String sql = "UPDATE Comment SET is_deleted = true WHERE post_ID = " + postID + " AND comment_number = "
-                + commentID;
-        if (jdbcTemplate == null) {
-            createTemplate();
+        try {
+            String sql = """
+                    UPDATE Comment
+                    SET is_deleted = true
+                    WHERE post_ID = ? AND comment_number = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, comment.getPostID());
+            ps.setInt(2, comment.getCommentID());
+            ps.executeUpdate();
+            comment.setDeleted(true);
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
-        jdbcTemplate.update(sql);
-        comment.setDeleted(true);
     }
 
     /**
      * @param post
      */
     public static void delete(Post post) {
-        int postID = post.getPostID();
-        String sql = "UPDATE Post SET is_deleted = true WHERE post_ID = " + postID;
-        if (jdbcTemplate == null) {
-            createTemplate();
+        try {
+            String sql = """
+                    UPDATE Post
+                    SET is_deleted = true
+                    WHERE post_ID = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, post.getPostID());
+            ps.executeUpdate();
+            post.setDeleted(true);
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
-        jdbcTemplate.update(sql);
-        post.setDeleted(true);
     }
 
     /**
@@ -374,17 +514,20 @@ public class Database {
      *             <code>userID</code>.
      */
 
-    // todo:need to change as the user id is different now
     public static void delete(User user) {
-        String userID = user.getUserID();
-        String sql = "UPDATE User SET is_deleted = true WHERE user_ID = \"" + userID + "\"";
-        if (jdbcTemplate == null) {
-            createTemplate();
+        try {
+            String sql = """
+                    UPDATE User
+                    SET is_deleted = true
+                    WHERE user_ID = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user.getUserID());
+            ps.executeUpdate();
+            user.setDeleted(true);
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
-        jdbcTemplate.update(sql);
-        user.setDeleted(true);
-
-        // Note that there is no warning even if the user does not exist.
     }
 
     /**
@@ -578,37 +721,67 @@ public class Database {
      * @throws DoesNotExistException If the user does not exist.
      */
     public static int save(PromotionRequest request) throws DoesNotExistException {
-        /*
-         * if user has active request (not deleted), update and return the existing
-         * requestID
-         * otherwise generate incrementing requestID then insert and return the
-         * generated requestID
-         * throw new DoesNotExistException("User does not exist.") if userID not in User
-         * table
-         */
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
-        String userID = request.getUserID();
-        int requestID = 0;
-        String sql = "SELECT COUNT(*) FROM Promotion_Request WHERE user_ID = \"" + userID + "\" AND is_deleted = false";
-        if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
-            int maxID;
-            sql = "SELECT MAX(request_ID) FROM Promotion_Request";
-            try {
-                maxID = jdbcTemplate.queryForObject(sql, Integer.class);
-            } catch (Exception e) {
-                maxID = 0;
+        try {
+            int level = 1;
+            if (request.getTarget() == UserLevel.CONTRIBUTOR) {
+                level = 2;
+            } else if (request.getTarget() == UserLevel.ADMIN) {
+                level = 3;
             }
-            requestID = maxID + 1;
-            sql = formInsert(request, requestID);
-        } else {
-            sql = "SELECT request_ID FROM Promotion_Request WHERE user_ID = \"" + userID + "\" AND is_deleted = false";
-            requestID = jdbcTemplate.queryForObject(sql, Integer.class);
-            sql = formUpdate(request, requestID);
+            String sql = """
+                    SELECT COUNT(*)
+                    FROM Promotion_Request
+                    WHERE user_ID = ? AND is_deleted = false
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, request.getUserID());
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int count = rs.getInt("COUNT(*)");
+            if (count == 0) {
+                sql = "SELECT COALESCE(MAX(request_ID), 0) AS max FROM Promotion_Request";
+                ps = connection.prepareStatement(sql);
+                rs = ps.executeQuery();
+                rs.next();
+                int id = rs.getInt("max") + 1;
+
+                sql = "INSERT INTO Promotion_Request VALUES(?, ?, ?, ?, ?, ?)";
+                ps.setInt(1, id);
+                ps.setString(2, request.getUserID());
+                ps.setInt(3, level);
+                ps.setString(4, request.getRequestTime());
+                ps.setString(5, request.getReason());
+                ps.setBoolean(6, request.isDeleted());
+                return id;
+            } else {
+                sql = """
+                        SELECT request_ID
+                        FROM Promotion_Request
+                        WHERE user_ID = ? AND is_deleted = false
+                        """;
+                ps = connection.prepareStatement(sql);
+                rs = ps.executeQuery();
+                rs.next();
+                int id = rs.getInt("request_ID");
+
+                sql = """
+                        UPDATE Promotion_Request
+                        SET user_ID = ?, target_level = ?, request_time = ?, reason = ?, is_deleted = ?
+                        WHERE request_ID = ?
+                        """;
+                ps.setString(1, request.getUserID());
+                ps.setInt(2, level);
+                ps.setString(3, request.getRequestTime());
+                ps.setString(4, request.getReason());
+                ps.setBoolean(5, request.isDeleted());
+                ps.setInt(6, id);
+                ps = connection.prepareStatement(sql);
+                rs = ps.executeQuery();
+                return id;
+            }
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
-        jdbcTemplate.update(sql);
-        return requestID;
     }
 
     /**
@@ -622,19 +795,38 @@ public class Database {
      * @throws IsDeletedException
      */
     public static void retrieve(PromotionRequest request) throws DoesNotExistException, IsDeletedException {
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
-        int requestID = request.getRequestID();
-        String sql = "SELECT * FROM Promotion_Request WHERE request_ID = " + requestID;
+
         try {
-            PromotionRequest temp = jdbcTemplate.queryForObject(sql, new PromotionRequestRowMapper());
-            request.copy(temp);
-            if (Boolean.TRUE.equals(temp.isDeleted())) {
-                throw new IsDeletedException("Promotion request with ID " + requestID + " is deleted.");
+            String sql = """
+                    SELECT *
+                    FROM Promotion_Request
+                    WHERE request_ID = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, request.getRequestID());
+
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new DoesNotExistException(
+                        "Promotion request with ID " + request.getRequestID() + " does not exist.");
             }
-        } catch (EmptyResultDataAccessException e) {
-            throw new DoesNotExistException("Promotion request with ID " + requestID + " does not exist.");
+            request.setUserID(rs.getString("user_ID"));
+            request.setRequestTime(rs.getString("request_time"));
+            if (rs.getInt("target_level") == 1) {
+                request.setTarget(UserLevel.READER);
+            } else if (rs.getInt("target_level") == 2) {
+                request.setTarget(UserLevel.CONTRIBUTOR);
+            } else if (rs.getInt("target_level") == 3) {
+                request.setTarget(UserLevel.ADMIN);
+            }
+            request.setReason(rs.getString("reason"));
+            request.setDeleted(rs.getBoolean("is_deleted"));
+
+            if (Boolean.TRUE.equals(request.isDeleted())) {
+                throw new IsDeletedException("Promotion request with ID " + request.getRequestID() + " is deleted.");
+            }
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
     }
 
@@ -650,20 +842,46 @@ public class Database {
      */
     public static void retrievePromotionRequests(ArrayList<PromotionRequest> requests, int requestIDStart, int count,
             boolean reverse) {
-        String sql;
-        if (reverse) {
-            sql = "SELECT * FROM Promotion_Request WHERE request_ID <= " + requestIDStart
-                    + " AND is_deleted = false ORDER BY request_ID DESC LIMIT " + count;
-        } else {
-            sql = "SELECT * FROM Promotion_Request WHERE request_ID >= " + requestIDStart
-                    + " AND is_deleted = false ORDER BY request_ID ASC LIMIT " + count;
-        }
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
-        List<PromotionRequest> temp = jdbcTemplate.query(sql, new PromotionRequestRowMapper());
-        for (PromotionRequest r : temp) {
-            requests.add(r);
+        try {
+            String sql;
+            if (reverse) {
+                sql = """
+                        SELECT *
+                        FROM Promotion_Request
+                        WHERE request_ID <= ? AND is_deleted = false
+                        ORDER BY request_ID DESC
+                        LIMIT ?
+                        """;
+            } else {
+                sql = """
+                        SELECT *
+                        FROM Promotion_Request
+                        WHERE request_ID >= ? AND is_deleted = false
+                        ORDER BY request_ID ASC
+                        LIMIT ?
+                        """;
+            }
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, requestIDStart);
+            ps.setInt(2, count);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                PromotionRequest request = new PromotionRequest(rs.getInt("request_ID"));
+                request.setUserID(rs.getString("user_ID"));
+                request.setRequestTime(rs.getString("request_time"));
+                if (rs.getInt("target_level") == 1) {
+                    request.setTarget(UserLevel.READER);
+                } else if (rs.getInt("target_level") == 2) {
+                    request.setTarget(UserLevel.CONTRIBUTOR);
+                } else if (rs.getInt("target_level") == 3) {
+                    request.setTarget(UserLevel.ADMIN);
+                }
+                request.setReason(rs.getString("reason"));
+                request.setDeleted(rs.getBoolean("is_deleted"));
+                requests.add(request);
+            }
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
     }
 
@@ -671,13 +889,19 @@ public class Database {
      * @param request
      */
     public static void delete(PromotionRequest request) {
-        if (jdbcTemplate == null) {
-            createTemplate();
+        try {
+            String sql = """
+                    UPDATE Promotion_Request
+                    SET is_deleted = true
+                    WHERE request_ID = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, request.getRequestID());
+            ps.executeUpdate();
+            request.setDeleted(true);
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
-        int requestID = request.getRequestID();
-        String sql = "UPDATE Promotion_Request SET is_deleted = true WHERE request_ID = " + requestID;
-        jdbcTemplate.update(sql);
-        request.setDeleted(true);
     }
 
     /**
@@ -728,13 +952,37 @@ public class Database {
             String sql;
             sortBy = sortBy.toLowerCase();
             if (sortBy.equals("new")) {
-                sql = "SELECT * FROM Post WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false ORDER BY creation_date DESC LIMIT ?, ?";
+                sql = """
+                        SELECT *
+                        FROM Post
+                        WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false
+                        ORDER BY creation_date DESC
+                        LIMIT ?, ?
+                        """;
             } else if (sortBy.equals("old")) {
-                sql = "SELECT * FROM Post WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false ORDER BY creation_date ASC LIMIT ?, ?";
+                sql = """
+                        SELECT *
+                        FROM Post
+                        WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false
+                        ORDER BY creation_date ASC
+                        LIMIT ?, ?
+                        """;
             } else if (sortBy.equals("top")) {
-                sql = "SELECT *, upvotes - downvotes as top FROM Post WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false ORDER BY top DESC LIMIT ?, ?";
+                sql = """
+                        SELECT *, upvotes - downvotes as top
+                        FROM Post
+                        WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false
+                        ORDER BY top DESC
+                        LIMIT ?, ?
+                        """;
             } else if (sortBy.equals("view")) {
-                sql = "SELECT * FROM Post WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false ORDER BY views DESC LIMIT ?, ?";
+                sql = """
+                        SELECT *
+                        FROM Post
+                        WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false
+                        ORDER BY views DESC
+                        LIMIT ?, ?
+                        """;
             } else {
                 throw new Error("Unexpected soryBy string.");
             }
@@ -781,129 +1029,4 @@ public class Database {
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
-    private static String formInsert(User user, String id) {
-        String profile = "DEFAULT";
-        if (user.getProfilePicture() != null) {
-            profile = "\"" + user.getProfilePicture() + "\"";
-        }
-        int level = 1;
-        if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
-            level = 2;
-        } else if (user.getUserLevel() == UserLevel.ADMIN) {
-            level = 3;
-        }
-        int status = 0;
-        if (user.getUserStatus() == UserStatus.AWAY) {
-            status = 1;
-        } else if (user.getUserStatus() == UserStatus.BUSY) {
-            status = 2;
-        } else if (user.getUserStatus() == UserStatus.OFFLINE) {
-            status = 3;
-        }
-        String bio = user.getBio();
-        String creationDate = user.getCreationDate();
-        String lastLogin = user.getLastLogin();
-        return "INSERT INTO User VALUES(\"" + id + "\", \"" + user.getUsername()
-                + "\", \"" + creationDate + "\", \"" + lastLogin + "\", " + status + ", " + profile + ", \"" + bio
-                + "\", " + level + ", " + user.isDeleted() + ")";
-    }
-
-    private static String formUpdate(User user, String id) {
-        String profile = "NULL";
-        if (user.getProfilePicture() != null) {
-            profile = "\"" + user.getProfilePicture() + "\"";
-        }
-        String bio = "NULL";
-        if (user.getBio() != null) {
-            bio = "\"" + user.getBio() + "\"";
-        }
-        int level = 1;
-        if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
-            level = 2;
-        } else if (user.getUserLevel() == UserLevel.ADMIN) {
-            level = 3;
-        }
-        int status = 0;
-        if (user.getUserStatus() == UserStatus.AWAY) {
-            status = 1;
-        } else if (user.getUserStatus() == UserStatus.BUSY) {
-            status = 2;
-        } else if (user.getUserStatus() == UserStatus.OFFLINE) {
-            status = 3;
-        }
-        String creationDate = user.getCreationDate();
-        String lastLogin = user.getLastLogin();
-
-        return "UPDATE User SET username = \"" + user.getUsername() + "\", creation_date = \"" + creationDate
-                + "\", last_login = \"" + lastLogin
-                + "\", user_status = " + status + ", profile_picture = " + profile + ", bio = " + bio
-                + ", user_level = " + level + ", is_deleted = " + user.isDeleted()
-                + " WHERE user_ID = \"" + id + "\"";
-    }
-
-    private static String formInsert(Post post, int id) {
-        String creationDate = post.getCreationDate();
-        String lastModified = post.getLastModified();
-        return "INSERT INTO Post VALUES(" + id + ", \"" + post.getAuthorID() + "\", \"" + post.getTitle() + "\", \""
-                + post.getContent() + "\", \""
-                + creationDate + "\", \"" + lastModified + "\", " + post.getUpvotes() + ", " + post.getDownvotes()
-                + ", "
-                + post.getViews() + ", " + post.isDeleted() + ", " + post.isAllowComments() + ")";
-    }
-
-    private static String formUpdate(Post post, int id) {
-        String creationDate = post.getCreationDate();
-        String lastModified = post.getLastModified();
-        return "UPDATE Post SET user_ID = \"" + post.getAuthorID() + "\", title = \"" + post.getTitle()
-                + "\", content = \"" + post.getContent() + "\", creation_date = \"" + creationDate
-                + "\", last_modified = \"" + lastModified + "\", upvotes = " + post.getUpvotes() + ", downvotes = "
-                + post.getDownvotes() + ", views = " + post.getViews() + ", is_deleted = "
-                + post.isDeleted() + ", allow_comments = " + post.isAllowComments() + " WHERE post_ID = " + id;
-    }
-
-    private static String formInsert(Comment comment, int id) {
-        String creationDate = comment.getCreationDate();
-        String lastModified = comment.getLastModified();
-        return "INSERT INTO Comment VALUES(" + comment.getPostID() + ", " + id + ", \"" + comment.getAuthorID()
-                + "\", \"" + comment.getContent() + "\", \""
-                + creationDate + "\", \"" + lastModified + "\", " + comment.getUpvotes() + ", " + comment.getDownvotes()
-                + ", "
-                + comment.isDeleted() + ")";
-    }
-
-    private static String formUpdate(Comment comment, int id) {
-        String creationDate = comment.getCreationDate();
-        String lastModified = comment.getLastModified();
-        return "UPDATE Comment SET user_ID = \"" + comment.getAuthorID() + "\", content = \"" + comment.getContent()
-                + "\", creation_date = \"" + creationDate
-                + "\", last_modified = \"" + lastModified + "\", upvotes = " + comment.getUpvotes() + ", downvotes = "
-                + comment.getDownvotes() + ", is_deleted = "
-                + comment.isDeleted() + " WHERE post_ID = " + comment.getPostID() + " AND comment_number = " + id;
-    }
-
-    private static String formInsert(PromotionRequest request, int id) {
-        String requestTime = request.getRequestTime();
-        int level = 1;
-        if (request.getTarget() == UserLevel.CONTRIBUTOR) {
-            level = 2;
-        } else if (request.getTarget() == UserLevel.ADMIN) {
-            level = 3;
-        }
-        return "INSERT INTO Promotion_Request VALUES(" + id + ", \"" + request.getUserID() + "\", " + level + ", \""
-                + requestTime + "\",  \"" + request.getReason() + "\", " + request.isDeleted() + ")";
-    }
-
-    private static String formUpdate(PromotionRequest request, int id) {
-        String requestTime = request.getRequestTime();
-        int level = 1;
-        if (request.getTarget() == UserLevel.CONTRIBUTOR) {
-            level = 2;
-        } else if (request.getTarget() == UserLevel.ADMIN) {
-            level = 3;
-        }
-        return "UPDATE Promotion_Request SET user_ID = \"" + request.getUserID() + "\", target_level = " + level
-                + ", request_time = \"" + requestTime
-                + "\", reason = \"" + request.getReason() + "\", is_deleted = " + request.isDeleted()
-                + " WHERE request_ID = " + id;
-    }
 }

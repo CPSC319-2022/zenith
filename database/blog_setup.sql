@@ -8,8 +8,7 @@ CREATE TABLE User(
     user_ID VARCHAR(255),
     username VARCHAR(255) NOT NULL,
     creation_date CHAR(30) NOT NULL,
-    last_login CHAR(30) NOT NULL,
-    user_status TINYINT NOT NULL DEFAULT 0,
+    last_active CHAR(30) NOT NULL,
     profile_picture VARCHAR(255) DEFAULT NULL,
     bio VARCHAR(1000) DEFAULT NULL,
     user_level TINYINT NOT NULL DEFAULT 0,
@@ -29,6 +28,7 @@ CREATE TABLE Post(
     views INTEGER NOT NULL DEFAULT 0,
     is_deleted BOOLEAN NOT NULL DEFAULT false,
     allow_comments BOOLEAN NOT NULL DEFAULT true,
+    thumbnail_url VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY(post_ID),
     FOREIGN KEY(user_ID) REFERENCES User(user_ID) ON DELETE CASCADE
 );
