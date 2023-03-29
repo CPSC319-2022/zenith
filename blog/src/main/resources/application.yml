@@ -15,3 +15,8 @@ spring:
           google:
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: sub
+google:
+  cloud:
+    storage:
+      credentials:
+        path: blog-pipe-db1667c1da0e.json
