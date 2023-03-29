@@ -146,6 +146,10 @@ public class Post extends Content {
     }
 
     public void setThumbnailURL(String thumbnailURL) {
-        this.thumbnailURL = thumbnailURL;
+        if (thumbnailURL.isEmpty()) {
+            this.thumbnailURL = DEFAULT_IMAGE_URL;
+        } else {
+            this.thumbnailURL = thumbnailURL;
+        }
     }
 }
