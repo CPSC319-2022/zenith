@@ -13,7 +13,7 @@ public class Post extends Content {
     private static final int MIN_TITLE_LENGTH = 1;
     private static final String DEFAULT_IMAGE_URL = "https://storage.googleapis.com/zenith-blog-storage/176fee8b-09f9-4d97-b1fa-9e47dabf1752.jpg";
 
-    private final int postID;
+    private int postID;
     private String title;
     private int views;
     private boolean allowComments;
@@ -115,6 +115,10 @@ public class Post extends Content {
 
     public int getPostID() {
         return postID;
+    }
+
+    public void setPostID(int postID) {
+        this.postID = postID;
     }
 
     public String getTitle() {

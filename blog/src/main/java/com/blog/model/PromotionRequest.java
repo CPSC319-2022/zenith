@@ -9,7 +9,7 @@ import org.json.JSONObject;
 public class PromotionRequest extends Record {
     public static final int NEW_PROMOTION_REQUEST_ID = 0;
 
-    private final int requestID;
+    private int requestID;
     private String userID;
     private UserLevel target;
     private String requestTime;
@@ -79,6 +79,10 @@ public class PromotionRequest extends Record {
 
     public int getRequestID() {
         return requestID;
+    }
+
+    public void setRequestID(int requestID) {
+        this.requestID = requestID;
     }
 
     public String getUserID() {

@@ -35,7 +35,7 @@ public class User extends Record {
         }
     }
 
-    private final String userID;
+    private String userID;
     private String username;
     private UserLevel userLevel;
     private String creationDate;
@@ -249,6 +249,10 @@ public class User extends Record {
 
     public String getUserID() {
         return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getUsername() {

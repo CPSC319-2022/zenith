@@ -10,7 +10,7 @@ import org.json.JSONObject;
 public class Comment extends Content {
     public static final int NEW_COMMENT_ID = 0;
 
-    private final int postID;
+    private int postID;
     private int commentID;
 
     public Comment(int postID, int commentID) {
@@ -77,6 +77,10 @@ public class Comment extends Content {
 
     public int getPostID() {
         return postID;
+    }
+
+    public void setPostID(int postID) {
+        this.postID = postID;
     }
 
     public int getCommentID() {
