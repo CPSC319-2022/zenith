@@ -158,10 +158,7 @@ public class PostController {
         int postID = Database.save(post);
 
         // Return the created post
-        post = Post.retrieve(postID);
-        post.setThumbnailURL(thumbnailURL);
-        return post.asJSONString();
-        // return Post.retrieve(postID).asJSONString(); // TODO: bring back when Database is updated
+        return Post.retrieve(postID).asJSONString();
     }
 
     /**
