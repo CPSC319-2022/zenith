@@ -28,7 +28,7 @@ public class Database {
             connection = null;
         }
     }
-    
+
     // TODO: before using this code, change table from cloud shell (necessary)
 
     private static JdbcTemplate jdbcTemplate;
@@ -171,7 +171,7 @@ public class Database {
      * @param count
      */
     public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count,
-            boolean reverse) {
+                                boolean reverse) {
         try {
             String sql;
 
@@ -539,7 +539,7 @@ public class Database {
         /*
          * will also need new table with key (userID, postID)
          * also need column for whether they upvoted or downvoted (binary column)
-         * 
+         *
          * if user has neither upvoted nor downvoted
          * normal insert
          * increment upvote counter for the post
@@ -645,7 +645,7 @@ public class Database {
         /*
          * will also need new table with key (userID, postID, commentID)
          * also need column for whether they upvoted or downvoted (binary column)
-         * 
+         *
          * similar behaviour as upvote post but for comments
          */
         if (jdbcTemplate == null) {
@@ -684,7 +684,7 @@ public class Database {
     public static void downvote(String userID, int postID, int commentID) throws BlogException {
         /*
          * should same table as upvote
-         * 
+         *
          * similar behaviour as upvote but flipped
          */
         if (jdbcTemplate == null) {
@@ -841,7 +841,7 @@ public class Database {
      * @param reverse
      */
     public static void retrievePromotionRequests(ArrayList<PromotionRequest> requests, int requestIDStart, int count,
-            boolean reverse) {
+                                                 boolean reverse) {
         try {
             String sql;
             if (reverse) {
@@ -994,19 +994,20 @@ public class Database {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                Post post = new Post(rs.getInt("post_ID"));
-                post.setAuthorID(rs.getString("user_ID"));
-                post.setTitle(rs.getString("title"));
-                post.setContent(rs.getString("content"));
-                post.setCreationDate(rs.getString("creation_date"));
-                post.setLastModified(rs.getString("last_modified"));
-                post.setUpvotes(rs.getInt("upvotes"));
-                post.setDownvotes(rs.getInt("downvotes"));
-                post.setDeleted(rs.getBoolean("is_deleted"));
-                post.setViews(rs.getInt("views"));
-                post.setAllowComments(rs.getBoolean("allow_comments"));
-                post.setThumbnailURL(rs.getString("thumbnail_url"));
-                posts.add(post);
+                posts.add(new Post(
+                        rs.getInt("post_ID"),
+                        rs.getString("user_ID"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getString("creation_date"),
+                        rs.getString("last_modified"),
+                        rs.getInt("upvotes"),
+                        rs.getInt("downvotes"),
+                        rs.getBoolean("is_deleted"),
+                        rs.getInt("views"),
+                        rs.getBoolean("allow_comments"),
+                        rs.getString("thumbnail_url")
+                        ));
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
