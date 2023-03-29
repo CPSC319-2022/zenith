@@ -103,7 +103,7 @@ public class PostController {
      *                    "content":       String,  // The content of the post.
      *                    "allowComments": boolean  // Whether to allow comments
      *                    }
-     * @param file        The thumbnail of the post.
+     * @param file        The thumbnail of the post. Can be null to indicate using default image.
      * @return The JSON string representing the created post.
      * @throws BlogException
      */
@@ -368,13 +368,8 @@ public class PostController {
     @ResponseBody
     public ResponseEntity<String> create(@RequestHeader("Authorization") String accessToken,
                                          @RequestParam("jsonData") String body,
-                                         @RequestPart(value = "file", required = false) MultipartFile file) { // TODO: allow List<MultipartFile> files
+                                         @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
-            if (file != null) {
-                System.out.println("File received: " + file.getOriginalFilename());
-            } else {
-                System.out.println("File not received");
-            }
             return new ResponseEntity<>(createPost(accessToken, new JSONObject(body), file), HttpStatus.CREATED);
         } catch (IsDeletedException | InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
