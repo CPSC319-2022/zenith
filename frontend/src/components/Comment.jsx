@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Card, Button, Image, Row, Col } from 'react-bootstrap';
 import { AiFillLike, AiFillDislike, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 import '../styles/Comment.css';
@@ -10,25 +10,46 @@ const Comment = ({
   onUpvote,
   userIsLoggedIn,
   onDownvote,
-  handleEdit,
-  handleSave,
-  handleCancel,
+  
+  // handleCancel,
   onDelete,
-  editing,
-  editedContent,
-  handleChange,
+  onEdit,
   userIsCommentAuthor,
   userIsAdmin,
  
 }) => {
+  
+  const [editing, setEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(comment.content);
+  
+  const handleEdit = () => {
+    setEditedContent(comment.content);
+    setEditing(true);
+  };
+  const handleChange = (value) => {
+    console.log(value);
+    console.log("editedContent", editedContent);
+    setEditedContent(value);
+  };
+  const handleSave = () => {
+    // Call a function to save the edited comment content
+    onEdit(editedContent.toString());
+    setEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditing(false);
+  };
   return (
     
+
     <Card className="mb-4 comment-card">
       {console.log('comment', userIsCommentAuthor)}
       <Card.Body>
         <Row className="align-items-center">
           <Col xs={2} md={1} className="text-center">
-            <Image src={comment.authorProfilePicture} roundedCircle className="comment-thumbnail" referrerpolicy="no-referrer"/>
+            {<img src={comment.authorProfilePicture} className="comment-thumbnail" referrerpolicy="no-referrer"/>}
+            {/* <Image src={comment.authorProfilePicture} roundedCircle className="comment-thumbnail" referrerpolicy="no-referrer"/> */}
           </Col>
           <Col>
             <Card.Title className="comment-author">{comment.authorUsername}</Card.Title>
@@ -86,4 +107,3 @@ const Comment = ({
   );
               }
   export default Comment;
-  

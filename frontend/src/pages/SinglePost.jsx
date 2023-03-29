@@ -176,11 +176,13 @@ const SinglePost = () => {
 
   const handleDeleteComment = async (postID, commentID) => {
     await dispatch(deleteComment({ postID, commentID }));
+    setUpdateComments(!updateComments);
   };
 
   const handleEditComment = async (postID, commentID, content, editedContent) => {
     content = editedContent.toString();
     await dispatch(editComment({ postID, commentID, content }));
+    setUpdateComments(!updateComments);
   };
 
 
