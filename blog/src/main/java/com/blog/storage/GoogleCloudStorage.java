@@ -1,7 +1,6 @@
 package com.blog.storage;
 
 import com.blog.exception.BlogException;
-import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import org.springframework.stereotype.Service;
