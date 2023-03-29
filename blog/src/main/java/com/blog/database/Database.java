@@ -198,15 +198,17 @@ public class Database {
             ps.setInt(3, count);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Comment comment = new Comment(rs.getInt("post_ID"), rs.getInt("comment_number"));
-                comment.setAuthorID(rs.getString("user_ID"));
-                comment.setContent(rs.getString("content"));
-                comment.setCreationDate(rs.getString("creation_date"));
-                comment.setLastModified(rs.getString("last_modified"));
-                comment.setUpvotes(rs.getInt("upvotes"));
-                comment.setDownvotes(rs.getInt("downvotes"));
-                comment.setDeleted(rs.getBoolean("is_deleted"));
-                comments.add(comment);
+                comments.add(new Comment(
+                        rs.getInt("post_ID"),
+                        rs.getInt("comment_number"),
+                        rs.getString("user_ID"),
+                        rs.getString("content"),
+                        rs.getString("creation_date"),
+                        rs.getString("last_modified"),
+                        rs.getInt("upvotes"),
+                        rs.getInt("downvotes"),
+                        rs.getBoolean("is_deleted")
+                ));
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -248,19 +250,20 @@ public class Database {
             ps.setInt(2, count);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Post post = new Post(rs.getInt("post_ID"));
-                post.setAuthorID(rs.getString("user_ID"));
-                post.setTitle(rs.getString("title"));
-                post.setContent(rs.getString("content"));
-                post.setCreationDate(rs.getString("creation_date"));
-                post.setLastModified(rs.getString("last_modified"));
-                post.setUpvotes(rs.getInt("upvotes"));
-                post.setDownvotes(rs.getInt("downvotes"));
-                post.setDeleted(rs.getBoolean("is_deleted"));
-                post.setViews(rs.getInt("views"));
-                post.setAllowComments(rs.getBoolean("allow_comments"));
-                post.setThumbnailURL(rs.getString("thumbnail_url"));
-                posts.add(post);
+                posts.add(new Post(
+                        rs.getInt("post_ID"),
+                        rs.getString("user_ID"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getString("creation_date"),
+                        rs.getString("last_modified"),
+                        rs.getInt("upvotes"),
+                        rs.getInt("downvotes"),
+                        rs.getBoolean("is_deleted"),
+                        rs.getInt("views"),
+                        rs.getBoolean("allow_comments"),
+                        rs.getString("thumbnail_url")
+                ));
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -269,9 +272,8 @@ public class Database {
 
     /**
      * @param comment
-     * @return the commentID
      */
-    public static int save(Comment comment) {
+    public static void save(Comment comment) {
         try {
             int commentID = comment.getCommentID();
             String sql = """
@@ -305,7 +307,6 @@ public class Database {
                 ps.setInt(8, comment.getPostID());
                 ps.setInt(9, id);
                 ps.executeUpdate();
-                return id;
             } else {
                 int id = maxID + 1;
                 sql = "INSERT INTO Comment VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -320,8 +321,7 @@ public class Database {
                 ps.setInt(8, comment.getDownvotes());
                 ps.setBoolean(9, comment.isDeleted());
                 ps.executeUpdate();
-                // comment.setID(id);
-                return id;
+                comment.setCommentID(id);
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -330,9 +330,8 @@ public class Database {
 
     /**
      * @param post
-     * @return the postID
      */
-    public static int save(Post post) {
+    public static void save(Post post) {
         try {
             int postID = post.getPostID();
             String sql = "SELECT COALESCE(MAX(post_id), 0) AS max FROM Post";
@@ -364,7 +363,6 @@ public class Database {
                 ps.setString(11, post.getThumbnailURL());
                 ps.setInt(12, id);
                 ps.executeUpdate();
-                return id;
             } else {
                 int id = maxID + 1;
                 sql = "INSERT INTO Post VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -382,8 +380,7 @@ public class Database {
                 ps.setBoolean(11, post.isAllowComments());
                 ps.setString(12, post.getThumbnailURL());
                 ps.executeUpdate();
-                // post.setID(id);
-                return id;
+                post.setPostID(id);
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -395,9 +392,8 @@ public class Database {
      *
      * @param user The <code>User</code> object to save. Contains the
      *             <code>userID</code>.
-     * @return the userID
      */
-    public static String save(User user) {
+    public static void save(User user) {
         try {
             int level = 1;
             if (user.getUserLevel() == UserLevel.CONTRIBUTOR) {
@@ -438,8 +434,6 @@ public class Database {
                 ps.setInt(6, level);
                 ps.setBoolean(7, user.isDeleted());
                 ps.setString(8, user.getUserID());
-
-                return user.getUserID();
             } else {
                 sql = "INSERT INTO User VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
                 ps = connection.prepareStatement(sql);
@@ -459,7 +453,6 @@ public class Database {
                 }
                 ps.setInt(7, level);
                 ps.setBoolean(8, user.isDeleted());
-                return user.getUserID();
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -717,10 +710,9 @@ public class Database {
 
     /**
      * @param request The promotion request.
-     * @return The requestID
      * @throws DoesNotExistException If the user does not exist.
      */
-    public static int save(PromotionRequest request) throws DoesNotExistException {
+    public static void save(PromotionRequest request) throws DoesNotExistException {
         try {
             int level = 1;
             if (request.getTarget() == UserLevel.CONTRIBUTOR) {
@@ -744,15 +736,16 @@ public class Database {
                 rs = ps.executeQuery();
                 rs.next();
                 int id = rs.getInt("max") + 1;
+                request.setRequestID(id);
 
                 sql = "INSERT INTO Promotion_Request VALUES(?, ?, ?, ?, ?, ?)";
+                ps = connection.prepareStatement(sql);
                 ps.setInt(1, id);
                 ps.setString(2, request.getUserID());
                 ps.setInt(3, level);
                 ps.setString(4, request.getRequestTime());
                 ps.setString(5, request.getReason());
                 ps.setBoolean(6, request.isDeleted());
-                return id;
             } else {
                 sql = """
                         SELECT request_ID
@@ -777,7 +770,6 @@ public class Database {
                 ps.setInt(6, id);
                 ps = connection.prepareStatement(sql);
                 rs = ps.executeQuery();
-                return id;
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -950,43 +942,37 @@ public class Database {
      */
     public static void search(ArrayList<Post> posts, String pattern, int start, int count, String sortBy) throws BlogException {
         try {
-            String sql;
-            sortBy = sortBy.toLowerCase();
-            if (sortBy.equals("new")) {
-                sql = """
+            String sql = switch (sortBy.toLowerCase()) {
+                case "new" -> """
                         SELECT *
                         FROM Post
                         WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false
                         ORDER BY creation_date DESC
                         LIMIT ?, ?
                         """;
-            } else if (sortBy.equals("old")) {
-                sql = """
+                case "old" -> """
                         SELECT *
                         FROM Post
                         WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false
                         ORDER BY creation_date ASC
                         LIMIT ?, ?
                         """;
-            } else if (sortBy.equals("top")) {
-                sql = """
+                case "top" -> """
                         SELECT *, upvotes - downvotes as top
                         FROM Post
                         WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false
                         ORDER BY top DESC
                         LIMIT ?, ?
                         """;
-            } else if (sortBy.equals("view")) {
-                sql = """
+                case "view" -> """
                         SELECT *
                         FROM Post
                         WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = false
                         ORDER BY views DESC
                         LIMIT ?, ?
                         """;
-            } else {
-                throw new BlogException("Unexpected sortBy string.");
-            }
+                default -> throw new BlogException("Unexpected sortBy string.");
+            };
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, "%" + pattern + "%");
             ps.setString(2, "%" + pattern + "%");
@@ -1008,7 +994,7 @@ public class Database {
                         rs.getInt("views"),
                         rs.getBoolean("allow_comments"),
                         rs.getString("thumbnail_url")
-                        ));
+                ));
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());

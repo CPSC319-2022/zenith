@@ -205,10 +205,10 @@ public class UserController {
         );
 
         // Save the request to database
-        int requestID = Database.save(request);
+        Database.save(request);
 
         // Return the created request
-        return PromotionRequest.retrieve(requestID).asJSONString();
+        return request.asJSONString();
     }
 
     /**

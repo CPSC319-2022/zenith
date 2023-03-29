@@ -140,10 +140,10 @@ public class CommentController {
         );
 
         // Save comment to database
-        int commentID = Database.save(comment);
+        Database.save(comment);
 
         // Return the created comment
-        return Comment.retrieve(postID, commentID).asJSONString();
+        return comment.asJSONString();
     }
 
     /**

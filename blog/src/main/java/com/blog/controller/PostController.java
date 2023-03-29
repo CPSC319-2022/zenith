@@ -155,10 +155,10 @@ public class PostController {
         );
 
         // Save post to database
-        int postID = Database.save(post);
+        Database.save(post);
 
         // Return the created post
-        return Post.retrieve(postID).asJSONString();
+        return post.asJSONString();
     }
 
     /**
