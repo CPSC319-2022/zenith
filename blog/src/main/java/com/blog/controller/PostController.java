@@ -483,6 +483,8 @@ public class PostController {
                                          @RequestParam(value = "sortBy", defaultValue = "new") String sortBy) {
         try {
             return ResponseEntity.ok(searchPosts(pattern, start, count, sortBy));
+        } catch (BlogException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

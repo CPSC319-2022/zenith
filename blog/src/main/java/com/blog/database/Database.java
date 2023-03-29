@@ -991,7 +991,7 @@ public class Database {
             ps.setString(1, "%" + pattern + "%");
             ps.setString(2, "%" + pattern + "%");
             ps.setInt(3, start - 1);
-            ps.setInt(3, count);
+            ps.setInt(4, count);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -1011,7 +1011,7 @@ public class Database {
                         ));
             }
         } catch (SQLException e) {
-            throw new BlogException(e.getMessage());
+            throw new Error(e.getMessage());
         }
     }
 
