@@ -3,6 +3,7 @@ package com.blog.storage;
 import com.blog.exception.BlogException;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +15,12 @@ public class GoogleCloudStorage {
     public static final String DEFAULT_IMAGE_URL = ""; // TODO: add default url
 
     private static final String BUCKET_NAME = "zenith-blog-storage";
-    private static final Storage STORAGE = GoogleCloudStorageConfig.storage();
+    private static Storage STORAGE;
+
+    @Autowired
+    public GoogleCloudStorage(GoogleCloudStorageConfig googleCloudStorageConfig) {
+        this.STORAGE = googleCloudStorageConfig.storage();
+    }
 
     public static String uploadImage(MultipartFile image) throws BlogException {
         if (image == null) {
