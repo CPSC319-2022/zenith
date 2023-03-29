@@ -16,7 +16,7 @@ public class GoogleCloudStorage {
     private static final String BUCKET_NAME = "zenith-blog-storage";
     private static final Storage STORAGE = GoogleCloudStorageConfig.storage();
 
-    public String uploadImage(MultipartFile image) throws IOException {
+    public static String uploadImage(MultipartFile image) throws IOException {
         String imageName = UUID.randomUUID().toString();
         String imageExtension = getImageExtension(image.getOriginalFilename());
         String blobName = imageName + "." + imageExtension;
@@ -28,7 +28,7 @@ public class GoogleCloudStorage {
         return String.format("https://storage.googleapis.com/%s/%s", BUCKET_NAME, blobName);
     }
 
-    private String getImageExtension(String originalFilename) {
+    private static String getImageExtension(String originalFilename) {
         int lastDotIndex = originalFilename.lastIndexOf('.');
         if (lastDotIndex == -1) {
             return ""; // or a default extension
