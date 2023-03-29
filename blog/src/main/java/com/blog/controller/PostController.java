@@ -367,9 +367,14 @@ public class PostController {
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<String> create(@RequestHeader("Authorization") String accessToken,
-                                         @RequestBody String body,
+                                         @RequestParam("jsonData") String body,
                                          @RequestPart(value = "file", required = false) MultipartFile file) { // TODO: allow List<MultipartFile> files
         try {
+            if (file != null) {
+                System.out.println("File received: " + file.getOriginalFilename());
+            } else {
+                System.out.println("File not received");
+            }
             return new ResponseEntity<>(createPost(accessToken, new JSONObject(body), file), HttpStatus.CREATED);
         } catch (IsDeletedException | InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
@@ -383,6 +388,7 @@ public class PostController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
 
     @DeleteMapping("/delete")
     @ResponseBody

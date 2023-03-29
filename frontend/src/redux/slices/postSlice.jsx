@@ -30,15 +30,17 @@ export const fetchPost = createAsyncThunk(
 
 export const createPost = createAsyncThunk(
     'posts/createPost',
-    async (postData, { rejectWithValue }) => {
+    async ({ postData, file }, { rejectWithValue }) => {
         try {
-            await createPostAPI(postData);
+            await createPostAPI({ ...postData, image: file });
             return 'Post created successfully';
         } catch (err) {
             return rejectWithValue(err.message);
         }
     }
 );
+
+
 
 // Async thunk for editing a post
 export const editPost = createAsyncThunk(
