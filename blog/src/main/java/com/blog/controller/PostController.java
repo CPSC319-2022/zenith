@@ -4,6 +4,7 @@ import com.blog.database.Database;
 import com.blog.exception.*;
 import com.blog.model.Post;
 import com.blog.model.User;
+import com.blog.storage.GoogleCloudStorage;
 import com.blog.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +12,9 @@ import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.blog.model.Post.NEW_POST_ID;
@@ -100,10 +103,11 @@ public class PostController {
      *                    "content":       String,  // The content of the post.
      *                    "allowComments": boolean  // Whether to allow comments
      *                    }
+     * @param file        The thumbnail of the post.
      * @return The JSON string representing the created post.
      * @throws BlogException
      */
-    private static String createPost(String accessToken, JSONObject input) throws BlogException {
+    private static String createPost(String accessToken, JSONObject input, MultipartFile file) throws BlogException {
         String title;
         String content;
         boolean allowComments;
@@ -131,6 +135,9 @@ public class PostController {
         Post.validateTitle(title);
         Post.validateContent(content);
 
+        // Get the URL for the thumbnail
+        String thumbnailURL = GoogleCloudStorage.uploadImage(file);
+
         // Create new post
         String currentTime = Utility.getCurrentTime();
         Post post = new Post(
@@ -144,14 +151,18 @@ public class PostController {
                 0,
                 false,
                 0,
-                allowComments
+                allowComments,
+                thumbnailURL
         );
 
         // Save post to database
         int postID = Database.save(post);
 
         // Return the created post
-        return Post.retrieve(postID).asJSONString();
+        post = Post.retrieve(postID);
+        post.setThumbnailURL(thumbnailURL);
+        return post.asJSONString();
+        // return Post.retrieve(postID).asJSONString(); // TODO: bring back when Database is updated
     }
 
     /**
@@ -356,9 +367,10 @@ public class PostController {
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<String> create(@RequestHeader("Authorization") String accessToken,
-                                         @RequestBody String body) {
+                                         @RequestBody String body,
+                                         @RequestPart(value = "file", required = false) MultipartFile file) { // TODO: allow List<MultipartFile> files
         try {
-            return new ResponseEntity<>(createPost(accessToken, new JSONObject(body)), HttpStatus.CREATED);
+            return new ResponseEntity<>(createPost(accessToken, new JSONObject(body), file), HttpStatus.CREATED);
         } catch (IsDeletedException | InvalidPermissionException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (LoginFailedException e) {

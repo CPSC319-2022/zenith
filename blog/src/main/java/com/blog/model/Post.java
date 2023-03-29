@@ -16,7 +16,7 @@ public class Post extends Content {
     private String title;
     private int views;
     private boolean allowComments;
-    // private Tag tags; TODO: allow tags for posts
+    private String thumbnailURL;
 
     public Post(int postID) {
         this.postID = postID;
@@ -32,12 +32,14 @@ public class Post extends Content {
                 int downvotes,
                 boolean isDeleted,
                 int views,
-                boolean allowComments) {
+                boolean allowComments,
+                String thumbnailURL) {
         super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
         this.postID = postID;
         this.title = title;
         this.views = views;
         this.allowComments = allowComments;
+        this.thumbnailURL = thumbnailURL;
     }
 
     /**
@@ -131,5 +133,13 @@ public class Post extends Content {
 
     public void setAllowComments(boolean allowComments) {
         this.allowComments = allowComments;
+    }
+
+    public String getThumbnailURL() {
+        return thumbnailURL;
+    }
+
+    public void setThumbnailURL(String thumbnailURL) {
+        this.thumbnailURL = thumbnailURL;
     }
 }

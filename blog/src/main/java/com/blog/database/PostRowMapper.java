@@ -22,6 +22,6 @@ public class PostRowMapper implements RowMapper<Post> {
 		boolean isDeleted = rs.getBoolean("is_deleted");
 		int views = rs.getInt("views");
 		boolean allowComments = rs.getBoolean("allow_comments");
-		return new Post(postID, authorID, title, content, creationDate, lastModified, upvotes, downvotes, isDeleted, views, allowComments);
+		return new Post(postID, authorID, title, content, creationDate, lastModified, upvotes, downvotes, isDeleted, views, allowComments, "");
 	}
 }
