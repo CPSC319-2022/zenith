@@ -53,10 +53,15 @@ const CreatePost = () => {
         },
         file: image, // Pass the image state
       })
-    );
+    ).then((response) => {
+      if (response.meta.requestStatus === 'fulfilled') {
+
+        setTitle("");
+        setBody("");
+        window.location.href = `/`;
+      }});
   
-    setTitle("");
-    setBody("");
+ 
   };
   
 
