@@ -230,25 +230,6 @@ class UnitTests {
         }
     }
 
-    @Test
-    void userCopy() {
-        User admin = new User(
-                "99",
-                "Admin",
-                ADMIN,
-                "2021-12-09T06:00:00.861336Z",
-                "2023-03-19T19:00:30.861336Z",
-                OFFLINE,
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-                "Admin is watching you",
-                false
-        );
-        assertEquals("Guest Username", guest.getUsername());
-        guest.copy(admin);
-        assertEquals("Admin", guest.getUsername());
-        assertEquals(ADMIN, guest.getUserLevel());
-    }
-
 
     /**
      * Tests for Comment
@@ -304,31 +285,6 @@ class UnitTests {
         assertEquals(1, comment.getCommentID());
         comment.setCommentID(5);
         assertEquals(5, comment.getCommentID());
-    }
-
-    @Test
-    void commentCopy() {
-        Comment comment1 = new Comment(
-                10,
-                11,
-                "12",
-                "Happy New Year!",
-                "2022-01-01T00:00:00.861336Z",
-                "2022-01-02T06:00:00.861336Z",
-                18,
-                1,
-                false
-        );
-        assertEquals(1, comment.getCommentID());
-        assertEquals(0, comment.getPostID());
-        comment.copy(comment1);
-        assertEquals("12", comment.getAuthorID());
-        assertEquals("Happy New Year!", comment.getContent());
-        assertEquals("2022-01-01T00:00:00.861336Z", comment.getCreationDate());
-        assertEquals("2022-01-02T06:00:00.861336Z", comment.getLastModified());
-        assertEquals(18, comment.getUpvotes());
-        assertEquals(1, comment.getDownvotes());
-        assertEquals(false, comment.isDeleted());
     }
 
     @Test
@@ -632,36 +588,6 @@ class UnitTests {
         } catch (BlogException be){
             fail("a blog exception should not be thrown.");
         }
-    }
-
-    @Test
-    void postCopy() {
-        Post post1 = new Post(
-                1874,
-                "9934",
-                "Happy New Year",
-                "I wish everyone is having fun in Christmas and wish all of us a happy new year!",
-                "2023-01-01T00:00:01.861336Z",
-                "2023-01-01T00:21:57.861336Z",
-                98,
-                0,
-                false,
-                201,
-                true,
-                "");
-
-        assertEquals(0, post.getPostID());
-        assertEquals("1", post.getAuthorID());
-        post.copy(post1);
-        assertEquals("9934", post.getAuthorID());
-        assertEquals("Happy New Year", post.getTitle());
-        assertEquals("I wish everyone is having fun in Christmas and wish all of us a happy new year!", post.getContent());
-        assertEquals("2023-01-01T00:00:01.861336Z", post.getCreationDate());
-        assertEquals("2023-01-01T00:21:57.861336Z", post.getLastModified());
-        assertEquals(98, post.getUpvotes());
-        assertEquals(0, post.getDownvotes());
-        assertEquals(false, post.isDeleted());
-        assertEquals(true, post.isAllowComments());
     }
 
     @Test

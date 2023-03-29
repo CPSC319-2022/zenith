@@ -94,18 +94,6 @@ public class Post extends Content {
         return asJSONObject().toString();
     }
 
-    public void copy(Post p) {
-        this.setAuthorID(p.getAuthorID());
-        this.setTitle(p.getTitle());
-        this.setContent(p.getContent());
-        this.setCreationDate(p.getCreationDate());
-        this.setLastModified(p.getLastModified());
-        this.setUpvotes(p.getUpvotes());
-        this.setDownvotes(p.getDownvotes());
-        this.setDeleted(p.isDeleted());
-        this.setAllowComments(p.isAllowComments());
-    }
-
     /**
      * Increments the view counter.
      */

@@ -65,16 +65,6 @@ public class Comment extends Content {
         return asJSONObject().toString();
     }
 
-    public void copy(Comment c) {
-        this.setAuthorID(c.getAuthorID());
-        this.setContent(c.getContent());
-        this.setCreationDate(c.getCreationDate());
-        this.setLastModified(c.getLastModified());
-        this.setUpvotes(c.getUpvotes());
-        this.setDownvotes(c.getDownvotes());
-        this.setDeleted(c.isDeleted());
-    }
-
     public int getPostID() {
         return postID;
     }

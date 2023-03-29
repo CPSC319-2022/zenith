@@ -60,14 +60,6 @@ public class PromotionRequest extends Record {
                 .put("reason", reason);
     }
 
-    public void copy(PromotionRequest r) {
-        this.setUserID(r.getUserID());
-        this.setRequestTime(r.getRequestTime());
-        this.setTarget(r.getTarget());
-        this.setReason(r.getReason());
-        this.setDeleted(r.isDeleted());
-    }
-
     /**
      * Returns the JSON string of this object
      *

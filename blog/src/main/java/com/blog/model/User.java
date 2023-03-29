@@ -237,16 +237,6 @@ public class User extends Record {
         return getUserLevel().above(userLevel);
     }
 
-    public void copy(User u) {
-        this.setUsername(u.getUsername());
-        this.setCreationDate(u.getCreationDate());
-        this.setLastLogin(u.getLastLogin());
-        this.setProfilePicture(u.getProfilePicture());
-        this.setUserLevel(u.getUserLevel());
-        this.setDeleted(u.isDeleted());
-        this.setBio(u.getBio());
-    }
-
     public String getUserID() {
         return userID;
     }
