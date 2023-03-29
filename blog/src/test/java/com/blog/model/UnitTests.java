@@ -55,7 +55,8 @@ class UnitTests {
                 0,
                 false,
                 0,
-                true);
+                true,
+                "");
     }
 
     /**
@@ -646,7 +647,8 @@ class UnitTests {
                 0,
                 false,
                 201,
-                true);
+                true,
+                "");
 
         assertEquals(0, post.getPostID());
         assertEquals("1", post.getAuthorID());
@@ -680,7 +682,8 @@ class UnitTests {
                 1,
                 true,
                 200,
-                false
+                false,
+                ""
         );
         assertEquals(false, post1.isDisplayable());
     }
@@ -752,7 +755,8 @@ class UnitTests {
                 1,
                 true,
                 200,
-                false
+                false,
+                ""
         );
         assertEquals("I wish everyone is having fun in Christmas and wish all of us a happy new year!", post1.getContent());
     }
@@ -804,7 +808,8 @@ class UnitTests {
                 1,
                 true,
                 201,
-                true
+                true,
+                ""
         );
         JSONObject actualJson = post1.asJSONObject();
 

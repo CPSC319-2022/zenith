@@ -11,12 +11,13 @@ import org.json.JSONObject;
 public class Post extends Content {
     public static final int NEW_POST_ID = 0;
     private static final int MIN_TITLE_LENGTH = 1;
+    private static final String DEFAULT_IMAGE_URL = "https://storage.googleapis.com/zenith-blog-storage/176fee8b-09f9-4d97-b1fa-9e47dabf1752.jpg";
 
     private final int postID;
     private String title;
     private int views;
     private boolean allowComments;
-    // private Tag tags; TODO: allow tags for posts
+    private String thumbnailURL;
 
     public Post(int postID) {
         this.postID = postID;
@@ -32,12 +33,18 @@ public class Post extends Content {
                 int downvotes,
                 boolean isDeleted,
                 int views,
-                boolean allowComments) {
+                boolean allowComments,
+                String thumbnailURL) {
         super(authorID, content, creationDate, lastModified, upvotes, downvotes, isDeleted);
         this.postID = postID;
         this.title = title;
         this.views = views;
         this.allowComments = allowComments;
+        if (thumbnailURL.isEmpty()) {
+            this.thumbnailURL = DEFAULT_IMAGE_URL;
+        } else {
+            this.thumbnailURL = thumbnailURL;
+        }
     }
 
     /**
@@ -74,7 +81,8 @@ public class Post extends Content {
                 .put("postID", postID)
                 .put("title", title)
                 .put("views", views)
-                .put("allowComments", allowComments);
+                .put("allowComments", allowComments)
+                .put("thumbnailURL", thumbnailURL);
     }
 
     /**
@@ -131,5 +139,17 @@ public class Post extends Content {
 
     public void setAllowComments(boolean allowComments) {
         this.allowComments = allowComments;
+    }
+
+    public String getThumbnailURL() {
+        return thumbnailURL;
+    }
+
+    public void setThumbnailURL(String thumbnailURL) {
+        if (thumbnailURL.isEmpty()) {
+            this.thumbnailURL = DEFAULT_IMAGE_URL;
+        } else {
+            this.thumbnailURL = thumbnailURL;
+        }
     }
 }

@@ -27,7 +27,7 @@ class DatabaseTest {
 
     @Test
     void testSavePost() {
-        Post post = new Post(1, "1", "testtitle", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false, 3, true);
+        Post post = new Post(1, "1", "testtitle", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false, 3, true, "");
         try {
             int num = Database.save(post);
             assertEquals(1, num);

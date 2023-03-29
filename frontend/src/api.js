@@ -37,21 +37,31 @@ export const getPost = async ({postID}) => {
 };
 
 
-export const createPost = async ({ title, content, allowComments }) => {
+export const createPost = async ({ title, content, allowComments, image }) => {
   const token = getAccessToken();
-  console.log("createPost token: ", token);
-  console.log("typeof token.credential: ", typeof token.credential);
-  const response = await axios.post(`${apiUrl}/post/create`, {
-    title,
-    content,
-    allowComments,
-  },  {
+
+  // Create a FormData object
+  const formData = new FormData();
+
+  // Append fields to the FormData object
+  formData.append('jsonData', JSON.stringify({ title, content, allowComments }));
+
+  // Append the optional image, if provided
+  if (image) {
+    console.log('image exists');
+    formData.append('file', image);
+  }
+
+  // Update the request to use FormData and set the content type
+  const response = await axios.post(`${apiUrl}/post/create`, formData, {
     headers: {
       Authorization: `Bearer ${token.credential}`,
       'X-Oauth-Provider': 'google',
       'X-Oauth-Credential': JSON.stringify(token.credential),
+      'Content-Type': 'multipart/form-data', // Keep content type as 'multipart/form-data'
     },
   });
+
   return response.data;
 };
 
