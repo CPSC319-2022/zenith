@@ -992,11 +992,8 @@ public class Database {
             ps.setInt(3, start - 1);
             ps.setInt(3, count);
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                // throw new DoesNotExistException("Post does not exist.");
-                // need change in controller
-            }
-            do {
+
+            while (rs.next()) {
                 Post post = new Post(rs.getInt("post_ID"));
                 post.setAuthorID(rs.getString("user_ID"));
                 post.setTitle(rs.getString("title"));
@@ -1010,7 +1007,7 @@ public class Database {
                 post.setAllowComments(rs.getBoolean("allow_comments"));
                 post.setThumbnailURL(rs.getString("thumbnail_url"));
                 posts.add(post);
-            } while (rs.next());
+            }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
         }
