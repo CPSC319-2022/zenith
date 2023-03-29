@@ -76,7 +76,8 @@ public class Post extends Content {
                 .put("postID", postID)
                 .put("title", title)
                 .put("views", views)
-                .put("allowComments", allowComments);
+                .put("allowComments", allowComments)
+                .put("thumbnailURL", thumbnailURL);
     }
 
     /**
