@@ -27,8 +27,7 @@ function Searchbar() {
         if (searchQuery.trim().length !== 0) {
             console.log({searchQuery, sortBy});
             dispatch(postSliceActions.filterPosts({ searchQuery, sortBy }));
-            navigate(`/searchResults`);
-            //navigate(`/post?searchQuery=${searchQuery}&sortBy=${sortBy}`);
+            navigate('/searchResults');
         }
     };
 
