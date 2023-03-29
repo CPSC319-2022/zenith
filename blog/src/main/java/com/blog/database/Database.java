@@ -946,8 +946,9 @@ public class Database {
      *                "old": oldest post first
      *                "top": top-rated post first (upvote - downvote)
      *                "view": top-viewed post first
+     * @throws BlogException
      */
-    public static void search(ArrayList<Post> posts, String pattern, int start, int count, String sortBy) {
+    public static void search(ArrayList<Post> posts, String pattern, int start, int count, String sortBy) throws BlogException {
         try {
             String sql;
             sortBy = sortBy.toLowerCase();
@@ -984,7 +985,7 @@ public class Database {
                         LIMIT ?, ?
                         """;
             } else {
-                throw new Error("Unexpected soryBy string.");
+                throw new BlogException("Unexpected sortBy string.");
             }
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, "%" + pattern + "%");
@@ -1010,7 +1011,7 @@ public class Database {
                         ));
             }
         } catch (SQLException e) {
-            throw new Error(e.getMessage());
+            throw new BlogException(e.getMessage());
         }
     }
 

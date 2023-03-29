@@ -309,8 +309,9 @@ public class PostController {
      * },                           //
      * ...  // The JSON array will contain at most <code>count</code> number of post representations.
      * ]
+     * @throws BlogException
      */
-    private static String searchPosts(String pattern, int start, int count, String sortBy) {
+    private static String searchPosts(String pattern, int start, int count, String sortBy) throws BlogException {
         // Create array to store retrieved posts
         ArrayList<Post> posts = new ArrayList<>();
 
