@@ -98,7 +98,7 @@ steps:
     waitFor:
       - Deploy Backend
       - Deploy Frontend
-    onSuccess: []
+    
 
   - name: curlimages/curl
     args:
