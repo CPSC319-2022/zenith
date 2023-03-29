@@ -4,6 +4,7 @@ import { AiFillLike, AiFillDislike, AiOutlineEdit, AiOutlineDelete } from 'react
 import '../styles/Comment.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { Link } from 'react-router-dom';
 
 const Comment = ({
   comment,
@@ -48,8 +49,9 @@ const Comment = ({
       <Card.Body>
         <Row className="align-items-center">
           <Col xs={2} md={1} className="text-center">
-            {<img src={comment.authorProfilePicture} className="comment-thumbnail" referrerpolicy="no-referrer"/>}
-            {/* <Image src={comment.authorProfilePicture} roundedCircle className="comment-thumbnail" referrerpolicy="no-referrer"/> */}
+            <Link to={`/profile/${comment.authorID}`}>
+              <img className="comment-thumbnail" src={comment.authorProfilePicture} alt={comment.authorProfilePicture} referrerpolicy="no-referrer"/>
+            </Link>
           </Col>
           <Col>
             <Card.Title className="comment-author">{comment.authorUsername}</Card.Title>
