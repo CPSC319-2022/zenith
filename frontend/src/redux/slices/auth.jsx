@@ -74,7 +74,6 @@ export const selectClientID = (state) => {
 
 export const getAccessToken = () => {
   const auth = JSON.parse(localStorage.getItem('auth'));
-  console.log('authAccTok:', auth);
   return auth ? { ...auth, userId: localStorage.getItem('userId') } : null;
 };
 
