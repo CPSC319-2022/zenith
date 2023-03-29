@@ -12,19 +12,17 @@ import java.util.UUID;
 
 @Service
 public class GoogleCloudStorage {
-    public static final String DEFAULT_IMAGE_URL = ""; // TODO: add default url
-
     private static final String BUCKET_NAME = "zenith-blog-storage";
-    private static Storage STORAGE;
+    private static Storage storage;
 
     @Autowired
     public GoogleCloudStorage(GoogleCloudStorageConfig googleCloudStorageConfig) {
-        this.STORAGE = googleCloudStorageConfig.storage();
+        storage = googleCloudStorageConfig.storage();
     }
 
     public static String uploadImage(MultipartFile image) throws BlogException {
         if (image == null) {
-            return DEFAULT_IMAGE_URL;
+            return "";
         }
 
         String imageName = UUID.randomUUID().toString();
@@ -33,7 +31,7 @@ public class GoogleCloudStorage {
 
         BlobInfo blobInfo = BlobInfo.newBuilder(BUCKET_NAME, blobName).build();
         try {
-            STORAGE.create(blobInfo, image.getBytes());
+            storage.create(blobInfo, image.getBytes());
         } catch (IOException e) {
             throw new BlogException("Failed to upload image to Google Cloud Storage.");
         }
