@@ -79,6 +79,16 @@ const Comment = ({
             <AiFillDislike /> {comment.downvotes}
           </Button>
           )}
+          {!userIsLoggedIn && (
+          <Button variant="outline-primary" disabled>
+            <AiFillLike /> {comment.upvotes}
+          </Button>
+          )}
+          {!userIsLoggedIn && (
+          <Button variant="outline-danger" disabled>
+            <AiFillDislike /> {comment.downvotes}
+          </Button>
+          )}
              
           {editing ? (
             <>

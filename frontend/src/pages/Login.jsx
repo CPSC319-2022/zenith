@@ -4,9 +4,11 @@ import '../styles/Auth.css';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticated, setUser, setClientId, resetAuth } from '../redux/slices/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const handleSuccess = (credentialResponse) => {
@@ -18,6 +20,7 @@ const Login = () => {
     dispatch(setUser(credentialResponse.profileObj));
     dispatch(setClientId(credentialResponse.clientId)); // update the clientId in the store
     // Redirect to main page
+    navigate('/');
     window.location.href = '/';
   };
   
