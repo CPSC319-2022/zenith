@@ -92,9 +92,9 @@ const Home = () => {
           {posts.slice(0, 3).map((post) => (
             <Carousel.Item key={post.postID}>
               <img
-                src={`https://source.unsplash.com/random/900x300?sig=${post.postID}`}
+                src={post.thumbnailURL}
                 alt={`Post ${post.postID}`}
-                className="d-block w-100"
+                className="d-block w-100 carousel-image"
               />
               <Carousel.Caption>
                 <Link to={`/single-post/${post.postID}`} className="carousel-title carousel-post-title-home">
@@ -102,7 +102,7 @@ const Home = () => {
                 </Link>
                 <div
                   className="carousel-content carousel-post-content-home"
-                  dangerouslySetInnerHTML={{ __html: post.content.substring(0, 50) + '...' }}
+                  dangerouslySetInnerHTML={{ __html: post.content}}
                 ></div>
               </Carousel.Caption>
             </Carousel.Item>
@@ -126,15 +126,15 @@ const Home = () => {
           {posts.map((post) => (
             <div className="col-md-4 col-sm-6 mb-4 post-cards " key={post.postID}>
               <Card style={{ width: '18rem' }}>
-                <Card.Img variant="top" src={`https://source.unsplash.com/random/300x200?sig=${post.postID}`} />
+                <Card.Img variant="top" src={post.thumbnailURL} />
                 <Card.Body>
                   <Card.Title>
-                    <Link className="link" to={`/single-post/${post.postID}`}>
+                    <Link className="link post-title" to={`/single-post/${post.postID}`}>
                       {post.title}
                     </Link>
                   </Card.Title>
-                  <Card.Text>
-                    <div dangerouslySetInnerHTML={{ __html: post.content.substring(0, 50) + '...' }}></div>
+                  <Card.Text  className='post-content'>
+                    <div dangerouslySetInnerHTML={{ __html: post.content}}></div>
                   </Card.Text>
                   <Button className="read-button" onClick={() => handleClick({ post })}>
                     Read More
