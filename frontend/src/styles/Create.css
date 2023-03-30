@@ -1,109 +1,29 @@
-.create {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 5%;
-  }
-  
-  .content {
-    gap: 20px;
-    margin-bottom: 2%;
-  }
-  
-  
-  input {
-    padding: 10px;
-    border: 1px solid #bfc0c0ff;
-    border-radius: 10px;
-    width: 100%;
-  }
-  
-  .editor-container {
-    height: 300px;
-    overflow: scroll;
-    border: 1px solid #bfc0c0ff;
-    border-radius: 10px;
-    margin-top: 5%;
-  }
-  
-  .editor {
-    height: 100%;
-    /* border: 1px solid #bfc0c0ff; */
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 16px;
-  min-height: 200px;
-  }
-  
-  .menu {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-  }
-  
-  .menu-item {
-    padding: 10px;
-    font-size: 12px;
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 20px;
-    align-items:center ;
-  }
-  
-  .visibility {
-    font-size: 12px;
-  }
-  
-  .img-upload {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  
-  .buttons {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .btn1 {
-    cursor: pointer;
-    color: #ef8354ff;;
-    background-color: #ffffff;
-    border: 1px solid #ef8354ff;
-    padding: 3px 5px;
-  }
-  
-  .btn2 {
-    cursor: pointer;
-    color: #ffffffff;
-    background-color: #ef8354ff;
-    border: 1px solid #ef8354ff;
-    padding: 3px 5px;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .create {
-      padding: 2%;
-    }
-    
-    input {
-      width: 100%;
-    }
-  
-    .menu-item {
-      flex-direction: column;
-      gap: 10px;
-    }
-    
-    .buttons {
-      flex-direction: column;
-      gap: 10px;
-    }
-  }
-  
+.create-post-container {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+}
+
+.create-post-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.editor-container {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.submit-button {
+  margin-top: 1rem;
+}
+
+.not-authorized-container {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+

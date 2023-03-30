@@ -9,21 +9,51 @@
 .post-area {
     margin-top: 2rem;
 }
-.post-cards{
+
+.post-cards {
     transition: transform .2s;
-    
+
 }
+
 .post-cards:hover {
     transform: scale(1.1);
 }
-.carousel-post-title-home{
+
+.carousel-post-title-home {
     text-shadow: 5px 5px 8px black;
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: inline-block;
 }
-.carousel-post-content-home{
+
+.carousel-post-content-home {
     text-shadow: 5px 5px 8px black;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Change this value to the number of lines you want */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 .switch-container {
     display: flex;
     justify-content: flex-end;
     margin: 20px;
+}
+
+.post-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: inline-block;
+}
+.post-content {
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Change this value to the number of lines you want */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }

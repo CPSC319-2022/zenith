@@ -83,26 +83,11 @@ steps:
       - Push Frontend
     entrypoint: gcloud
 
-  - name: curlimages/curl
-    args:
-      - -X
-      - POST
-      - -H
-      - "Content-Type: application/json"
-      - -d
-      - >-
-        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "SUCCESS"}
-      - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
-    id: Notify Slack
-    waitFor:
-      - Deploy Backend
-      - Deploy Frontend
 
 images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
   - >-
     $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
-
 options:
   substitutionOption: ALLOW_LOOSE
 
@@ -119,4 +104,6 @@ tags:
   - gcp-cloud-build-deploy-cloud-run-managed
   - zenith-backend
 
+
 timeout: 500s
+
