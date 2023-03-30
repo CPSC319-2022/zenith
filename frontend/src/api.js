@@ -15,8 +15,6 @@ const getApiUrl = () => {
 const apiUrl = getApiUrl();
 console.log('apiUrl: ', apiUrl);
 export const getPosts = async ({ postIDStart, count, reverse }) => {
-  const token = getAccessToken();
-
   try {
     const response = await axios.get(`${apiUrl}/post/gets`, {
       params: {
@@ -24,11 +22,6 @@ export const getPosts = async ({ postIDStart, count, reverse }) => {
         count,
         reverse,
       },
-      // headers: {
-      //   Authorization: `Bearer ${token.credential}`,
-      //   'X-Oauth-Provider': 'google',
-      //   'X-Oauth-Credential': JSON.stringify(token.credential),
-      // },
     });
     return response.data;
   } catch (error) {
@@ -37,38 +30,38 @@ export const getPosts = async ({ postIDStart, count, reverse }) => {
 };
 
 export const getPost = async ({postID}) => {
-  const token = getAccessToken();
     const response = await axios.get(`${apiUrl}/post/get`, {
       params: { postID },
-      //  headers:
-      // {
-      //   'Content-Type': 'application/json' ,
-      //     Authorization: `Bearer ${token.credential}`,
-      //     'X-Oauth-Provider': 'google',
-      //     'X-Oauth-Credential': JSON.stringify(token.credential),
-      // },
     });
     return response.data;
 };
 
 
-export const createPost = async ({ title, content, allowComments }) => {
+export const createPost = async ({ title, content, allowComments, image }) => {
   const token = getAccessToken();
-  console.log("createPost token: ", token);
-  console.log("typeof token.credential: ", typeof token.credential);
-  // const cred = (token.credential);
-  // console.log("createPost credential: ", cred);
-  const response = await axios.post(`${apiUrl}/post/create`, {
-    title,
-    content,
-    allowComments,
-  },  {
+
+  // Create a FormData object
+  const formData = new FormData();
+
+  // Append fields to the FormData object
+  formData.append('jsonData', JSON.stringify({ title, content, allowComments }));
+
+  // Append the optional image, if provided
+  if (image) {
+    console.log('image exists');
+    formData.append('file', image);
+  }
+
+  // Update the request to use FormData and set the content type
+  const response = await axios.post(`${apiUrl}/post/create`, formData, {
     headers: {
       Authorization: `Bearer ${token.credential}`,
       'X-Oauth-Provider': 'google',
       'X-Oauth-Credential': JSON.stringify(token.credential),
+      'Content-Type': 'multipart/form-data', // Keep content type as 'multipart/form-data'
     },
   });
+
   return response.data;
 };
 
@@ -77,8 +70,6 @@ export const editPost = async ({ postID, title, content, allowComments }) => {
   const token = getAccessToken();
   console.log("editPost token: ", token);
   console.log("typeof token.credential: ", typeof token.credential);
-  // const cred = (token.credential);
-  // console.log("editPost credential: ", cred);
   const response = await axios.put(`${apiUrl}/post/edit`, {
     postID,
     title,
@@ -188,24 +179,18 @@ export const createComment = async ({ postID, content }) => {
 
 export const upvotePost = async ({ postID }) => {
   const token = getAccessToken();
-
   try {
-    const response = await axios.put(
-      `${apiUrl}/post/upvote?postID=${postID}`,
-      null,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token.credential}`,
-          'X-Oauth-Provider': 'google',
-          'X-Oauth-Credential': JSON.stringify(token.credential),
-        },
+    const response = await axios.put(`${apiUrl}/post/upvote?postID=${postID}`, null, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
       },
-    );
-    if (response.status !== 200) {
+    });
+    if (response.status !== 204) {
       throw new Error('Server Error');
     }
-    return response.data;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -229,6 +214,24 @@ export const downvotePost = async ({ postID }) => {
     throw new Error(error.message);
   }
 };
+
+
+// export const filterPosts = async ({ searchQuery, sortBy }) => {
+//   try {
+//     const response = await axios.get(`${apiUrl}/post/search}`, {
+//       params: {
+//         pattern: searchQuery,
+//         sortBy: sortBy,
+//       },
+//     });
+//     console.log("api works", response.data);
+//     return response.data;
+//   } catch (error) {
+//     throw new Error(error.message);
+//   }
+
+
+// }
 
 export const upvoteComment = async ({ postID, commentID }) => {
   const token = getAccessToken();
@@ -284,7 +287,11 @@ export const deleteComment = async ({ postID, commentID }) => {
   try {
     const body = JSON.stringify({ postID, commentID });
     const response = await axios.delete(`${apiUrl}/comment/delete`, {
-      data: body,
+      params: {
+        postID,
+        commentID,
+      }
+        ,
       headers: {
         'Content-Type': 'application/json' ,
         Authorization: `Bearer ${token.credential}`,
@@ -348,21 +355,35 @@ export const getUsers = async ({ userIDStart, count, reverse }) => {
 
 export const getUser = async (userID) => {
   const token = getAccessToken();
-
-  try {
-    const response = await axios.get(`${apiUrl}/user/get`, {
-      params: { userID },
-      headers:
-      {
-        'Content-Type': 'application/json' ,
-          Authorization: `Bearer ${token.credential}`,
-          'X-Oauth-Provider': 'google',
-          'X-Oauth-Credential': JSON.stringify(token.credential),
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.message);
+  if (token === null || token === undefined) {
+    try {
+      const response = await axios.get(`${apiUrl}/user/get`, {
+        params: { userID },
+        headers:
+        {
+          'Content-Type': 'application/json' ,
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  } else {
+    try {
+      const response = await axios.get(`${apiUrl}/user/get`, {
+        params: { userID },
+        headers:
+        {
+          'Content-Type': 'application/json' ,
+            Authorization: `Bearer ${token.credential}`,
+            'X-Oauth-Provider': 'google',
+            'X-Oauth-Credential': JSON.stringify(token.credential),
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 };
 

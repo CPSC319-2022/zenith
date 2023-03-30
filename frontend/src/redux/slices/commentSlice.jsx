@@ -8,19 +8,33 @@ import {
     getComments,
     upvoteComment as upvoteCommentApi
 } from '../../api';
+import { userSliceActions } from './userSlice';
+
 
 
 export const fetchComments = createAsyncThunk(
   'comments/fetchComments',
-  async (params, { rejectWithValue }) => {
+  async (params, { dispatch, rejectWithValue }) => {
     try {
       const response = await getComments(params);
-      return response;
+      const comments = response;
+      const commentsWithAuthors = await Promise.all(
+        comments.map(async (comment) => {
+          const author = await dispatch(userSliceActions.fetchUser(comment.authorID)).then((response) => response.payload);
+          return {
+            ...comment,
+            authorUsername: author.username,
+            authorProfilePicture: author.profilePicture,
+          };
+        }),
+      );
+      return commentsWithAuthors;
     } catch (err) {
       return rejectWithValue(err.message);
     }
   }
 );
+
 
 export const fetchComment = createAsyncThunk(
   'comments/fetchComment',

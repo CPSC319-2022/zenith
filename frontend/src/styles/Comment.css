@@ -1,0 +1,25 @@
+.comment-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .comment-thumbnail {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .comment-author {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .comment-text {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  .editor {
+    z-index: 1;
+  }

@@ -6,18 +6,19 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../styles/Create.css';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import { postSliceActions } from '../redux/slices/postSlice';
 import { Link, useParams } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
 
 const CreatePost = () => {
-   const { id } = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-
-  console.log('id:',id);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -35,87 +36,78 @@ const CreatePost = () => {
     }
   }, [id, dispatch, isAuthenticated]);
 
-    if (!isAuthenticated) {
-      return (
-        <div className="login-button">
-          <Link to="/login">
-            <Button variant="primary">Login to Create a Post</Button>
-          </Link>
-        </div>
-      );
-    }
-  
-    if (user&&user.userLevel === 'READER') {
-      console.log('this:',user.userLevel);
-        return (
-          <div>
-            <h1>Not Authorized</h1>
-            <p> You need to be a Contributor or an Admin to create a post. See Profile Page for applying to become one!</p>
-          </div>
-        )
-      }
-
   const handleCreatePost = (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      return alert('Please login to create a post.');
+      return alert("Please login to create a post.");
     }
-   
-   
-
-    // Replace authorID with the clientID of the currently logged-in user
+  
     const allowComments = true; // You can change this according to your requirements
-
+  
     dispatch(
       postSliceActions.createPost({
-        title,
-        content: body,
-        allowComments,
+        postData: {
+          title,
+          content: body,
+          allowComments,
+        },
+        file: image, // Pass the image state
       })
-    );
+    ).then((response) => {
+      if (response.meta.requestStatus === 'fulfilled') {
 
-    setTitle('');
-    setBody('');
+        setTitle("");
+        setBody("");
+        window.location.href = `/`;
+      }});
+  
+ 
+  };
+  
+
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
   };
 
-
-
-    return (
+  return (
+    <Container className="create-post-container">
+    {user && (user.userLevel === 'ADMIN' || user.userLevel === 'CONTRIBUTOR') ? (
       <>
-        {user && (user.userLevel === 'ADMIN' || user.userLevel === 'CONTRIBUTOR') ? ( 
-          <>
-            <h1 className="create-title">Create a Post</h1>
-            <div className="create">
-              <form id="new_post" onSubmit={handleCreatePost}>
-                <div className="content">
-                  <input
-                    type="text"
-                    id="name"
-                    name="title"
-                    placeholder="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                  <div className="editor-container">
-                    <ReactQuill className="editor" theme="snow" value={body} onChange={setBody} />
-                  </div>
-                </div>
-                <div className="menu">
-                  <div className="menu-item col-md-auto">
-                    <Button as="input" type="submit" value="Publish" variant="primary" size="lg" />{' '}
-                    {/* <Form.Group controlId="formFile">
-                      <Form.Control type="file" />
-                    </Form.Group> */}
-                    {/* <Button variant="outline-success">Update</Button>{''} */}
-                  </div>
-                </div>
-              </form>
-            </div>
-          </>
-        ) : (<div>Not Authorized</div>)}
+        <h1 className="create-post-title">Create a Post</h1>
+        <Form onSubmit={handleCreatePost}>
+          <Form.Group controlId="postTitle">
+            <Form.Control
+              type="text"
+              name="title"
+              placeholder="Title - Can not be changed later"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </Form.Group>
+          <div className="editor-container">
+            <ReactQuill className="editor" theme="snow" value={body} onChange={setBody} />
+          </div>
+          <Form.Group controlId="formFile">
+            <Form.Label>Upload Image - (Optional) Max file size 1MB </Form.Label>
+            <Form.Control type="file" onChange={handleImageChange} />
+          </Form.Group>
+          <Button type="submit" variant="primary" size="lg" className="submit-button">
+            Publish
+          </Button>
+        </Form>
       </>
-    );
-    
+    ) : (
+      <div className="not-authorized-container">
+        <p>You need to be logged in and be a creator to create a post</p>
+        <Link to="/login">
+          <Button variant="primary">Login</Button>
+        </Link>
+      </div>
+    )}
+  </Container>
+);
 };
 
 export default CreatePost;
+

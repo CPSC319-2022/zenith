@@ -1,12 +1,14 @@
 import React from 'react';
-import { Card, Button } from 'react-bootstrap';
-import '../styles/Auth.css';
+import { Card, Button, Container } from 'react-bootstrap';
+import '../styles/Login.css';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticated, setUser, setClientId, resetAuth } from '../redux/slices/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const handleSuccess = (credentialResponse) => {
@@ -18,6 +20,7 @@ const Login = () => {
     dispatch(setUser(credentialResponse.profileObj));
     dispatch(setClientId(credentialResponse.clientId)); // update the clientId in the store
     // Redirect to main page
+    navigate('/');
     window.location.href = '/';
   };
   
@@ -38,21 +41,23 @@ const Login = () => {
   
 
   return (
-    <div className="d-flex justify-content-center align-items-center h-100">
-      <Card style={{ width: '25rem' }}>
+    <Container className="d-flex justify-content-center align-items-center login-container">
+      <Card className="login-card">
         <Card.Body>
-          <Card.Title>Welcome to Zenith Blog</Card.Title>
+          <Card.Title className="login-card-title">Welcome to Zenith Blog</Card.Title>
           {isAuthenticated ? (
             <div>
-              <p>You are already signed in.</p>
-              <Button variant="danger" onClick={handleSignOut}>
+              <Card.Text className="login-card-text">
+                To Log Out Click the Red Button.
+              </Card.Text>
+              <Button variant="danger" onClick={handleSignOut} className="login-button">
                 Logout
               </Button>
             </div>
           ) : (
             <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} cookiePolicy={'single_host_origin'}>
-              <GoogleLogin onSuccess={handleSuccess} onFailure={handleFailure}>
-                <Button variant="primary" className="rounded-pill">
+              <GoogleLogin onSuccess={handleSuccess} onFailure={handleFailure}  isSignedIn={true}>
+                <Button variant="primary" className="rounded-pill login-button">
                   Sign In with Google
                 </Button>
               </GoogleLogin>
@@ -60,7 +65,7 @@ const Login = () => {
           )}
         </Card.Body>
       </Card>
-    </div>
+    </Container>
   );
 };
 

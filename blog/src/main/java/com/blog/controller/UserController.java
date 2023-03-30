@@ -205,81 +205,10 @@ public class UserController {
         );
 
         // Save the request to database
-        int requestID = Database.save(request);
+        Database.save(request);
 
         // Return the created request
-        return PromotionRequest.retrieve(requestID).asJSONString();
-    }
-
-    /**
-     * @param input A JSON containing the following key-value pairs:
-     *              {
-     *              "userID":    int,     // The user to retrieve.
-     *              "user_status": String // New user status of the user
-     *              }
-     * @return Updates the User Status and saves the changes in the database
-     * @throws BlogException
-     * @deprecated Feature to be removed.
-     */
-    @Deprecated
-    private static void updateUserStatus(JSONObject input) throws BlogException {
-        User user;
-        String status;
-
-        try {
-            String userID = input.getString("userID");
-            user = User.retrieveByUserID(userID);
-            status = input.getString("user_status");
-
-            if (status.toUpperCase() == "OFFLINE")
-                user.setLastLoginNow();
-
-            user.setUserStatus(UserStatus.valueOf(status));
-            Database.save(user);
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from JSON. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
-    }
-
-    /**
-     * Updates user level of the promotee only if the promoter has the authorization to do so.
-     *
-     * @param input JSONObject would contain the following key-value pairs:
-     *              {
-     *              "promoterID": userID of promoter,
-     *              "promoteeID": userID of promotee, and
-     *              "new_level": the new user level for the promotee
-     *              }
-     * @throws BlogException
-     * @deprecated Feature moved to AdminController.
-     */
-    @Deprecated
-    private void updateUserLevel(JSONObject input) throws BlogException {
-        String promoterID;
-        String promoteeID;
-        String new_level;
-        //READ DATA FROM JSON
-        try {
-            promoterID = input.getString("promoterID");
-            promoteeID = input.getString("promoteeID");
-
-        } catch (JSONException e) {
-            throw new BlogException("Failed to read data from json. \n" + e.getMessage());
-        } catch (NullPointerException e) {
-            throw new BlogException("JSON object received is null. \n" + e.getMessage());
-        }
-
-        //retrieves info about the user from the database
-        User promoter = User.retrieveByUserID(promoterID);
-        User promotee = User.retrieveByUserID(promoteeID);
-
-        if (promoter.getUserLevel() != ADMIN)
-            throw new BlogException("Promoter not authorized to make the required changes");
-
-        new_level = input.getString("new_level");
-        promotee.setUserLevel(UserLevel.valueOf(new_level)); //converting string to enum
+        return request.asJSONString();
     }
 
     @GetMapping("/get")

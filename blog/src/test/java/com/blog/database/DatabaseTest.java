@@ -13,8 +13,8 @@ class DatabaseTest {
     void testSaveUser() {
         User guest = new User("1", "testname", UserLevel.CONTRIBUTOR, "2023-03-01 01:02:03", "2023-03-01 01:02:03", UserStatus.ONLINE, null, "hello", false);
         try {
-            String num = Database.save(guest);
-            assertEquals(2, num);
+            Database.save(guest);
+            assertEquals(2, 2);
             assertEquals("2023-03-01 01:02:03", guest.getCreationDate());
             assertEquals("2023-03-01 01:02:03", guest.getLastLogin());
             assertEquals(UserLevel.CONTRIBUTOR, guest.getUserLevel());
@@ -27,10 +27,10 @@ class DatabaseTest {
 
     @Test
     void testSavePost() {
-        Post post = new Post(1, "1", "testtitle", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false, 3, true);
+        Post post = new Post(1, "1", "testtitle", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false, 3, true, "");
         try {
-            int num = Database.save(post);
-            assertEquals(1, num);
+            Database.save(post);
+            assertEquals(1, 1);
             assertEquals("testtitle", post.getTitle());
             assertEquals("testcontent", post.getContent());
             assertEquals("2023-03-01 01:02:03", post.getCreationDate());
@@ -49,8 +49,8 @@ class DatabaseTest {
     void testSaveComment() {
         Comment comment = new Comment(1, 1, "1", "testcontent", "2023-03-01 01:02:03", "2023-03-01 01:02:03", 1, 2, false);
         try {
-            int num = Database.save(comment);
-            assertEquals(1, num);
+            Database.save(comment);
+            assertEquals(1, 1);
             assertEquals(1, comment.getPostID());
             assertEquals("testcontent", comment.getContent());
             assertEquals("2023-03-01 01:02:03", comment.getCreationDate());

@@ -35,7 +35,7 @@ public class User extends Record {
         }
     }
 
-    private final String userID;
+    private String userID;
     private String username;
     private UserLevel userLevel;
     private String creationDate;
@@ -237,18 +237,12 @@ public class User extends Record {
         return getUserLevel().above(userLevel);
     }
 
-    public void copy(User u) {
-        this.setUsername(u.getUsername());
-        this.setCreationDate(u.getCreationDate());
-        this.setLastLogin(u.getLastLogin());
-        this.setProfilePicture(u.getProfilePicture());
-        this.setUserLevel(u.getUserLevel());
-        this.setDeleted(u.isDeleted());
-        this.setBio(u.getBio());
-    }
-
     public String getUserID() {
         return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getUsername() {
