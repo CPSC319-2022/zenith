@@ -171,7 +171,7 @@ public class Database {
      * @param count
      */
     public static void retrieve(ArrayList<Comment> comments, int postID, int commentIDStart, int count,
-                                boolean reverse) {
+            boolean reverse) {
         try {
             String sql;
 
@@ -207,8 +207,7 @@ public class Database {
                         rs.getString("last_modified"),
                         rs.getInt("upvotes"),
                         rs.getInt("downvotes"),
-                        rs.getBoolean("is_deleted")
-                ));
+                        rs.getBoolean("is_deleted")));
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -262,8 +261,7 @@ public class Database {
                         rs.getBoolean("is_deleted"),
                         rs.getInt("views"),
                         rs.getBoolean("allow_comments"),
-                        rs.getString("thumbnail_url")
-                ));
+                        rs.getString("thumbnail_url")));
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -434,6 +432,7 @@ public class Database {
                 ps.setInt(6, level);
                 ps.setBoolean(7, user.isDeleted());
                 ps.setString(8, user.getUserID());
+                ps.executeUpdate();
             } else {
                 sql = "INSERT INTO User VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
                 ps = connection.prepareStatement(sql);
@@ -453,6 +452,7 @@ public class Database {
                 }
                 ps.setInt(7, level);
                 ps.setBoolean(8, user.isDeleted());
+                ps.executeUpdate();
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -529,45 +529,63 @@ public class Database {
      * @throws BlogException If the user already upvoted this post.
      */
     public static void upvote(String userID, int postID) throws BlogException {
-        /*
-         * will also need new table with key (userID, postID)
-         * also need column for whether they upvoted or downvoted (binary column)
-         *
-         * if user has neither upvoted nor downvoted
-         * normal insert
-         * increment upvote counter for the post
-         * else if user already downvoted
-         * change downvote to upvote
-         * increment upvote counter for the post
-         * decrement downvote counter for the post
-         * else if user already upvoted
-         * throw new BlogException("User already upvoted this post.")
-         * else
-         * unexpected
-         */
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
-        String sql = "SELECT COUNT(*) FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
-        if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
-            sql = "INSERT INTO Vote_Post VALUES(" + postID + ", \"" + userID + "\", true)";
-            jdbcTemplate.update(sql);
-            Post post = Post.retrieve(postID);
-            post.setUpvotes(post.getUpvotes() + 1);
-            save(post);
-        } else {
-            sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
-            if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
-                throw new BlogException("User already upvoted this post.");
-            } else {
-                sql = "UPDATE Vote_Post SET is_upvoted = true WHERE user_ID = \"" + userID + "\" AND post_ID = "
-                        + postID;
-                jdbcTemplate.update(sql);
+        try {
+            String sql = """
+                    SELECT COUNT(*)
+                    FROM Vote_Post
+                    WHERE post_ID = ? AND user_ID = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, postID);
+            ps.setString(2, userID);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int count = rs.getInt("COUNT(*)");
+            if (count == 0) {
+                sql = """
+                        INSERT INTO Vote_Post
+                        VALUES(?, ?, true)
+                        """;
+                ps = connection.prepareStatement(sql);
+                ps.setInt(1, postID);
+                ps.setString(2, userID);
+                ps.executeUpdate();
+
                 Post post = Post.retrieve(postID);
-                post.setDownvotes(post.getDownvotes() - 1);
                 post.setUpvotes(post.getUpvotes() + 1);
                 save(post);
+            } else {
+                sql = """
+                        SELECT is_upvoted
+                        FROM Vote_Post
+                        WHERE post_ID = ? AND user_ID = ?
+                        """;
+                ps = connection.prepareStatement(sql);
+                ps.setInt(1, postID);
+                ps.setString(2, userID);
+                rs = ps.executeQuery();
+                rs.next();
+                if (Boolean.TRUE.equals(rs.getBoolean("is_upvoted"))) {
+                    throw new BlogException("User already upvoted this post.");
+                } else {
+                    sql = """
+                            UPDATE Vote_Post
+                            SET is_upvoted = true
+                            WHERE post_ID = ? AND user_ID = ?
+                            """;
+                    ps = connection.prepareStatement(sql);
+                    ps.setInt(1, postID);
+                    ps.setString(2, userID);
+                    ps.executeUpdate();
+
+                    Post post = Post.retrieve(postID);
+                    post.setDownvotes(post.getDownvotes() - 1);
+                    post.setUpvotes(post.getUpvotes() + 1);
+                    save(post);
+                }
             }
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
     }
 
@@ -577,33 +595,63 @@ public class Database {
      * @throws BlogException If the user already downvoted this post.
      */
     public static void downvote(String userID, int postID) throws BlogException {
-        /*
-         * should same table as upvote
-         * similar behaviour as upvote but flipped
-         */
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
-        String sql = "SELECT COUNT(*) FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
-        if (jdbcTemplate.queryForObject(sql, Integer.class) == 0) {
-            sql = "INSERT INTO Vote_Post VALUES(" + postID + ", \"" + userID + "\", false)";
-            jdbcTemplate.update(sql);
-            Post post = Post.retrieve(postID);
-            post.setDownvotes(post.getDownvotes() + 1);
-            save(post);
-        } else {
-            sql = "SELECT is_upvoted FROM Vote_Post WHERE user_ID = \"" + userID + "\" AND post_ID = " + postID;
-            if (Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class))) {
-                sql = "UPDATE Vote_Post SET is_upvoted = false WHERE user_ID = \"" + userID + "\" AND post_ID = "
-                        + postID;
-                jdbcTemplate.update(sql);
+        try {
+            String sql = """
+                    SELECT COUNT(*)
+                    FROM Vote_Post
+                    WHERE post_ID = ? AND user_ID = ?
+                    """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, postID);
+            ps.setString(2, userID);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int count = rs.getInt("COUNT(*)");
+            if (count == 0) {
+                sql = """
+                        INSERT INTO Vote_Post
+                        VALUES(?, ?, false)
+                        """;
+                ps = connection.prepareStatement(sql);
+                ps.setInt(1, postID);
+                ps.setString(2, userID);
+                ps.executeUpdate();
+
                 Post post = Post.retrieve(postID);
-                post.setUpvotes(post.getUpvotes() - 1);
                 post.setDownvotes(post.getDownvotes() + 1);
                 save(post);
             } else {
-                throw new BlogException("User already downvoted this post.");
+                sql = """
+                        SELECT is_upvoted
+                        FROM Vote_Post
+                        WHERE post_ID = ? AND user_ID = ?
+                        """;
+                ps = connection.prepareStatement(sql);
+                ps.setInt(1, postID);
+                ps.setString(2, userID);
+                rs = ps.executeQuery();
+                rs.next();
+                if (Boolean.TRUE.equals(rs.getBoolean("is_upvoted"))) {
+                    sql = """
+                            UPDATE Vote_Post
+                            SET is_upvoted = false
+                            WHERE post_ID = ? AND user_ID = ?
+                            """;
+                    ps = connection.prepareStatement(sql);
+                    ps.setInt(1, postID);
+                    ps.setString(2, userID);
+                    ps.executeUpdate();
+
+                    Post post = Post.retrieve(postID);
+                    post.setUpvotes(post.getUpvotes() - 1);
+                    post.setDownvotes(post.getDownvotes() + 1);
+                    save(post);
+                } else {
+                    throw new BlogException("User already downvoted this post.");
+                }
             }
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
     }
 
@@ -614,17 +662,22 @@ public class Database {
      * @throws DoesNotExistException
      */
     public static void view(int postID) throws DoesNotExistException {
-        if (jdbcTemplate == null) {
-            createTemplate();
-        }
         try {
-            String sql = "SELECT views FROM Post WHERE post_ID = " + postID;
-            int view = jdbcTemplate.queryForObject(sql, Integer.class);
+            String sql = "SELECT views FROM Post WHERE post_ID = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new DoesNotExistException("Post does not exist.");
+            }
+            int view = rs.getInt("views");
             view++;
-            sql = "UPDATE Post SET views = " + view + " WHERE post_ID = " + postID;
-            jdbcTemplate.update(sql);
-        } catch (Exception e) {
-            throw new DoesNotExistException("Post does not exist.");
+            sql = "UPDATE Post SET views = ? WHERE post_ID = ?";
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, view);
+            ps.setInt(2, postID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
         }
     }
 
@@ -833,7 +886,7 @@ public class Database {
      * @param reverse
      */
     public static void retrievePromotionRequests(ArrayList<PromotionRequest> requests, int requestIDStart, int count,
-                                                 boolean reverse) {
+            boolean reverse) {
         try {
             String sql;
             if (reverse) {
@@ -940,7 +993,8 @@ public class Database {
      *                "view": top-viewed post first
      * @throws BlogException
      */
-    public static void search(ArrayList<Post> posts, String pattern, int start, int count, String sortBy) throws BlogException {
+    public static void search(ArrayList<Post> posts, String pattern, int start, int count, String sortBy)
+            throws BlogException {
         try {
             String sql = switch (sortBy.toLowerCase()) {
                 case "new" -> """
@@ -993,8 +1047,7 @@ public class Database {
                         rs.getBoolean("is_deleted"),
                         rs.getInt("views"),
                         rs.getBoolean("allow_comments"),
-                        rs.getString("thumbnail_url")
-                ));
+                        rs.getString("thumbnail_url")));
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
