@@ -746,6 +746,7 @@ public class Database {
                 ps.setString(4, request.getRequestTime());
                 ps.setString(5, request.getReason());
                 ps.setBoolean(6, request.isDeleted());
+
             } else {
                 sql = """
                         SELECT request_ID
@@ -756,19 +757,20 @@ public class Database {
                 rs = ps.executeQuery();
                 rs.next();
                 int id = rs.getInt("request_ID");
+                rs = ps.executeQuery();
 
                 sql = """
                         UPDATE Promotion_Request
                         SET user_ID = ?, target_level = ?, request_time = ?, reason = ?, is_deleted = ?
                         WHERE request_ID = ?
                         """;
+                ps = connection.prepareStatement(sql);
                 ps.setString(1, request.getUserID());
                 ps.setInt(2, level);
                 ps.setString(3, request.getRequestTime());
                 ps.setString(4, request.getReason());
                 ps.setBoolean(5, request.isDeleted());
                 ps.setInt(6, id);
-                ps = connection.prepareStatement(sql);
                 rs = ps.executeQuery();
             }
         } catch (SQLException e) {
