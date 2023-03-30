@@ -102,7 +102,6 @@ images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
   - >-
     $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
-
 options:
   substitutionOption: ALLOW_LOOSE
 
@@ -118,4 +117,3 @@ tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
   - zenith-backend
-
