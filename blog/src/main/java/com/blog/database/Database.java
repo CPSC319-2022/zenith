@@ -860,7 +860,6 @@ public class Database {
                 rs = ps.executeQuery();
                 rs.next();
                 int id = rs.getInt("request_ID");
-                rs = ps.executeQuery();
 
                 sql = """
                         UPDATE Promotion_Request
@@ -874,7 +873,7 @@ public class Database {
                 ps.setString(4, request.getReason());
                 ps.setBoolean(5, request.isDeleted());
                 ps.setInt(6, id);
-                rs = ps.executeQuery();
+                ps.executeQuery();
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
