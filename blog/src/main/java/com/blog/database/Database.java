@@ -849,7 +849,7 @@ public class Database {
                 ps.setString(4, request.getRequestTime());
                 ps.setString(5, request.getReason());
                 ps.setBoolean(6, request.isDeleted());
-
+                ps.executeUpdate();
             } else {
                 sql = """
                         SELECT request_ID
