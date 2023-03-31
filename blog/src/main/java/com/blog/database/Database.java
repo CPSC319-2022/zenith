@@ -876,7 +876,7 @@ public class Database {
                 ps.executeQuery();
             }
         } catch (SQLException e) {
-            throw new Error(e.getMessage());
+            throw new DoesNotExistException(e.getMessage());
         }
     }
 
