@@ -71,13 +71,18 @@ public class PromotionRequest extends Record {
      * @return JSONObject
      */
     public JSONObject asJSONObject() {
-        return super.asJSONObject()
+        JSONObject result = super.asJSONObject()
                 .put("requestID", requestID)
                 .put("userID", userID)
                 .put("target", target)
                 .put("requestTime", requestTime)
-                .put("reason", reason)
-                .put("username", username);
+                .put("reason", reason);
+
+        if (username == null) {
+            return result;
+        }
+
+        return result.put("username", username);
     }
 
     /**
