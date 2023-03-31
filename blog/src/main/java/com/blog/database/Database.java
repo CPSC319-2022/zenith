@@ -865,6 +865,7 @@ public class Database {
                 ps.setString(5, request.getReason());
                 ps.setBoolean(6, request.isDeleted());
                 ps.executeUpdate();
+                request.setRequestID(id);
             } else {
                 sql = """
                         SELECT request_ID
