@@ -6,7 +6,7 @@ const Footer = () => {
         <footer className="footer">
             <span>
 
-                Team Zenith CPSC 319 anusha
+                Team Zenith CPSC 319 anusha trying slack 100 times
 
             </span>
         </footer>
