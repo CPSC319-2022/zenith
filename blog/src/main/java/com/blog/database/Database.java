@@ -854,7 +854,6 @@ public class Database {
                 rs = ps.executeQuery();
                 rs.next();
                 int id = rs.getInt("max") + 1;
-                request.setRequestID(id);
 
                 sql = "INSERT INTO Promotion_Request VALUES(?, ?, ?, ?, ?, ?)";
                 ps = connection.prepareStatement(sql);
@@ -894,7 +893,7 @@ public class Database {
                 ps.executeQuery();
             }
         } catch (SQLException e) {
-            throw new Error(e.getMessage());
+            throw new BlogException(e.getMessage());
         }
     }
 
