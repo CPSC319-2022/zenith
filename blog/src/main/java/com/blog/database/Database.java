@@ -880,6 +880,7 @@ public class Database {
                 ps.setBoolean(5, request.isDeleted());
                 ps.setInt(6, id);
                 ps.executeUpdate();
+                request.setRequestID(id);
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -893,10 +894,9 @@ public class Database {
      *
      * @param request The <code>PromotionRequest</code> object to update. Contains
      *                the <code>requestID</code>.
-     * @throws DoesNotExistException
-     * @throws IsDeletedException
+     * @throws BlogException
      */
-    public static void retrieve(PromotionRequest request) throws DoesNotExistException, IsDeletedException {
+    public static void retrieve(PromotionRequest request) throws BlogException {
 
         try {
             String sql = """
@@ -929,7 +929,7 @@ public class Database {
                 throw new IsDeletedException("Promotion request with ID " + request.getRequestID() + " is deleted.");
             }
         } catch (SQLException e) {
-            throw new Error(e.getMessage());
+            throw new BlogException(e.getMessage());
         }
     }
 

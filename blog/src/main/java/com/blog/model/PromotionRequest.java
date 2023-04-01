@@ -1,6 +1,7 @@
 package com.blog.model;
 
 import com.blog.database.Database;
+import com.blog.exception.BlogException;
 import com.blog.exception.DoesNotExistException;
 import com.blog.exception.IsDeletedException;
 
@@ -57,9 +58,9 @@ public class PromotionRequest extends Record {
      *
      * @param requestID The promotion request to retrieve.
      * @return The promotion request with the given requestID.
-     * @throws IsDeletedException
+     * @throws BlogException
      */
-    public static PromotionRequest retrieve(int requestID) throws DoesNotExistException, IsDeletedException {
+    public static PromotionRequest retrieve(int requestID) throws BlogException {
         PromotionRequest request = new PromotionRequest(requestID);
         Database.retrieve(request);
         return request;
