@@ -839,7 +839,7 @@ public class Database {
                 level = 3;
             }
             sql = """
-                    SELECT COUNT(*)
+                    SELECT request_ID
                     FROM Promotion_Request
                     WHERE user_ID = ? AND target_level = ? AND is_deleted = false
                     """;
@@ -847,8 +847,7 @@ public class Database {
             ps.setString(1, request.getUserID());
             ps.setInt(2, level);
             rs = ps.executeQuery();
-            rs.next();
-            if (rs.getInt("COUNT(*)") == 0) {
+            if (!rs.next()) {
                 sql = "SELECT COALESCE(MAX(request_ID), 0) AS max FROM Promotion_Request";
                 ps = connection.prepareStatement(sql);
                 rs = ps.executeQuery();
@@ -866,16 +865,6 @@ public class Database {
                 ps.executeUpdate();
                 request.setRequestID(id);
             } else {
-                sql = """
-                        SELECT request_ID
-                        FROM Promotion_Request
-                        WHERE user_ID = ? AND target_level = ? AND is_deleted = false
-                        """;
-                ps = connection.prepareStatement(sql);
-                ps.setString(1, request.getUserID());
-                ps.setInt(2, level);
-                rs = ps.executeQuery();
-                rs.next();
                 int id = rs.getInt("request_ID");
 
                 sql = """
