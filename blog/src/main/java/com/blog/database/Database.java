@@ -958,7 +958,7 @@ public class Database {
                         """;
             } else {
                 sql = """
-                        SELECT R.request_ID, R.request_time, R.target_level, R.reason, R.is_deleted, U.username
+                        SELECT R.request_ID, R.user_ID, R.request_time, R.target_level, R.reason, R.is_deleted, U.username
                         FROM Promotion_Request R, User U
                         WHERE R.request_ID >= ? AND R.is_deleted = false AND R.user_ID = U.user_ID
                         ORDER BY R.request_ID ASC
