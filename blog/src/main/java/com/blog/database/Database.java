@@ -942,9 +942,10 @@ public class Database {
      * @param requestIDStart
      * @param count
      * @param reverse
+     * @throws BlogException
      */
     public static void retrievePromotionRequests(ArrayList<PromotionRequest> requests, int requestIDStart, int count,
-            boolean reverse) {
+            boolean reverse) throws BlogException {
         try {
             String sql;
             if (reverse) {
@@ -985,7 +986,7 @@ public class Database {
                 requests.add(request);
             }
         } catch (SQLException e) {
-            throw new Error(e.getMessage());
+            throw new BlogException(e.getMessage());
         }
     }
 
