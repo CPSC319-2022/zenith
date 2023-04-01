@@ -879,7 +879,7 @@ public class Database {
                 ps.setString(4, request.getReason());
                 ps.setBoolean(5, request.isDeleted());
                 ps.setInt(6, id);
-                ps.executeQuery();
+                ps.executeUpdate();
             }
         } catch (SQLException e) {
             throw new BlogException(e.getMessage());
