@@ -19,26 +19,15 @@ const Login = () => {
     dispatch(setAuthenticated(true));
     dispatch(setUser(credentialResponse.profileObj));
     dispatch(setClientId(credentialResponse.clientId)); // update the clientId in the store
-    // Redirect to main page
-    navigate('/');
-    window.location.href = '/';
-  };
-  
-  
-  const handleFailure = (response) => {
-    console.log('Login Failed', response);
   };
 
-  const handleSignOut = () => {
-    window.localStorage.clear();
-    dispatch(setAuthenticated(false));
-    dispatch(setUser(null));
-    dispatch(setClientId(null)); // reset the clientId in the store
-    dispatch(resetAuth()); // reset the auth state in the store
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('auth');
+
+  const handleFailure = (response) => {
+    console.log('Logout Failed', response);
   };
-  
+
+
+
 
   return (
     <Container className="d-flex justify-content-center align-items-center login-container">
@@ -46,17 +35,11 @@ const Login = () => {
         <Card.Body>
           <Card.Title className="login-card-title">Welcome to Zenith Blog</Card.Title>
           {isAuthenticated ? (
-            <div>
-              <Card.Text className="login-card-text">
-                To Log Out Click the Red Button.
-              </Card.Text>
-              <Button variant="danger" onClick={handleSignOut} className="login-button">
-                Logout
-              </Button>
-            </div>
+            navigate('/')
+
           ) : (
             <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} cookiePolicy={'single_host_origin'}>
-              <GoogleLogin onSuccess={handleSuccess} onFailure={handleFailure}  isSignedIn={true}>
+              <GoogleLogin onSuccess={handleSuccess} onFailure={handleFailure} isSignedIn={true}>
                 <Button variant="primary" className="rounded-pill login-button">
                   Sign In with Google
                 </Button>
