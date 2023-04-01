@@ -813,33 +813,46 @@ public class Database {
 
     /**
      * @param request The promotion request.
-     * @throws DoesNotExistException If the user does not exist.
+     * @throws BlogException
      */
-    public static void save(PromotionRequest request) throws DoesNotExistException {
+    public static void save(PromotionRequest request) throws BlogException {
         try {
-            int level = 1;
-            if (request.getTarget() == UserLevel.CONTRIBUTOR) {
-                level = 2;
-            } else if (request.getTarget() == UserLevel.ADMIN) {
-                level = 3;
-            }
+            // check if user exists
             String sql = """
                     SELECT COUNT(*)
-                    FROM Promotion_Request
+                    FROM User
                     WHERE user_ID = ? AND is_deleted = false
                     """;
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, request.getUserID());
             ResultSet rs = ps.executeQuery();
             rs.next();
-            int count = rs.getInt("COUNT(*)");
-            if (count == 0) {
+            if (rs.getInt("COUNT(*)") == 0) {
+                throw new DoesNotExistException("User with user ID " + request.getUserID() + " does not exist.");
+            }
+
+            // check if request exists
+            int level = 1;
+            if (request.getTarget() == UserLevel.CONTRIBUTOR) {
+                level = 2;
+            } else if (request.getTarget() == UserLevel.ADMIN) {
+                level = 3;
+            }
+            sql = """
+                    SELECT request_ID
+                    FROM Promotion_Request
+                    WHERE user_ID = ? AND target_level = ? AND is_deleted = false
+                    """;
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, request.getUserID());
+            ps.setInt(2, level);
+            rs = ps.executeQuery();
+            if (!rs.next()) {
                 sql = "SELECT COALESCE(MAX(request_ID), 0) AS max FROM Promotion_Request";
                 ps = connection.prepareStatement(sql);
                 rs = ps.executeQuery();
                 rs.next();
                 int id = rs.getInt("max") + 1;
-                request.setRequestID(id);
 
                 sql = "INSERT INTO Promotion_Request VALUES(?, ?, ?, ?, ?, ?)";
                 ps = connection.prepareStatement(sql);
@@ -849,15 +862,9 @@ public class Database {
                 ps.setString(4, request.getRequestTime());
                 ps.setString(5, request.getReason());
                 ps.setBoolean(6, request.isDeleted());
+                ps.executeUpdate();
+                request.setRequestID(id);
             } else {
-                sql = """
-                        SELECT request_ID
-                        FROM Promotion_Request
-                        WHERE user_ID = ? AND is_deleted = false
-                        """;
-                ps = connection.prepareStatement(sql);
-                rs = ps.executeQuery();
-                rs.next();
                 int id = rs.getInt("request_ID");
 
                 sql = """
@@ -865,14 +872,15 @@ public class Database {
                         SET user_ID = ?, target_level = ?, request_time = ?, reason = ?, is_deleted = ?
                         WHERE request_ID = ?
                         """;
+                ps = connection.prepareStatement(sql);
                 ps.setString(1, request.getUserID());
                 ps.setInt(2, level);
                 ps.setString(3, request.getRequestTime());
                 ps.setString(4, request.getReason());
                 ps.setBoolean(5, request.isDeleted());
                 ps.setInt(6, id);
-                ps = connection.prepareStatement(sql);
-                rs = ps.executeQuery();
+                ps.executeUpdate();
+                request.setRequestID(id);
             }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
@@ -886,16 +894,15 @@ public class Database {
      *
      * @param request The <code>PromotionRequest</code> object to update. Contains
      *                the <code>requestID</code>.
-     * @throws DoesNotExistException
-     * @throws IsDeletedException
+     * @throws BlogException
      */
-    public static void retrieve(PromotionRequest request) throws DoesNotExistException, IsDeletedException {
+    public static void retrieve(PromotionRequest request) throws BlogException {
 
         try {
             String sql = """
-                    SELECT *
-                    FROM Promotion_Request
-                    WHERE request_ID = ?
+                    SELECT R.user_ID, R.request_time, R.target_level, R.reason, R.is_deleted, U.username
+                    FROM Promotion_Request R, User U
+                    WHERE R.request_ID = ? AND R.user_ID = U.user_ID
                     """;
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, request.getRequestID());
@@ -916,12 +923,13 @@ public class Database {
             }
             request.setReason(rs.getString("reason"));
             request.setDeleted(rs.getBoolean("is_deleted"));
+            request.setUsername(rs.getString("username"));
 
             if (Boolean.TRUE.equals(request.isDeleted())) {
                 throw new IsDeletedException("Promotion request with ID " + request.getRequestID() + " is deleted.");
             }
         } catch (SQLException e) {
-            throw new Error(e.getMessage());
+            throw new BlogException(e.getMessage());
         }
     }
 
@@ -934,25 +942,26 @@ public class Database {
      * @param requestIDStart
      * @param count
      * @param reverse
+     * @throws BlogException
      */
     public static void retrievePromotionRequests(ArrayList<PromotionRequest> requests, int requestIDStart, int count,
-            boolean reverse) {
+            boolean reverse) throws BlogException {
         try {
             String sql;
             if (reverse) {
                 sql = """
-                        SELECT *
-                        FROM Promotion_Request
-                        WHERE request_ID <= ? AND is_deleted = false
-                        ORDER BY request_ID DESC
+                        SELECT R.request_ID, R.user_ID, R.request_time, R.target_level, R.reason, R.is_deleted, U.username
+                        FROM Promotion_Request R, User U
+                        WHERE R.request_ID <= ? AND R.is_deleted = false AND R.user_ID = U.user_ID
+                        ORDER BY R.request_ID DESC
                         LIMIT ?
                         """;
             } else {
                 sql = """
-                        SELECT *
-                        FROM Promotion_Request
-                        WHERE request_ID >= ? AND is_deleted = false
-                        ORDER BY request_ID ASC
+                        SELECT R.request_ID, R.user_ID, R.request_time, R.target_level, R.reason, R.is_deleted, U.username
+                        FROM Promotion_Request R, User U
+                        WHERE R.request_ID >= ? AND R.is_deleted = false AND R.user_ID = U.user_ID
+                        ORDER BY R.request_ID ASC
                         LIMIT ?
                         """;
             }
@@ -973,10 +982,11 @@ public class Database {
                 }
                 request.setReason(rs.getString("reason"));
                 request.setDeleted(rs.getBoolean("is_deleted"));
+                request.setUsername(rs.getString("username"));
                 requests.add(request);
             }
         } catch (SQLException e) {
-            throw new Error(e.getMessage());
+            throw new BlogException(e.getMessage());
         }
     }
 

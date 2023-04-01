@@ -1,6 +1,7 @@
 package com.blog.model;
 
 import com.blog.database.Database;
+import com.blog.exception.BlogException;
 import com.blog.exception.DoesNotExistException;
 import com.blog.exception.IsDeletedException;
 
@@ -14,6 +15,9 @@ public class PromotionRequest extends Record {
     private UserLevel target;
     private String requestTime;
     private String reason;
+
+    // Optional fields
+    private String username;
 
     public PromotionRequest(int requestID) {
         this.requestID = requestID;
@@ -33,14 +37,30 @@ public class PromotionRequest extends Record {
         this.reason = reason;
     }
 
+    public PromotionRequest(int requestID,
+                            String userID,
+                            UserLevel target,
+                            String requestTime,
+                            String reason,
+                            boolean isDeleted,
+                            String username) {
+        super(isDeleted);
+        this.requestID = requestID;
+        this.userID = userID;
+        this.target = target;
+        this.requestTime = requestTime;
+        this.reason = reason;
+        this.username = username;
+    }
+
     /**
      * Factory method to retrieve the promotion request with the given requestID.
      *
      * @param requestID The promotion request to retrieve.
      * @return The promotion request with the given requestID.
-     * @throws IsDeletedException
+     * @throws BlogException
      */
-    public static PromotionRequest retrieve(int requestID) throws DoesNotExistException, IsDeletedException {
+    public static PromotionRequest retrieve(int requestID) throws BlogException {
         PromotionRequest request = new PromotionRequest(requestID);
         Database.retrieve(request);
         return request;
@@ -52,12 +72,18 @@ public class PromotionRequest extends Record {
      * @return JSONObject
      */
     public JSONObject asJSONObject() {
-        return super.asJSONObject()
+        JSONObject result = super.asJSONObject()
                 .put("requestID", requestID)
                 .put("userID", userID)
                 .put("target", target)
                 .put("requestTime", requestTime)
                 .put("reason", reason);
+
+        if (username == null) {
+            return result;
+        }
+
+        return result.put("username", username);
     }
 
     /**
@@ -107,5 +133,13 @@ public class PromotionRequest extends Record {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
