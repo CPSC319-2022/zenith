@@ -83,6 +83,20 @@ steps:
       - Push Frontend
     entrypoint: gcloud
 
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    id: Notify Slack
+    args:
+      - pubsub
+      - topics
+      - publish
+      - projects/blog-pipe/topics/zenith-build-topic
+      - '--message'
+      - '$BUILD_ID'
+    entrypoint: gcloud
+    waitFor:
+      - Deploy Backend
+      - Deploy Frontend
+
 
 images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
@@ -106,7 +120,4 @@ tags:
 
 timeout: 500s
 
-notifications:
-  - pubsub:
-      topic: 'projects/blog-pipe/topics/zenith-build-topic'
 
