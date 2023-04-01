@@ -882,7 +882,7 @@ public class Database {
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new BlogException(e.getMessage());
+            throw new Error(e.getMessage());
         }
     }
 
