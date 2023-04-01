@@ -8,12 +8,13 @@ import '../styles/Create.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { postSliceActions } from '../redux/slices/postSlice';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 
 const CreatePost = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const [title, setTitle] = useState('');
@@ -58,7 +59,8 @@ const CreatePost = () => {
 
         setTitle("");
         setBody("");
-        window.location.href = `/`;
+        // window.location.href = `/`;
+        navigate(`/`);
       }});
   
  
@@ -97,13 +99,24 @@ const CreatePost = () => {
           </Button>
         </Form>
       </>
-    ) : (
-      <div className="not-authorized-container">
-        <p>You need to be logged in and be a creator to create a post</p>
-        <Link to="/login">
-          <Button variant="primary">Login</Button>
-        </Link>
-      </div>
+    ) :  (
+      <>
+        {!user ? (
+          <div className="not-authorized-container">
+            <p>You need to be logged in and be a creator to create a post</p>
+            <Link to="/login">
+              <Button variant="primary">Login</Button>
+            </Link>
+          </div>
+        ) : user.userLevel === 'READER' ? (
+          <div className="not-authorized-container">
+            <p>You need to be a contributor to create a post</p>
+            <Link to="/profile">
+              <Button variant="primary">Apply to be a contributor</Button>
+            </Link>
+          </div>
+        ) : null}
+      </>
     )}
   </Container>
 );

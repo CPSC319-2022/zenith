@@ -5,6 +5,7 @@ import './styles/App.css';
 // imported components
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 import Home from "./pages/Home";
 import SearchResults from "./pages/SearchResults";
 import Create from "./pages/Create";
@@ -44,6 +45,7 @@ function App() {
                             <Route path="/wip" element={<WIP />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/login" element={<Login />} />
+                            <Route path="/logout" element={<Logout />} />
                             {/* <Route path="/admin" element={<Admin />} /> */}
                             <Route path="/admin" element={<AdminWrapper />} />
                         </Routes>
