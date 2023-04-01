@@ -104,6 +104,9 @@ tags:
   - gcp-cloud-build-deploy-cloud-run-managed
   - zenith-backend
 
-
 timeout: 500s
+
+notifications:
+  - pubsub:
+      topic: 'projects/blog-pipe/topics/zenith-build-topic'
 
