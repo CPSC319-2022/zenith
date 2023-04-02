@@ -93,7 +93,7 @@ options:
 
 substitutions:
   _PLATFORM: managed
-  _AR_HOSTNAME: us-central1-docker.pkg.dev
+  _AR_HOSTNAME:  us-docker.pkg.dev
   _SERVICE_NAME: zenith
   _DEPLOY_REGION: us-central1
   _GCR_HOSTNAME: us.gcr.io
@@ -102,7 +102,6 @@ substitutions:
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
-  - zenith-backend
 timeout: 500s
 
 
