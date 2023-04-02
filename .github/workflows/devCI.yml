@@ -3,7 +3,9 @@ name: Pull Request to QA on successfull push/pull to dev
 on:
   push:
     branches:
-      - dev
+      - 'dev'
+      - 'dev/**'
+      - 'qa/**'
 
 jobs:
   testBackend:
@@ -36,11 +38,11 @@ jobs:
         run: docker image prune --all
 
   deploy:
+    runs-on: ubuntu-latest
     needs:
       - testBackend
       - testFrontend
-    runs-on: ubuntu-latest
-    
+    if: success() && github github.ref == 'refs/heads/dev'
     steps:
       - uses: actions/checkout@v3
         with: 
@@ -48,7 +50,7 @@ jobs:
           
       - name: Fetch remote changes
         run: git fetch -a
-        
+
       - name: Change working branch to qa
         run: git checkout qa
 
