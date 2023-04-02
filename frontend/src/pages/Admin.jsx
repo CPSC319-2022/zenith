@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPromotionRequests, promoteUser, deleteRequest } from '../redux/slices/adminSlice';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Spinner, Alert } from 'react-bootstrap';
 
 const AdminPage = () => {
   const dispatch = useDispatch();
@@ -11,13 +11,31 @@ const AdminPage = () => {
 
   useEffect(() => {
     // Fetch promotion requests here
-    dispatch(fetchPromotionRequests({requestIDStart:0, count:10, reverse:false}));
+    dispatch(fetchPromotionRequests({requestIDStart:0, count:100, reverse:false}));
   }, [dispatch]);
 
+  const handleApprove = (row) => {
+    // Promote user
+    dispatch(promoteUser({ userID: row.userID, target: row.target }))
+      .then(() => {
+        // Refetch promotion requests after a successful approve request
+        dispatch(fetchPromotionRequests({requestIDStart:0, count:100, reverse:false}));
+      });
+  };
+
+  const handleDeny = (row) => {
+    // Delete promotion request
+    dispatch(deleteRequest(row.requestID))
+      .then(() => {
+        // Refetch promotion requests after a successful deny request
+        dispatch(fetchPromotionRequests({requestIDStart:0, count:100, reverse:false}));
+      });
+  };
+
   return (
-    <div>
-      {loading && <div>Loading...</div>}
-      {error && <div>{error}</div>}
+    <div className="mt-4">
+      {loading && <div className="d-flex justify-content-center"><Spinner animation="border" variant="primary" /></div>}
+      {error && <Alert variant="danger">{error}</Alert>}
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -35,26 +53,20 @@ const AdminPage = () => {
               <td>{row.requestID}</td>
               <td>{row.userID}</td>
               <td>{row.target}</td>
-              <td>{row.requestTime}</td>
+              <td>{new Date(row.requestTime).toLocaleString()}</td>
               <td>{row.reason}</td>
               <td>
                 <Button
                   variant="success"
                   size="sm"
-                  onClick={() => {
-                    // Promote user
-                    dispatch(promoteUser({ userID: row.userID, target: row.target }));
-                  }}
+                  onClick={() => handleApprove(row)}
                 >
                   Approve
                 </Button>{' '}
                 <Button
                   variant="danger"
                   size="sm"
-                  onClick={() => {
-                    // Delete promotion request
-                    dispatch(deleteRequest(row.requestID));
-                  }}
+                  onClick={() => handleDeny(row)}
                 >
                   Deny
                 </Button>
