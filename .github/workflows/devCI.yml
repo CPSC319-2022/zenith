@@ -42,7 +42,7 @@ jobs:
     needs:
       - testBackend
       - testFrontend
-    if: success() && github github.ref == 'refs/heads/dev'
+    if: success() && github.ref == 'refs/heads/dev'
     steps:
       - uses: actions/checkout@v3
         with: 
