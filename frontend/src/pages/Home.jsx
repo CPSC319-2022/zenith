@@ -12,28 +12,51 @@ import { highestPostIndex } from '../api';
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [highestIndex, setHighestIndex] = useState(null);
-  const [isReverse, setIsReverse] = useState(false);
+  const [isReverse, setIsReverse] = useState(true);
   const postsPerPage = 9;
   const { resetStatus } = postSliceActions;
-
+  
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
 
+  const [prevCall, setPrevCall] = useState(false);
+  const [indexRef, setIndexRef] = useState(new Set([0]));
+
   useEffect(() => {
     const fetchCurrentPosts = () => {
       if (status === 'idle') {
-        if (isReverse) {
-          const postIDStart = highestIndex - (currentPage - 1) * postsPerPage;
-          dispatch(fetchPosts({ postIDStart, count: postsPerPage, reverse: true }));
+        var postIDStart = 0;
+        var increment = 1;
+        if (currentPage == 1) {
+          if (isReverse) {
+            postIDStart = 10000;
+            increment = -1;
+          }
+          dispatch(fetchPosts({ postIDStart, count: postsPerPage, reverse: isReverse }))
+            .then((postsRes) => {
+              setIndexRef(indexRef.add(postsRes.payload[postsRes.payload.length-1].postID+increment));
+            }); 
         } else {
-          const postIDStart = (currentPage - 1) * postsPerPage;
-          dispatch(fetchPosts({ postIDStart, count: postsPerPage, reverse: false }));
+          if (prevCall) {
+            dispatch(fetchPosts({ postIDStart: [...indexRef][currentPage-2], count: postsPerPage, reverse: isReverse }));
+            setPrevCall(false);
+            //delete future indexes from indexRef?
+          }
+
+          if (isReverse) {
+            increment = -1;
+          }
+          dispatch(fetchPosts({ postIDStart: [...indexRef][currentPage-1], count: postsPerPage, reverse: isReverse }))
+            .then((postsRes) => {    
+              setIndexRef(indexRef.add(postsRes.payload[postsRes.payload.length-1].postID+increment));
+            });
         }
       }
     };
-  
+
     const fetchHighestIndex = async () => {
       try {
         const index = await highestPostIndex();
@@ -50,10 +73,12 @@ const Home = () => {
   
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, status, dispatch, highestIndex, isReverse]);
-  
 
   const handleReverse = () => {
     setIsReverse(!isReverse);
+    setIndexRef(new Set([0]));
+    setCurrentPage(1);
+
     dispatch(resetStatus());
   }
   const nextPage = () => {
@@ -62,11 +87,10 @@ const Home = () => {
   };
 
   const prevPage = () => {
+    setPrevCall(true);
     setCurrentPage(currentPage - 1);
     dispatch(resetStatus());
   };
-
-  const navigate = useNavigate();
 
   function handleClick(post) {
     const postID = post.post.postID;
@@ -80,7 +104,7 @@ const Home = () => {
   if (status === 'failed') {
     return <div>Error: {error}</div>;
   }
-  console.log('highestIndex:', highestIndex);
+
   const isLastPage = currentPage * postsPerPage >= highestIndex;
   return (
 
@@ -114,8 +138,8 @@ const Home = () => {
               <Form.Check
                 type="switch"
                 id="custom-switch"
-                label={isReverse ? "Newest to Oldest" : "Oldest to Newest"}
-                checked={isReverse}
+                label={isReverse ? "Newest to Oldest" : "Oldest to Newest" }
+                checked={!isReverse}
                 onChange={handleReverse}
               />
             </div>
@@ -150,12 +174,16 @@ const Home = () => {
       <div className="container">
         <div className="row">
           <div className="col-12 d-flex flex-column align-items-center gap-2">
-            {!isLastPage && (
-              <Button className="next-button btn-lg mb-2" style={{ width: '200px' }} onClick={nextPage} disabled={isLastPage}>
-                Next
-              </Button>
+            {posts.map((post) => {
+              if ((post.postID == (posts.at(postsPerPage-1) ? posts.at(postsPerPage-1).postID : -1)) && post.postID != highestIndex) {
+                return (
+                  <Button className="next-button btn-lg mb-2" style={{ width: '200px' }} onClick={nextPage}>
+                    Next
+                  </Button>)
+              }
+            }
             )}
-            {currentPage > 1 && (
+            {currentPage != 1 && (
               <Button className="prev-button btn-lg mb-2" style={{ width: '200px' }} onClick={prevPage}>
                 Previous
               </Button>
