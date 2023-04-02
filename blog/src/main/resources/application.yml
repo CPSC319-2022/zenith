@@ -19,4 +19,4 @@ google:
   cloud:
     storage:
       credentials:
-        path: blog-pipe-db1667c1da0e.json
+        path: zenith-blog-pipe-28715d58597f.json
