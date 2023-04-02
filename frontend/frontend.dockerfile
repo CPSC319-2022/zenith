@@ -1,10 +1,17 @@
 # Stage 0 - Build Frontend Assets
 FROM node:19.6.0-alpine as build
 
+ARG ENVIRONMENT=local
+ENV ENV_FILE=.env.${ENVIRONMENT}
+
 WORKDIR /app
 COPY /package*.json ./
 RUN npm install --legacy-peer-deps
 COPY / .
+
+# Copy the appropriate environment file
+COPY ${ENV_FILE} .env
+
 RUN npm run build
 
 FROM build as test
