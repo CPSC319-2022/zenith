@@ -26,8 +26,8 @@ jobs:
   
 
   cleanUp:
-    runs-on: ubuntu-latest
     if: always()
+    runs-on: ubuntu-latest
     needs: 
       - testBackend
       - testFrontend
@@ -38,11 +38,11 @@ jobs:
         run: docker image prune --all
 
   deploy:
-    runs-on: ubuntu-latest
+    if: success() && github.ref == 'refs/heads/dev'
     needs:
       - testBackend
       - testFrontend
-    if: success() && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with: 
@@ -62,6 +62,8 @@ jobs:
   
   notify:
     if: always()
+    needs: 
+      - deploy
     runs-on: ubuntu-latest
     steps:
       - name: Sends report of commit to project slack channel
