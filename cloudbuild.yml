@@ -101,4 +101,4 @@ substitutions:
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
-timeout: 500s
+timeout: 800s
