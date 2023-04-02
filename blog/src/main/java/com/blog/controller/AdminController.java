@@ -37,9 +37,10 @@ public class AdminController {
      * },                        //
      * ...  // The JSON array will contain at most <code>count</code> number of promotion request representations.
      * ]
+     * @throws BlogException
      */
     private static String getPromotionRequests(String accessToken, int requestIDStart, int count, boolean reverse)
-            throws LoginFailedException, IsDeletedException, InitializationException, InvalidPermissionException {
+            throws BlogException {
         // Validate the admin
         validateAdmin(accessToken);
 
@@ -106,14 +107,9 @@ public class AdminController {
      *
      * @param accessToken The access token of the user.
      * @param requestID   The promotion request to delete.
-     * @throws LoginFailedException       Invalid access token.
-     * @throws IsDeletedException         If the user is deleted.
-     * @throws InitializationException    Unable to create GoogleIDTokenVerifier.
-     * @throws InvalidPermissionException User does not have the permission to delete.
-     * @throws DoesNotExistException      The promotion request does not exist.
+     * @throws BlogException
      */
-    private static void deletePromotionRequest(String accessToken, int requestID) throws LoginFailedException,
-            IsDeletedException, InitializationException, InvalidPermissionException, DoesNotExistException {
+    private static void deletePromotionRequest(String accessToken, int requestID) throws BlogException {
         // Validate the admin
         validateAdmin(accessToken);
 

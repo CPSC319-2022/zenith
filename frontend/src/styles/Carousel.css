@@ -1,10 +1,3 @@
-.carousel-background {
-    background-color: #007bff; /* You can change this to any color you want */
-    height: 200px;
-    width: 100%;
-    opacity: 0.5;
-  }
-  
   .carousel-title {
     color: #ffffff;
     font-size: 2rem;
@@ -16,3 +9,10 @@
     font-size: 1.2rem;
   }
   
+/* i want images in carousel-image class to all occupy similar screen realstate. if the image is larger, whatever part of it comes in the fixed window of 900x300 */
+
+.carousel-image {
+  width: 900px;
+  height: 300px; /* You can set the desired height */
+  object-fit: cover;
+}

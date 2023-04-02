@@ -5,7 +5,7 @@ import { getAccessToken } from './redux/slices/auth';
 
 
 const testURL = 'http://localhost:8080';
-const prodURL = 'https://zenith-backend-azq7gdtpga-uc.a.run.app'; //to be filled 
+const prodURL = 'https://zenith-backend-t27edy3enq-uc.a.run.app'; //prod URL
 const getApiUrl = () => {
   return process.env.NODE_ENV === 'production'
     ? prodURL

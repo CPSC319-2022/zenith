@@ -4,7 +4,7 @@ steps:
       - build
       - '--no-cache'
       - '-t'
-      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
+      - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME-$_BRANCH_NAME-backend:$COMMIT_SHA'
       - '--file'
       - blog/Dockerfile
       - blog
@@ -19,7 +19,7 @@ steps:
       - '--no-cache'
       - '-t'
       - >-
-        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME-$_BRANCH_NAME:$COMMIT_SHA
       - '--file'
       - frontend/frontend.dockerfile
       - frontend
@@ -31,7 +31,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
+      - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME-$_BRANCH_NAME-backend:$COMMIT_SHA'
     id: Push Backend
     waitFor:
       - Containerize & Test Backend
@@ -41,7 +41,7 @@ steps:
     args:
       - push
       - >-
-        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME-$_BRANCH_NAME:$COMMIT_SHA
     id: Push Frontend
     waitFor:
       - Containerize & Test Backend
@@ -52,10 +52,10 @@ steps:
       - run
       - services
       - update
-      - $_SERVICE_NAME-backend
+      - $_SERVICE_NAME-$_BRANCH_NAME-backend
       - '--platform=managed'
       - >-
-        --image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA
+        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME-$_BRANCH_NAME-backend:$COMMIT_SHA
       - >-
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
       - '--region=$_DEPLOY_REGION'
@@ -70,10 +70,10 @@ steps:
       - run
       - services
       - update
-      - $_SERVICE_NAME
+      - $_SERVICE_NAME-$_BRANCH_NAME
       - '--platform=managed'
       - >-
-        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME-$_BRANCH_NAME:$COMMIT_SHA
       - >-
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
       - '--region=$_DEPLOY_REGION'
@@ -83,26 +83,10 @@ steps:
       - Push Frontend
     entrypoint: gcloud
 
-  - name: curlimages/curl
-    args:
-      - -X
-      - POST
-      - -H
-      - "Content-Type: application/json"
-      - -d
-      - >-
-        {"projectId": "$PROJECT_ID", "id": "$BUILD_ID", "status": "SUCCESS"}
-      - https://us-central1-blog-pipe.cloudfunctions.net/notifySlack
-    id: Notify Slack
-    waitFor:
-      - Deploy Backend
-      - Deploy Frontend
-
 images:
-  - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
+  - '$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME-$_BRANCH_NAME-backend:$COMMIT_SHA'
   - >-
-    $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
-
+    $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME-$_BRANCH_NAME:$COMMIT_SHA
 options:
   substitutionOption: ALLOW_LOOSE
 
@@ -111,12 +95,10 @@ substitutions:
   _AR_HOSTNAME: us-central1-docker.pkg.dev
   _SERVICE_NAME: zenith
   _DEPLOY_REGION: us-central1
-  _GCR_HOSTNAME: us.gcr.io
-  _TRIGGER_ID: bc8f33b4-744d-4d6a-b59c-e863024b2504
+  _TRIGGER_ID: c8e3bdfd-dc5f-4a9f-9f0e-cafb8c00e07b
+  _BRANCH_NAME: main
 
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
-  - zenith-backend
-
-timeout: 500s
+timeout: 800s

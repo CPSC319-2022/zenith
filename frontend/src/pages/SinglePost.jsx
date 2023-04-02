@@ -11,6 +11,7 @@ import { userSliceActions, fetchCurrentUserByToken } from '../redux/slices/userS
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Comment from '../components/Comment';
+import '../styles/SinglePost.css';
 import Filter from 'bad-words';
 import { AiFillLike, AiFillDislike, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 
@@ -40,6 +41,8 @@ const SinglePost = () => {
   const [postUpdated, setPostUpdated] = useState(false);
   const [postVoteErrorMessage, setPostVoteErrorMessage] = useState('');
   const [commentVoteErrorMessage, setCommentVoteErrorMessage] = useState('');
+  const [showPostVoteErrorMessage, setShowPostVoteErrorMessage] = useState(false);
+  const [showCommentVoteErrorMessage, setShowCommentVoteErrorMessage] = useState(false);
 
 
 
@@ -80,6 +83,22 @@ const SinglePost = () => {
       });
     }
   }, [isAuthenticated, dispatch]);
+
+  useEffect(() => {
+    if (postVoteErrorMessage) {
+      setShowPostVoteErrorMessage(true);
+      setTimeout(() => {
+        setShowPostVoteErrorMessage(false);
+      }, 2000);
+    }
+    if (commentVoteErrorMessage) {
+      setShowCommentVoteErrorMessage(true);
+      setTimeout(() => {
+        setShowCommentVoteErrorMessage(false);
+      }, 2000);
+    }
+  }, [postVoteErrorMessage,commentVoteErrorMessage]);
+  
 
   const checkProfanity = (text) => {
     const filter = new Filter();
@@ -133,6 +152,7 @@ const SinglePost = () => {
   const handleDeletePost = async (postID) => {
     await dispatch(deletePost(postID));
     setPostDeleted(true);
+    postVoteErrorMessage('');
   };
 
 
@@ -177,6 +197,7 @@ const SinglePost = () => {
   const handleDeleteComment = async (postID, commentID) => {
     await dispatch(deleteComment({ postID, commentID }));
     setUpdateComments(!updateComments);
+    commentVoteErrorMessage('');
   };
 
   const handleEditComment = async (postID, commentID, content, editedContent) => {
@@ -201,7 +222,6 @@ const SinglePost = () => {
       return;
     }
 
-    //const authorID = 1;
 
     await dispatch(
       commentSliceActions.createComment({
@@ -229,13 +249,17 @@ const SinglePost = () => {
                 {/* Render post title, author username, creation date, and content */}
                 {post && (
                   <>
-                    <h1>{post.title}</h1>
+                    
                     {/* <img src={authorPicture} alt="Profile Picture" /> <p>{authorUsername} | {new Date(post.creationDate).toLocaleString().split(',')[0]}</p> */}
                     <div className="author-info">
                       <Link to={`/profile/${post.authorID}`}>
                         <img className="author-picture" src={authorPicture} alt={authorUsername} referrerpolicy="no-referrer" />
-                        <h4>{authorUsername}</h4>
+                        <h6>By: {authorUsername}</h6>
                       </Link>
+                    </div>
+                    <h1>{post.title}</h1>
+                    <div className="post-thumbnail">
+                      <img src={post.thumbnailURL} alt="Post Thumbnail" referrerpolicy="no-referrer"/>
                     </div>
                     {editingPost ? (
                       <ReactQuill
@@ -256,17 +280,20 @@ const SinglePost = () => {
                 {/* Add upvote, downvote, edit, and delete buttons for the post */}
                 {post && (
                   <div className="post-votes">
+                     
                     {isAuthenticated && (
                       <Button
                         variant="outline-primary"
+                        className='post-actions'
                         onClick={() => handleUpvotePost(post.postID)}
                       >
-                        <AiFillLike /> {post.upvotes}
+                        <AiFillLike/> {post.upvotes}
                       </Button>
                     )}
                     {isAuthenticated && (
                       <Button
                         variant="outline-danger"
+                        className='post-actions'
                         onClick={() => handleDownvotePost(post.postID)}
                       >
                         <AiFillDislike /> {post.downvotes}
@@ -275,29 +302,33 @@ const SinglePost = () => {
                     {isAuthenticated && (
                       editingPost ? (
                         <>
-                          <Button variant="success" onClick={() => handleSave(post.postID, post.title, post.content, post.allowComments)}>
+                          <Button variant="success"  className='post-actions' onClick={() => handleSave(post.postID, post.title, post.content, post.allowComments)}>
                             Save
                           </Button>
-                          <Button variant="secondary" onClick={handleCancel}>
+                          <Button variant="secondary" className='post-actions' onClick={handleCancel}>
                             Cancel
                           </Button>
                         </>
                       ) :
                         ((currentUser.userID === post.authorID) &&
-                          <Button variant="outline-info" onClick={handleEditPost}>
+                          <Button variant="outline-info" className='post-actions' onClick={handleEditPost}>
                             <AiOutlineEdit />
                           </Button>
                         )
-                    )}
+                    
+                    )
+                   
+                    }
+                
 
                     {isAuthenticated && (
                       ((currentUser !== (null || undefined)) && (currentUser.userID === post.authorID) || (currentUser.userLevel === 'ADMIN')) &&
-                      <Button variant="danger" onClick={() => handleDeletePost(post.postID)}>
+                      <Button variant="danger" className='post-actions' onClick={() => handleDeletePost(post.postID)}>
                         <AiOutlineDelete />
                       </Button>
                     )}
 
-                    {postVoteErrorMessage && <div className="post-vote-error">{postVoteErrorMessage}</div>}
+                    {showPostVoteErrorMessage && <div className="post-vote-error">{postVoteErrorMessage}</div>}
 
 
 
@@ -326,7 +357,7 @@ const SinglePost = () => {
                         </div>
                       )}
                     </div>
-                    {commentVoteErrorMessage && <div className="comment-vote-error">{commentVoteErrorMessage}</div>}
+                    {showCommentVoteErrorMessage && <div className="comment-vote-error">{commentVoteErrorMessage}</div>}
 
                     {commentsStatus === 'loading' && <div>Loading comments...</div>}
                     {commentsStatus === 'failed' && <div>Error: {commentsError}</div>}

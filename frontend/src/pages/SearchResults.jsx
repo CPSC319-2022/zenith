@@ -52,30 +52,30 @@ const Home = () => {
 
   <div className="home">
 
-    <div className="container post-area">
-      <div className="row">
-        {posts.slice(start, end).map((post) => (
-          <div className="col-md-4 col-sm-6 mb-4 post-cards " key={post.postID}>
-            <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src={`https://source.unsplash.com/random/300x200?sig=${post.postID}`} />
-              <Card.Body>
-                <Card.Title>
-                  <Link className="link" to={`/single-post/${post.postID}`}>
-                    {post.title}
-                  </Link>
-                </Card.Title>
-                <Card.Text>
-                  <div dangerouslySetInnerHTML={{ __html: post.content.substring(0, 50) + '...' }}></div>
-                </Card.Text>
-                <Button className="read-button" onClick={() => handleClick({ post })}>
-                  Read More
-                </Button>
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
+      <div className="container post-area">
+        <div className="row">
+          {posts.map((post) => (
+            <div className="col-md-4 col-sm-6 mb-4 post-cards " key={post.postID}>
+              <Card style={{ width: '18rem' }}>
+                <Card.Img variant="top" src={post.thumbnailURL} />
+                <Card.Body>
+                  <Card.Title>
+                    <Link className="link post-title" to={`/single-post/${post.postID}`}>
+                      {post.title}
+                    </Link>
+                  </Card.Title>
+                  <Card.Text  className='post-content'>
+                    <div dangerouslySetInnerHTML={{ __html: post.content}}></div>
+                  </Card.Text>
+                  <Button className="read-button" onClick={() => handleClick({ post })}>
+                    Read More
+                  </Button>
+                </Card.Body>
+              </Card>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
 
     <div className="container">
       <div className="row">

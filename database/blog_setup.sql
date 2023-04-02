@@ -74,7 +74,7 @@ CREATE TABLE Promotion_Request(
     request_time CHAR(30) NOT NULL,
     reason VARCHAR(500),
     is_deleted BOOLEAN NOT NULL DEFAULT false,
-    PRIMARY KEY(user_ID),
+    PRIMARY KEY(request_ID),
     FOREIGN KEY(user_ID) REFERENCES User(user_ID) ON DELETE CASCADE
 );
 

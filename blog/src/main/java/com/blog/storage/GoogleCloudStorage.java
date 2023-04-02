@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Service
 public class GoogleCloudStorage {
-    private static final String BUCKET_NAME = "zenith-blog-storage";
+    private static final String BUCKET_NAME = "zenith-blog-thumbnailurl";
     private static Storage storage;
 
     @Autowired

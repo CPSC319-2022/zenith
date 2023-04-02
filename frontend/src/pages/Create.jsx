@@ -8,11 +8,13 @@ import '../styles/Create.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { postSliceActions } from '../redux/slices/postSlice';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
 
 const CreatePost = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const [title, setTitle] = useState('');
@@ -52,10 +54,16 @@ const CreatePost = () => {
         },
         file: image, // Pass the image state
       })
-    );
+    ).then((response) => {
+      if (response.meta.requestStatus === 'fulfilled') {
+
+        setTitle("");
+        setBody("");
+        window.location.href = `/`;
+        // navigate(`/`);
+      }});
   
-    setTitle("");
-    setBody("");
+ 
   };
   
 
@@ -65,41 +73,54 @@ const CreatePost = () => {
   };
 
   return (
-    <>
-      {user && (user.userLevel === 'ADMIN' || user.userLevel === 'CONTRIBUTOR') ? (
-        <>
-          <h1 className="create-title">Create a Post</h1>
-          <div className="create">
-            <form id="new_post" onSubmit={handleCreatePost}>
-              <div className="content">
-                <input
-                  type="text"
-                  id="name"
-                  name="title"
-                  placeholder="Title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <div className="editor-container">
-                  <ReactQuill className="editor" theme="snow" value={body} onChange={setBody} />
-                </div>
-              </div>
-              <div className="menu">
-                <div className="menu-item col-md-auto">
-                  <Button as="input" type="submit" value="Publish" variant="primary" size="lg" />{' '}
-                  <Form.Group controlId="formFile">
-                    <Form.Control type="file" onChange={handleImageChange} />
-                  </Form.Group>
-                </div>
-              </div>
-            </form>
+    <Container className="create-post-container">
+    {user && (user.userLevel === 'ADMIN' || user.userLevel === 'CONTRIBUTOR') ? (
+      <>
+        <h1 className="create-post-title">Create a Post</h1>
+        <Form onSubmit={handleCreatePost}>
+          <Form.Group controlId="postTitle">
+            <Form.Control
+              type="text"
+              name="title"
+              placeholder="Title - Can not be changed later"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </Form.Group>
+          <div className="editor-container">
+            <ReactQuill className="editor" theme="snow" value={body} onChange={setBody} />
           </div>
-        </>
-      ) : (
-        <div>Not Authorized</div>
-      )}
-    </>
-  );
+          <Form.Group controlId="formFile">
+            <Form.Label>Upload Image - (Optional) Max file size 1MB </Form.Label>
+            <Form.Control type="file" onChange={handleImageChange} />
+          </Form.Group>
+          <Button type="submit" variant="primary" size="lg" className="submit-button">
+            Publish
+          </Button>
+        </Form>
+      </>
+    ) :  (
+      <>
+        {!user ? (
+          <div className="not-authorized-container">
+            <p>You need to be logged in and be a creator to create a post</p>
+            <Link to="/login">
+              <Button variant="primary">Login</Button>
+            </Link>
+          </div>
+        ) : user.userLevel === 'READER' ? (
+          <div className="not-authorized-container">
+            <p>You need to be a contributor to create a post</p>
+            <Link to="/profile">
+              <Button variant="primary">Apply to be a contributor</Button>
+            </Link>
+          </div>
+        ) : null}
+      </>
+    )}
+  </Container>
+);
 };
 
 export default CreatePost;
+

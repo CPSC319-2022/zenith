@@ -1,0 +1,26 @@
+.login-container {
+    height: 100vh;
+  }
+  
+  .login-card {
+    width: 25rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  
+  .login-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .login-card-text {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .login-button {
+    width: 100%;
+  }
+  

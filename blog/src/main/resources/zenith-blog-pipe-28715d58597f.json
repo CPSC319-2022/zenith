@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "zenith-blog-pipe",
+  "private_key_id": "28715d58597fe76bfa934642984c1e67e777c451",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDXtsdFZ7LVfi54\nBG8vRxWwk2tQM4tBqvYXctL4h9UB/w6KUGApdOhxRVnwqFtlVEBBl7IO/Xrkm2fh\nImiKAdyaeIyroc9haOi/hMWWM+wLMJvpmSgKoAqOk23z3zfQy6AhEONmHZ9RgFT8\nzlVlB2lPxVU+mSgzIQ21hibkJOMtToTSjBgU5kEH9Cc+M557Uw61NyMsm9z1OAIB\nn0RcgI7OJJDIFZxmO3bD7ZBXV8EraGd4M5KJJwbgwDk58ov2BArLt0wbBimNDyrC\n7+EB5Fm+ASegYDNP2px4zNV8l6VSb16ArE4vQxd9Qo0WoGCcTZsVRsOMxGUgYDYc\nDQ/qYJPbAgMBAAECggEATW8NwkLSxeN5P9jrpo+AYDXTGGOgUg7SLyGnTNLJqmFJ\n8Wmf01HlnL+V5RcyU8H2HPWc09e3FTgaBo2I9D1t2L98U6IOpPt5TUKWgPAbg/rL\nhQPXBVVk5MBUgG35BckKrsP2tTHd/m4wU92ndtA9xAZkrsdg0FXFq4tAC7aYHCtB\nxvU++UpRe1Vqe6Xup66nXrHr1cR3qSFD+NxuYd1JZBBEa3pU5dHd/n0LobD6/KdN\nJt7sgtME5WUS8hVuMPN1iHvhtf/E2d+g+nkdzSPHgX8+gpiu7Zn4UN0G0Ecp1ocY\nrKyWZAaYMmUhwt76ZlP9rKwYXS7euo4S9IDLMNLonQKBgQD8t/TajIFHL+8V42UN\nsS8CZ/wexY3HvO//Ux1fuyBFA0DO8dw8uqMwFpve2u7ixQTFqqoxMCa2Fhxuyfzm\n+Itk1WQAuAQ34l5BUibZSfTQ1CpD+lig0CeXZ9YniAt4XqBpV+Fb/2th54Ljs0eK\nAwDQ5ab4C55EUNal0Ls7IIcbdwKBgQDag9FP105fGO+0Dw8+ZvXsyL8tK1DnRppB\nCz+ohuS2LrOLpe7wJBd29hBGqBwZ4ONVCmzLh5dkCtvv7Ge/htYO00w5gPiLM7yd\n63GpnYIiCgv+DhRPJIyGuvM2M/0fQAZ8PkEYNk57Wd+WUreOWIFjEXe/3moUoRtY\n3ewP+pJbvQKBgQDyIi7v1v9mfX7Nsfn4jHNGEut1cELPxS8Nq0zRlDDu7pcBsKob\nZZdFU+Q0Of/4NlzEJyi5yDDO9ZB4df9iLXEhQ3N1XNpt0O4OF/Aw8LMoAqAcUZjp\nO4czgcGmTqruwXtgc1rxEmCIhZDbKcK5cPcvL1oy/q69NdbzOHKrzBanMQKBgQDM\n5CsArUcMPmqMsE4/2fUgmD9CUEplAbuj37NKB2ovNW0fNXDs9TqXTjSGvBzVWxxu\nYf8PfM1EfjYqKsZBPWI7tn7TsI3coJ9siBckzs71sev6xSLf7sphjqx8l5Txl2w9\nVXZeCJXgba4L2vXIYE66IOfjHd7kBwiIdFZjyTUxFQKBgQCD8KeSIWO8AIrPKqgo\nGhv7CXm66nRw3EPD8bg6X5mdQG0DgYUCp9ecB0zTJD0p2ObNIuDWfBZ9czYd7vGZ\n8peZDjb4lI63ElKlLsPyDJi3TX3GL0q3oGpnGRZorCrtAGRGyzFTJgTJxB/EFSB7\nn5yQrMDkIxi9AVDPoNtf3SWDdg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "zenith-blog-thumbnail-storage@zenith-blog-pipe.iam.gserviceaccount.com",
+  "client_id": "105266493350090897471",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/zenith-blog-thumbnail-storage%40zenith-blog-pipe.iam.gserviceaccount.com"
+}
