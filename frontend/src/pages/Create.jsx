@@ -59,8 +59,8 @@ const CreatePost = () => {
 
         setTitle("");
         setBody("");
-        // window.location.href = `/`;
-        navigate(`/`);
+        window.location.href = `/`;
+        // navigate(`/`);
       }});
   
  
