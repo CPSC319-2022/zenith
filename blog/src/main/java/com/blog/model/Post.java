@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class Post extends Content {
     public static final int NEW_POST_ID = 0;
     private static final int MIN_TITLE_LENGTH = 1;
-    private static final String DEFAULT_IMAGE_URL = "https://storage.googleapis.com/zenith-blog-storage/176fee8b-09f9-4d97-b1fa-9e47dabf1752.jpg";
+    private static final String DEFAULT_IMAGE_URL = "https://storage.googleapis.com/zenith-blog-thumbnailurl/default_thumbnail.png";
 
     private int postID;
     private String title;

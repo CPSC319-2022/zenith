@@ -41,6 +41,8 @@ const SinglePost = () => {
   const [postUpdated, setPostUpdated] = useState(false);
   const [postVoteErrorMessage, setPostVoteErrorMessage] = useState('');
   const [commentVoteErrorMessage, setCommentVoteErrorMessage] = useState('');
+  const [showPostVoteErrorMessage, setShowPostVoteErrorMessage] = useState(false);
+  const [showCommentVoteErrorMessage, setShowCommentVoteErrorMessage] = useState(false);
 
 
 
@@ -81,6 +83,22 @@ const SinglePost = () => {
       });
     }
   }, [isAuthenticated, dispatch]);
+
+  useEffect(() => {
+    if (postVoteErrorMessage) {
+      setShowPostVoteErrorMessage(true);
+      setTimeout(() => {
+        setShowPostVoteErrorMessage(false);
+      }, 2000);
+    }
+    if (commentVoteErrorMessage) {
+      setShowCommentVoteErrorMessage(true);
+      setTimeout(() => {
+        setShowCommentVoteErrorMessage(false);
+      }, 2000);
+    }
+  }, [postVoteErrorMessage,commentVoteErrorMessage]);
+  
 
   const checkProfanity = (text) => {
     const filter = new Filter();
@@ -134,6 +152,7 @@ const SinglePost = () => {
   const handleDeletePost = async (postID) => {
     await dispatch(deletePost(postID));
     setPostDeleted(true);
+    postVoteErrorMessage('');
   };
 
 
@@ -178,6 +197,7 @@ const SinglePost = () => {
   const handleDeleteComment = async (postID, commentID) => {
     await dispatch(deleteComment({ postID, commentID }));
     setUpdateComments(!updateComments);
+    commentVoteErrorMessage('');
   };
 
   const handleEditComment = async (postID, commentID, content, editedContent) => {
@@ -308,7 +328,7 @@ const SinglePost = () => {
                       </Button>
                     )}
 
-                    {postVoteErrorMessage && <div className="post-vote-error">{postVoteErrorMessage}</div>}
+                    {showPostVoteErrorMessage && <div className="post-vote-error">{postVoteErrorMessage}</div>}
 
 
 
@@ -337,7 +357,7 @@ const SinglePost = () => {
                         </div>
                       )}
                     </div>
-                    {commentVoteErrorMessage && <div className="comment-vote-error">{commentVoteErrorMessage}</div>}
+                    {showCommentVoteErrorMessage && <div className="comment-vote-error">{commentVoteErrorMessage}</div>}
 
                     {commentsStatus === 'loading' && <div>Loading comments...</div>}
                     {commentsStatus === 'failed' && <div>Error: {commentsError}</div>}
