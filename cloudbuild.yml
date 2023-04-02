@@ -83,20 +83,6 @@ steps:
       - Push Frontend
     entrypoint: gcloud
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    id: Notify Slack
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        PAYLOAD='{"id":"$BUILD_ID","status":"$BUILD_STATUS","logUrl":"$LOG_URL"}'
-        ENCODED_PAYLOAD=$(echo -n "$PAYLOAD" | base64)
-        gcloud pubsub topics publish projects/blog-pipe/topics/zenith-build-topic --message '{"data":"'$ENCODED_PAYLOAD'"}'
-    waitFor:
-      - Deploy Backend
-      - Deploy Frontend
-
-
 
 images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME-backend:$COMMIT_SHA'
