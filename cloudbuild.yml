@@ -103,7 +103,6 @@ tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
   - zenith-backend
-
 timeout: 500s
 
 
