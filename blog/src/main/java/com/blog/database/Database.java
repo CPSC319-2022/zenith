@@ -1140,4 +1140,62 @@ public class Database {
             throw new Error(e.getMessage());
         }
     }
+
+    // hard delete methods only for testing use
+    public static void hardDelete(User user) {
+        try {
+            String sql = """
+                    DELETE FROM User
+                    WHERE user_ID = ?
+                        """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user.getUserID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
+        }
+    }
+
+    public static void hardDelete(Post post) {
+        try {
+            String sql = """
+                    DELETE FROM Post
+                    WHERE post_ID = ?
+                        """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, post.getPostID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
+        }
+    }
+
+    public static void hardDelete(Comment comment) {
+        try {
+            String sql = """
+                    DELETE FROM Comment
+                    WHERE post_ID = ? AND comment_number = ?
+                        """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, comment.getPostID());
+            ps.setInt(2, comment.getCommentID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
+        }
+    }
+    
+    public static void hardDelete(PromotionRequest request) {
+        try {
+            String sql = """
+                    DELETE FROM Promotion_Request
+                    WHERE request_ID = ?
+                        """;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, request.getRequestID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
+        }
+    }
 }
