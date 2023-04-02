@@ -96,7 +96,8 @@ substitutions:
   _SERVICE_NAME: zenith
   _DEPLOY_REGION: us-central1
   _TRIGGER_ID: c8e3bdfd-dc5f-4a9f-9f0e-cafb8c00e07b
-  _BRANCH_NAME: main
+  _BRANCH_NAME: ${BRANCH_NAME}
+
 
 tags:
   - gcp-cloud-build-deploy-cloud-run
