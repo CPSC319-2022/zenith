@@ -30,7 +30,6 @@ COPY nginx.local.conf /etc/nginx/
 COPY nginx.cloud.conf /etc/nginx/
 
 RUN if [ "$ENVIRONMENT" = "main" ] || [ "$ENVIRONMENT" = "qa" ] || [ "$ENVIRONMENT" = "prod" ]; then cp /etc/nginx/nginx.cloud.conf /etc/nginx/nginx.conf ; else cp /etc/nginx/nginx.local.conf /etc/nginx/nginx.conf ; fi
-
 COPY --from=test /app/build /usr/share/nginx/html
 EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
