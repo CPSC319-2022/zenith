@@ -11,6 +11,7 @@ on:
 jobs:
   testBackend:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
       
@@ -18,6 +19,7 @@ jobs:
         run: docker build -t "zenith/backend-test:latest" --file ./blog/Dockerfile ./blog
   
   testFrontend:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -43,6 +45,7 @@ jobs:
     needs:
       - testBackend
       - testFrontend
+    timeout-minutes: 3
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -62,15 +65,17 @@ jobs:
         run: git push
   
   notify:
+    timeout-minutes: 3
     if: always()
     needs: 
       - deploy
+      - cleanUp
     runs-on: ubuntu-latest
     steps:
       - name: Sends report of commit to project slack channel
         uses: slackapi/slack-github-action@v1.23.0
         with:
-          channel-id: 
-          slack-message: "GitHub build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+          channel-id: 'C04UU8SPE0P'
+          slack-message: "${{ github.ref_name }} Build Result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

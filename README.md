@@ -29,5 +29,9 @@ Muhammad Saad Shahid |  Param Tully | Ruchir Malik | Shawn Zhu | Andrew Liu | An
 ```cd frontend```
 ```npm start```
 
+## 3. Start the Cypress GUI (from root)
+```cd frontend```
+```npx cypress open```
+
 # Deployed Website
 ## https://zenithblog.ca
