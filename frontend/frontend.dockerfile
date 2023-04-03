@@ -26,7 +26,7 @@ WORKDIR /etc/nginx
 ARG ENVIRONMENT=local
 ENV ENVIRONMENT=${ENVIRONMENT}
 
-RUN if [ "$ENVIRONMENT" = "main" ] || [ "$ENVIRONMENT" = "qa" ] || [ "$ENVIRONMENT" = "prod" ]; then cp nginx.cloud.conf /etc/nginx/nginx.conf ; else cp nginx.local.conf /etc/nginx/nginx.conf ; fi
+ADD if [ "$ENVIRONMENT" = "main" ] || [ "$ENVIRONMENT" = "qa" ] || [ "$ENVIRONMENT" = "prod" ]; then cp /nginx.cloud.conf /etc/nginx/nginx.conf ; else cp /nginx.local.conf /etc/nginx/nginx.conf ; fi
 
 COPY --from=test /app/build /usr/share/nginx/html
 EXPOSE 443
