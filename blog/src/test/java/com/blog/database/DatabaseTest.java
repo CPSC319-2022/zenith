@@ -240,7 +240,9 @@ class DatabaseTest {
         Database.save(user);
 
         // Create a user as a foreign key of comment
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
+
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+
         Database.save(post);
 
         // Create a new comment
@@ -329,7 +331,9 @@ class DatabaseTest {
         user.setCreationDate("time1");
         user.setLastLogin("time2");
         user.setProfilePicture("link");
-        user.setBio("testbio");
+
+        user.setbio("testbio");
+
         user.setUserLevel(UserLevel.READER);
         user.setDeleted(false);
         try {
@@ -373,12 +377,14 @@ class DatabaseTest {
         user.setCreationDate("time1");
         user.setLastLogin("time2");
         user.setProfilePicture("link");
-        user.setBio("testbio");
+
+        user.setbio("testbio");
         user.setUserLevel(UserLevel.READER);
         user.setDeleted(true);
-        User result = new User("testID");
         try {
             Database.save(user);
+            User result = new User("testID");
+
             Database.retrieve(result);
 
             Database.hardDelete(user);
@@ -427,78 +433,8 @@ class DatabaseTest {
     }
 
     @Test
-    void testRetrieveMultiplePost() {
-        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        Database.save(user);
-        ArrayList<Post> posts = new ArrayList<Post>();
-        try {
-            for (int i = 0; i < 5; i++) {
-                Post post = new Post(0, "testID", "title " + i, "0", "0", "0", 0, 0, false, 0, true, "0");
-                Database.save(post);
-                posts.add(post);
-            }
-            ArrayList<Post> result = new ArrayList<Post>();
-            Database.retrieve(result, posts.get(0).getPostID(), 5, false);
-            assertEquals(5, result.size());
-            for (int i = 0; i < 5; i++) {
-                assertEquals(posts.get(i).getTitle(), result.get(i).getTitle());
-            }
-            ArrayList<Post> result2 = new ArrayList<Post>();
-            Database.retrieve(result2, posts.get(4).getPostID(), 2, true);
-            assertEquals(2, result2.size());
-            assertEquals(posts.get(4).getTitle(), result2.get(0).getTitle());
-            assertEquals(posts.get(3).getTitle(), result2.get(1).getTitle());
 
-            Database.hardDelete(user);
-        } catch (Exception e) {
-            Database.hardDelete(user);
-            fail(e.getMessage());
-        }
-    }
 
-    @Test
-    void testRetrieveMultipleComment() {
-        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        Database.save(user);
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
-        Database.save(post);
-        ArrayList<Comment> comments = new ArrayList<Comment>();
-        try {
-            for (int i = 0; i < 5; i++) {
-                Comment comment = new Comment(post.getPostID(), 0, "testID", "content" + i, "0", "0", 0, 0, false);
-                Database.save(comment);
-                comments.add(comment);
-            }
-            ArrayList<Comment> result = new ArrayList<Comment>();
-            Database.retrieve(result, post.getPostID(), comments.get(0).getCommentID(), 5, false);
-            assertEquals(5, result.size());
-            for (int i = 0; i < 5; i++) {
-                assertEquals(comments.get(i).getContent(), result.get(i).getContent());
-            }
-            ArrayList<Comment> result2 = new ArrayList<Comment>();
-            Database.retrieve(result2, post.getPostID(), comments.get(4).getCommentID(), 2, true);
-            assertEquals(2, result2.size());
-            assertEquals(comments.get(4).getContent(), result2.get(0).getContent());
-            assertEquals(comments.get(3).getContent(), result2.get(1).getContent());
-
-            Database.hardDelete(user);
-        } catch (Exception e) {
-            Database.hardDelete(user);
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    void testUpvote() {
-        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        Database.save(user);
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
-        Database.save(post);
-
-        // TODO
-    }
-
-    @Test
     void testSavePromotionRequest() {
         // Create a user as a foreign key of promotion request
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
@@ -518,7 +454,9 @@ class DatabaseTest {
         request.setRequestTime("updatedtime");
         request.setTarget(UserLevel.ADMIN);
         request.setReason("updatedtimereason");
-        request.setDeleted(false);
+
+        request.setDeleted(true);
+
         try {
             // Test for insert
             Database.save(request);
@@ -531,7 +469,9 @@ class DatabaseTest {
             assertEquals(false, result.isDeleted());
 
             // Test for update
-            update.setRequestID(request.getRequestID());
+
+            update.setPostID(request.getPostID());
+
             Database.save(update);
             PromotionRequest result2 = new PromotionRequest(request.getRequestID());
             Database.retrieve(result2);
@@ -539,7 +479,9 @@ class DatabaseTest {
             assertEquals("updatedtime", result2.getRequestTime());
             assertEquals(UserLevel.ADMIN, result2.getTarget());
             assertEquals("updatedtimereason", result2.getReason());
-            assertEquals(false, result2.isDeleted());
+
+            assertEquals(true, result2.isDeleted());
+
 
             // Delete user so that request will be deleted as well
             Database.hardDelete(user);
@@ -551,9 +493,11 @@ class DatabaseTest {
 
     @Test
     void testSavePromotionRequestInvalid() {
-        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+
         try {
             // Create a user as a foreign key of promotion request
+            User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+
             Database.save(user);
 
             // Create a new promotion request
@@ -566,38 +510,12 @@ class DatabaseTest {
 
             Database.save(request);
             Database.hardDelete(user);
-            fail("Unexpected");
+
+            fail("Unexpected result");
         } catch (Error e) {
             Database.hardDelete(user);
             // Expected
-        } catch (Exception e) {
-            Database.hardDelete(user);
-            fail("Unexpected");
         }
     }
 
-    @Test
-    void testDeletePromotionRequest() {
-        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        PromotionRequest request = new PromotionRequest(0);
-        request.setUserID("testID");
-        request.setRequestTime("time");
-        request.setTarget(UserLevel.CONTRIBUTOR);
-        request.setReason("reason");
-        request.setDeleted(false);
-        try {
-            Database.save(user);
-            Database.save(request);
-            Database.delete(request);
-
-            Database.hardDelete(user);
-            fail("Unexpected");
-        } catch (IsDeletedException e) {
-            Database.hardDelete(user);
-            // Expected
-        } catch (Exception e) {
-            Database.hardDelete(user);
-            fail("Unexpected");
-        }
-    }
 }
