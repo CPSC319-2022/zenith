@@ -38,7 +38,7 @@ jobs:
         run: docker image prune --all
 
   deploy:
-    if: success() && github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/dev'
     needs:
       - testBackend
       - testFrontend
