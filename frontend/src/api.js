@@ -261,7 +261,7 @@ export const downvoteComment = async ({ postID, commentID }) => {
   const token = getAccessToken();
 
   try {
-    const response = await axios.put(`${apiUrl}/comment/downvote?postID=${postID}&commentID=${commentID}`, null, {
+    const response = await axios.put(`${apiUrl}/comment/downvote?postID=${postID}&commentID=${commentID}`, {}, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token.credential}`,

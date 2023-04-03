@@ -728,7 +728,7 @@ public class Database {
                     ps.setInt(1, postID);
                     ps.setInt(2, commentID);
                     ps.setString(3, userID);
-                    rs = ps.executeQuery();
+                    ps.executeUpdate();
 
                     Comment comment = Comment.retrieve(postID, commentID);
                     comment.setDownvotes(comment.getDownvotes() - 1);
@@ -796,7 +796,7 @@ public class Database {
                     ps.setInt(1, postID);
                     ps.setInt(2, commentID);
                     ps.setString(3, userID);
-                    rs = ps.executeQuery();
+                    ps.executeUpdate();
 
                     Comment comment = Comment.retrieve(postID, commentID);
                     comment.setUpvotes(comment.getUpvotes() - 1);
