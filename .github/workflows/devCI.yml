@@ -3,6 +3,7 @@ name: Pull Request to QA on successfull push/pull to dev
 on:
   push:
     branches:
+      - 'main'
       - 'dev'
       - 'dev/**'
       - 'qa/**'
