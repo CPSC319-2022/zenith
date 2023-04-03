@@ -17,6 +17,8 @@ steps:
     args:
       - build
       - '--no-cache'
+      - '--build-arg'
+      - 'ENVIRONMENT=${_ENVIRONMENT}'
       - '-t'
       - >-
         $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME-$_BRANCH_NAME:$COMMIT_SHA
@@ -96,9 +98,11 @@ substitutions:
   _SERVICE_NAME: zenith
   _DEPLOY_REGION: us-central1
   _TRIGGER_ID: c8e3bdfd-dc5f-4a9f-9f0e-cafb8c00e07b
-  _BRANCH_NAME: main
+  _BRANCH_NAME: ${BRANCH_NAME}
+  _ENVIRONMENT: ${BRANCH_NAME}
 
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
 timeout: 800s
+
