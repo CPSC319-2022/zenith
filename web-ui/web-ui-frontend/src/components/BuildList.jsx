@@ -21,7 +21,7 @@ const BuildList = () => {
   useEffect(() => {
     const getTester = async () => {
         try {
-            const response = await axios.get('http://localhost:9000/api/');
+            const response = await axios.get('https://web-ui-backend-t27edy3enq-uc.a.run.app/api/');
             console.log(response.data);
         } catch (error) {
             console.error('Error fetching tester data:', error);
