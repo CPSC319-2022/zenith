@@ -140,25 +140,24 @@ class DatabaseTest {
 
     @Test
     void testSavePostInvalid() {
+        // Create a user as a foreign key of post
+        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+        Database.save(user);
+
+        // Create a new post with an invaild ID
+        Post post = new Post(99999999);
+        post.setAuthorID("testID");
+        post.setTitle("title");
+        post.setContent("content");
+        post.setCreationDate("time1");
+        post.setLastModified("time2");
+        post.setUpvotes(10);
+        post.setDownvotes(5);
+        post.setDeleted(false);
+        post.setViews(30);
+        post.setAllowComments(true);
+        post.setThumbnailURL("link");
         try {
-            // Create a user as a foreign key of post
-            User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-            Database.save(user);
-
-            // Create a new post with an invaild ID
-            Post post = new Post(99999999);
-            post.setAuthorID("testID");
-            post.setTitle("title");
-            post.setContent("content");
-            post.setCreationDate("time1");
-            post.setLastModified("time2");
-            post.setUpvotes(10);
-            post.setDownvotes(5);
-            post.setDeleted(false);
-            post.setViews(30);
-            post.setAllowComments(true);
-            post.setThumbnailURL("link");
-
             Database.save(post);
             Database.hardDelete(user);
             fail("Unexpected result");
@@ -233,25 +232,24 @@ class DatabaseTest {
     }
 
     void testSaveCommentInvalid() {
+        // Create a user as a foreign key of comment
+        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+        Database.save(user);
+
+        // Create a user as a foreign key of comment
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+        Database.save(post);
+
+        // Create a new comment
+        Comment comment = new Comment(post.getPostID(), 99999999);
+        comment.setAuthorID("testID");
+        comment.setContent("content");
+        comment.setCreationDate("time1");
+        comment.setLastModified("time2");
+        comment.setUpvotes(10);
+        comment.setDownvotes(5);
+        comment.setDeleted(false);
         try {
-            // Create a user as a foreign key of comment
-            User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-            Database.save(user);
-
-            // Create a user as a foreign key of comment
-            Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
-            Database.save(post);
-
-            // Create a new comment
-            Comment comment = new Comment(post.getPostID(), 0);
-            comment.setAuthorID("testID");
-            comment.setContent("content");
-            comment.setCreationDate("time1");
-            comment.setLastModified("time2");
-            comment.setUpvotes(10);
-            comment.setDownvotes(5);
-            comment.setDeleted(false);
-
             Database.save(comment);
             Database.hardDelete(user);
             fail("Unexpected result");
@@ -309,6 +307,186 @@ class DatabaseTest {
         } catch (Exception e) {
             Database.hardDelete(user);
             fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void testRetrieveUser() {
+        // Create a user
+        User user = new User("testID");
+        user.setUsername("testname");
+        user.setCreationDate("time1");
+        user.setLastLogin("time2");
+        user.setProfilePicture("link");
+        user.setbio("testbio");
+        user.setUserLevel(UserLevel.READER);
+        user.setDeleted(false);
+        try {
+            Database.save(user);
+            User result = new User("testID");
+            Database.retrieve(result);
+
+            assertEquals("testname", result.getUsername());
+            assertEquals("time1", result.getCreationDate());
+            assertEquals("time2", result.getLastLogin());
+            assertEquals("link", result.getProfilePicture());
+            assertEquals(UserLevel.READER, result.getUserLevel());
+            assertEquals("testbio", result.getBio());
+            assertEquals(false, result.isDeleted());
+
+            Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void testRetrieveUserNotExist() {
+        try {
+            User user = new User("not_exist_ID");
+            Database.retrieve(user);
+            fail("Unexpected");
+        } catch (DoesNotExistException e) {
+            // Expected
+        } catch (Exception e) {
+            fail("Unexpected");
+        }
+    }
+
+    @Test
+    void testRetrieveUserIsDeleted() {
+        // Create a user
+        User user = new User("testID");
+        user.setUsername("testname");
+        user.setCreationDate("time1");
+        user.setLastLogin("time2");
+        user.setProfilePicture("link");
+        user.setbio("testbio");
+        user.setUserLevel(UserLevel.READER);
+        user.setDeleted(true);
+        try {
+            Database.save(user);
+            User result = new User("testID");
+            Database.retrieve(result);
+
+            Database.hardDelete(user);
+            fail("Unexpected");
+        } catch (IsDeletedException e) {
+            // Expected
+            assertEquals("testname", result.getUsername());
+            assertEquals("time1", result.getCreationDate());
+            assertEquals("time2", result.getLastLogin());
+            assertEquals("link", result.getProfilePicture());
+            assertEquals(UserLevel.READER, result.getUserLevel());
+            assertEquals("testbio", result.getBio());
+            assertEquals(true, result.isDeleted());
+
+            Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail("Unexpected");
+        }
+    }
+
+    @Test
+    void testRetrievePostNotExist() {
+        try {
+            Post post = new Post(99999999);
+            Database.retrieve(post);
+            fail("Unexpected");
+        } catch (DoesNotExistException e) {
+            // Expected
+        } catch (Exception e) {
+            fail("Unexpected");
+        }
+    }
+
+    @Test
+    void testRetrieveCommentNotExist() {
+        try {
+            Comment comment = new Comment(99999999, 99999999);
+            Database.retrieve(comment);
+            fail("Unexpected");
+        } catch (DoesNotExistException e) {
+            // Expected
+        } catch (Exception e) {
+            fail("Unexpected");
+        }
+    }
+
+    @Test
+    void testSavePromotionRequest() {
+        // Create a user as a foreign key of promotion request
+        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+        Database.save(user);
+
+        // Create a new promotion request
+        PromotionRequest request = new PromotionRequest(0);
+        request.setUserID("testID");
+        request.setRequestTime("time");
+        request.setTarget(UserLevel.CONTRIBUTOR);
+        request.setReason("reason");
+        request.setDeleted(false);
+
+        // Create another promotion request for update
+        PromotionRequest update = new PromotionRequest(0);
+        request.setUserID("testID");
+        request.setRequestTime("updatedtime");
+        request.setTarget(UserLevel.ADMIN);
+        request.setReason("updatedtimereason");
+        request.setDeleted(true);
+        try {
+            // Test for insert
+            Database.save(request);
+            PromotionRequest result = new PromotionRequest(request.getRequestID());
+            Database.retrieve(result);
+            assertEquals("testID", result.getUserID());
+            assertEquals("time", result.getRequestTime());
+            assertEquals(UserLevel.CONTRIBUTOR, result.getTarget());
+            assertEquals("reason", result.getReason());
+            assertEquals(false, result.isDeleted());
+
+            // Test for update
+            update.setPostID(request.getPostID());
+            Database.save(update);
+            PromotionRequest result2 = new PromotionRequest(request.getRequestID());
+            Database.retrieve(result2);
+            assertEquals("testID", result2.getUserID());
+            assertEquals("updatedtime", result2.getRequestTime());
+            assertEquals(UserLevel.ADMIN, result2.getTarget());
+            assertEquals("updatedtimereason", result2.getReason());
+            assertEquals(true, result2.isDeleted());
+
+            // Delete user so that request will be deleted as well
+            Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void testSavePromotionRequestInvalid() {
+        try {
+            // Create a user as a foreign key of promotion request
+            User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+            Database.save(user);
+
+            // Create a new promotion request
+            PromotionRequest request = new PromotionRequest(99999999);
+            request.setUserID("testID");
+            request.setRequestTime("time");
+            request.setTarget(UserLevel.CONTRIBUTOR);
+            request.setReason("reason");
+            request.setDeleted(false);
+
+            Database.save(request);
+            Database.hardDelete(user);
+            fail("Unexpected result");
+        } catch (Error e) {
+            Database.hardDelete(user);
+            // Expected
         }
     }
 
