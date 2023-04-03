@@ -28,7 +28,7 @@ public class User extends Record {
             VERIFIER = new GoogleIdTokenVerifier.Builder(
                     GoogleNetHttpTransport.newTrustedTransport(),
                     GsonFactory.getDefaultInstance())
-                    .setAudience(Collections.singletonList("137046975675-86mneph4bv1sfafa1788famgv2ot695r.apps.googleusercontent.com"))  // TODO: hide this
+                    .setAudience(Collections.singletonList("987709227897-c7nj5pgs1t4e68q26slqf5prtabhhe7n.apps.googleusercontent.com"))  // TODO: hide this
                     .build();
         } catch (GeneralSecurityException | IOException e) {
             VERIFIER = null;
