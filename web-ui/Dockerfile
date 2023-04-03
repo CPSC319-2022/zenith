@@ -17,6 +17,6 @@ COPY server.js ./
 FROM nginx:1.21
 COPY --from=frontend-builder /app/build /usr/share/nginx/html
 COPY --from=backend /app /app
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.template /etc/nginx/nginx.template
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off; envsubst '\$PORT' < /etc/nginx/nginx.template > /etc/nginx/nginx.conf;"]
