@@ -64,8 +64,7 @@ export const createComment = createAsyncThunk(
 export const upvoteComment = createAsyncThunk(
   'comments/upvote',
   async ({ postID, commentID }, { rejectWithValue }) => {
-    console.log('postID:', postID);
-    console.log('commentID:', commentID);
+   
     try {
       await upvoteCommentApi({ postID, commentID });
       return { postID, commentID };
