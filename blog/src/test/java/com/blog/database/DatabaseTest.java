@@ -1,11 +1,14 @@
 package com.blog.database;
 
+import com.blog.exception.BlogException;
 import com.blog.exception.DoesNotExistException;
+import com.blog.exception.IsDeletedException;
 import com.blog.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DatabaseTest {
@@ -17,7 +20,7 @@ class DatabaseTest {
         user.setCreationDate("time1");
         user.setLastLogin("time2");
         user.setProfilePicture("link");
-        user.setbio("testbio");
+        user.setBio("testbio");
         user.setUserLevel(UserLevel.CONTRIBUTOR);
         user.setDeleted(false);
 
@@ -27,7 +30,7 @@ class DatabaseTest {
         update.setCreationDate("updatedtime1");
         update.setLastLogin("updatedtime2");
         update.setProfilePicture("updatedlink");
-        update.setbio("updatedtestbio");
+        update.setBio("updatedtestbio");
         update.setUserLevel(UserLevel.ADMIN);
         update.setDeleted(false);
         try {
@@ -128,7 +131,7 @@ class DatabaseTest {
             assertEquals(true, result2.isDeleted());
             assertEquals(40, result2.getViews());
             assertEquals(false, result2.isAllowComments());
-            assertEquals("updatedlink", result.getThumbnailURL());
+            assertEquals("updatedlink", result2.getThumbnailURL());
 
             // Delete user so that post will be deleted as well
             Database.hardDelete(user);
@@ -160,7 +163,7 @@ class DatabaseTest {
         try {
             Database.save(post);
             Database.hardDelete(user);
-            fail("Unexpected result");
+            fail("Unexpected");
         } catch (Error e) {
             Database.hardDelete(user);
             // Expected
@@ -174,7 +177,7 @@ class DatabaseTest {
         Database.save(user);
 
         // Create a user as a foreign key of comment
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
         Database.save(post);
 
         // Create a new comment
@@ -237,7 +240,9 @@ class DatabaseTest {
         Database.save(user);
 
         // Create a user as a foreign key of comment
+
         Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+
         Database.save(post);
 
         // Create a new comment
@@ -252,7 +257,7 @@ class DatabaseTest {
         try {
             Database.save(comment);
             Database.hardDelete(user);
-            fail("Unexpected result");
+            fail("Unexpected");
         } catch (Error e) {
             Database.hardDelete(user);
             // Expected
@@ -262,11 +267,16 @@ class DatabaseTest {
     @Test
     void testDeleteUser() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+        User result = new User("testID");
         try {
             Database.save(user);
             Database.delete(user);
-            User result = new User("testID");
             Database.retrieve(result);
+
+            Database.hardDelete(user);
+            fail("Unexpected");
+        } catch (IsDeletedException e) {
+            // Expected
             assertEquals(true, result.isDeleted());
             Database.hardDelete(user);
         } catch (Exception e) {
@@ -278,8 +288,9 @@ class DatabaseTest {
     @Test
     void testDeletePost() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
         try {
+            Database.save(user);
             Database.save(post);
             Database.delete(post);
             Post result = new Post(post.getPostID());
@@ -295,9 +306,11 @@ class DatabaseTest {
     @Test
     void testDeleteComment() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
         Comment comment = new Comment(post.getPostID(), 0, "testID", "0", "0", "0", 0, 0, false);
         try {
+            Database.save(user);
+            Database.save(post);
             Database.save(comment);
             Database.delete(comment);
             Comment result = new Comment(comment.getPostID(), comment.getCommentID());
@@ -318,7 +331,9 @@ class DatabaseTest {
         user.setCreationDate("time1");
         user.setLastLogin("time2");
         user.setProfilePicture("link");
+
         user.setbio("testbio");
+
         user.setUserLevel(UserLevel.READER);
         user.setDeleted(false);
         try {
@@ -362,12 +377,14 @@ class DatabaseTest {
         user.setCreationDate("time1");
         user.setLastLogin("time2");
         user.setProfilePicture("link");
+
         user.setbio("testbio");
         user.setUserLevel(UserLevel.READER);
         user.setDeleted(true);
         try {
             Database.save(user);
             User result = new User("testID");
+
             Database.retrieve(result);
 
             Database.hardDelete(user);
@@ -416,6 +433,8 @@ class DatabaseTest {
     }
 
     @Test
+
+
     void testSavePromotionRequest() {
         // Create a user as a foreign key of promotion request
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
@@ -435,7 +454,9 @@ class DatabaseTest {
         request.setRequestTime("updatedtime");
         request.setTarget(UserLevel.ADMIN);
         request.setReason("updatedtimereason");
+
         request.setDeleted(true);
+
         try {
             // Test for insert
             Database.save(request);
@@ -448,7 +469,9 @@ class DatabaseTest {
             assertEquals(false, result.isDeleted());
 
             // Test for update
+
             update.setPostID(request.getPostID());
+
             Database.save(update);
             PromotionRequest result2 = new PromotionRequest(request.getRequestID());
             Database.retrieve(result2);
@@ -456,7 +479,9 @@ class DatabaseTest {
             assertEquals("updatedtime", result2.getRequestTime());
             assertEquals(UserLevel.ADMIN, result2.getTarget());
             assertEquals("updatedtimereason", result2.getReason());
+
             assertEquals(true, result2.isDeleted());
+
 
             // Delete user so that request will be deleted as well
             Database.hardDelete(user);
@@ -468,9 +493,11 @@ class DatabaseTest {
 
     @Test
     void testSavePromotionRequestInvalid() {
+
         try {
             // Create a user as a foreign key of promotion request
             User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+
             Database.save(user);
 
             // Create a new promotion request
@@ -483,6 +510,7 @@ class DatabaseTest {
 
             Database.save(request);
             Database.hardDelete(user);
+
             fail("Unexpected result");
         } catch (Error e) {
             Database.hardDelete(user);
