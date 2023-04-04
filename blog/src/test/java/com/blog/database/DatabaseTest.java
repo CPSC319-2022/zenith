@@ -851,7 +851,7 @@ class DatabaseTest {
         }
     }
 
-    @test
+    @Test
     void testView() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
         Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
@@ -869,7 +869,7 @@ class DatabaseTest {
         }
     }
 
-    @test
+    @Test
     void testViewNotExist() {
         try {
             Database.view(99999999);
@@ -881,7 +881,7 @@ class DatabaseTest {
         }
     }
 
-    @test
+    @Test
     void testHighestPostID() {
         int highest = 0;
         try {
