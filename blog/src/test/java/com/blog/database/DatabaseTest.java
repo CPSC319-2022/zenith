@@ -510,7 +510,7 @@ class DatabaseTest {
             Database.retrieve(post);
 
             Database.hardDelete(user);
-            fail(e.getMessage());
+            fail("Unexpected");
         } catch (BlogException e) {
             // Expected
             Database.hardDelete(user);
@@ -541,7 +541,7 @@ class DatabaseTest {
             Database.retrieve(post);
 
             Database.hardDelete(user);
-            fail(e.getMessage());
+            fail("Unexpected");
         } catch (BlogException e) {
             // Expected
             Database.hardDelete(user);
@@ -575,7 +575,7 @@ class DatabaseTest {
             Database.retrieve(comment);
 
             Database.hardDelete(user);
-            fail(e.getMessage());
+            fail("Unexpected");
         } catch (BlogException e) {
             // Expected
             Database.hardDelete(user);
@@ -609,7 +609,7 @@ class DatabaseTest {
             Database.retrieve(comment);
 
             Database.hardDelete(user);
-            fail(e.getMessage());
+            fail("Unexpected");
         } catch (BlogException e) {
             // Expected
             Database.hardDelete(user);
