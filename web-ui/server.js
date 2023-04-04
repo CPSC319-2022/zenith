@@ -1,13 +1,14 @@
 const express = require('express');
 const { Server } = require('ws');
 
-const app = express();
-const PORT = process.env.PORT || 9000;
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-app.post('/api/post-status', (req, res) => {
-  console.log(req.body);
-  res.send('request received:' + req.body);
-});
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+const PORT = process.env.PORT || 9000;
 
 const server = app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
