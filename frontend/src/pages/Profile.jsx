@@ -16,9 +16,18 @@ const Profile = () => {
   const posts = useSelector((state) => state.posts.userPosts);
   const [user, setUser] = useState(null);
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const [isUser, setIsUser] = useState(true);
 
   useEffect(() => {
-
+    dispatch(fetchCurrentUserByToken())
+      .then((res) => {
+        if (id) {
+          if (res.payload.userID != id){
+            console.log("yes");
+            setIsUser(false);
+          }
+        }
+      });
     if (id) {
       dispatch(userSliceActions.fetchUser(id)).then((response) => {
         if (response.meta.requestStatus === 'fulfilled') {
@@ -62,7 +71,7 @@ const Profile = () => {
           <h5>{user.userLevel}</h5>
           <p>Account creation date: {creationDate}</p>
           {/*<p>Last login: {lastLogin}</p>*/}
-          {(!id && (user.userLevel === 'READER' || user.userLevel === 'CONTRIBUTOR')) && (
+          {(isUser && (user.userLevel === 'READER' || user.userLevel === 'CONTRIBUTOR')) && (
             showForm ? (
               <UpgradeRequestForm user={user} onClose={handleCloseForm} />
             ) : (
@@ -74,9 +83,14 @@ const Profile = () => {
       <div className="posts">
       <div className="posts-container">
         <h3 className="posts-header">Most Recent Posts</h3>
+          {posts.length == 0 && 
+            <div className="no-posts">
+               <h5>This user hasn't made any posts yet</h5>
+            </div>
+          }
             {posts.map((post) => (
                   <Card className="col-md-4 col-sm-6 mb-4 post">
-                    <Card.Header>{ new Date(post.creationDate).toLocaleDateString()}</Card.Header>
+                    <Card.Header>{new Date(post.creationDate).toLocaleDateString()}</Card.Header>
                     <Row className="post-row">
                       <Col className="col-md-3 thumbnail-col">
                       <Link className="post-thumbnail" to={`/single-post/${post.postID}`}>
