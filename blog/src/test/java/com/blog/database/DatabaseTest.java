@@ -840,16 +840,19 @@ class DatabaseTest {
             assertEquals(false, request2.isDeleted());
         } catch (Exception e) {
             Database.hardDelete(user);
-            fail("Unexpected");
+            fail("Unexpected " + e.getMessage());
         }
         try {
             Database.retrieve(request);
 
             Database.hardDelete(user);
-            fail("Unexpected");
+            fail("Exception expected");
         } catch (IsDeletedException e) {
             // Expected
             Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail("Unexpected " + e.getMessage());
         }
     }
 
