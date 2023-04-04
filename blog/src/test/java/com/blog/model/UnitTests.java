@@ -79,7 +79,7 @@ class UnitTests {
     @Test
     void guestConstructorTwo() {
         User user1 = new User("1");
-        assertEquals("1", user1.getUserID());
+        assertEquals("2", user1.getUserID());
     }
 
 
