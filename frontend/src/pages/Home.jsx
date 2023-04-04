@@ -147,14 +147,14 @@ const Home = () => {
       <div className="container post-area">
         <div className="row">
           {posts.map((post) => (
-            <div className="col-md-4 col-sm-6 mb-4 post-cards " key={post.postID}>
+            <div className="col-md-4 col-sm-6 mb-4 post-cards" key={post.postID}>
               <Card style={{ width: '18rem' }}>
-                <Card.Img variant="top" src={post.thumbnailURL} />
+                <Link className="link post-title" to={`/single-post/${post.postID}`}>
+                  <Card.Img variant="top" src={post.thumbnailURL} />
+                </Link>
                 <Card.Body>
                   <Card.Title>
-                    <Link className="link post-title" to={`/single-post/${post.postID}`}>
-                      {post.title}
-                    </Link>
+                    {post.title}
                   </Card.Title>
                   <Card.Text  className='post-content'>
                     <div dangerouslySetInnerHTML={{ __html: post.content}}></div>
