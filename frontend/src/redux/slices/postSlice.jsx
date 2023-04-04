@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {getPosts, getPost, createPost as createPostAPI, filterPosts as filterPostsAPI} from '../../api';
+import {getPosts, getPost, getPostsByUser, createPost as createPostAPI, filterPosts as filterPostsAPI} from '../../api';
 import { editPost as editPostAPI } from '../../api'
 import { upvotePost as upvotePostApi, downvotePost as downvotePostApi } from '../../api';
 import { deletePost as deletePostAPI } from '../../api';
@@ -28,6 +28,18 @@ export const fetchPost = createAsyncThunk(
     }
 );
 
+export const fetchPostsByUser = createAsyncThunk(
+    'posts/byUser',
+    async ({ userID, count }, { rejectWithValue }) => {
+        try {
+            const response = await getPostsByUser({ userID, count });
+            return response;
+        } catch (err) {
+            return rejectWithValue(err.message);
+        }
+    }
+);
+
 export const createPost = createAsyncThunk(
     'posts/createPost',
     async ({ postData, file }, { rejectWithValue }) => {
@@ -39,8 +51,6 @@ export const createPost = createAsyncThunk(
         }
     }
 );
-
-
 
 // Async thunk for editing a post
 export const editPost = createAsyncThunk(
@@ -85,11 +95,9 @@ export const downvotePost = createAsyncThunk(
 
 export const filterPosts = createAsyncThunk(
     'posts/filter',
-    async ({searchQuery, sortBy}, { rejectWithValue }) => {
+    async ({ searchQuery, sortBy }, { rejectWithValue }) => {
         try {
-            console.log("about to call api");
-            const response = await filterPostsAPI({searchQuery, sortBy})
-            console.log(response);
+            const response = await filterPostsAPI({ searchQuery, sortBy })
             return response;
         } catch (err) {
             return rejectWithValue(err.message);
@@ -117,6 +125,7 @@ const initialState = {
     status: 'idle',
     error: null,
     searchResults: [],
+    userPosts: [],
 };
 
 const postSlice = createSlice({
@@ -137,6 +146,17 @@ const postSlice = createSlice({
                 state.posts = action.payload;
             })
             .addCase(fetchPosts.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+            .addCase(fetchPostsByUser.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchPostsByUser.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.userPosts = action.payload;
+            })
+            .addCase(fetchPostsByUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
             })
@@ -201,6 +221,7 @@ export const postSliceActions = {
     ...postSlice.actions,
     fetchPosts,
     fetchPost,
+    fetchPostsByUser,
     createPost,
     editPost,
     upvotePost,

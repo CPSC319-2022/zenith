@@ -139,7 +139,7 @@ const commentSlice = createSlice({
             })
             .addCase(fetchComments.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.comments = action.payload;
+                state.comments = action.payload.reverse();
             })
             .addCase(fetchComments.rejected, (state, action) => {
                 state.status = 'failed';
