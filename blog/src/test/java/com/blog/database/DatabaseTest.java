@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class DatabaseTest {
     @Test
@@ -429,7 +429,7 @@ class DatabaseTest {
     }
 
     @Test
-    void testRetrieveMultiplePost() {
+    void testRetrieveMultiplePostOne() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
         ArrayList<Post> posts = new ArrayList<Post>();
         try {
@@ -459,7 +459,7 @@ class DatabaseTest {
     }
 
     @Test
-    void testRetrieveMultipleComment() {
+    void testRetrieveMultipleCommentOne() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
         Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
         ArrayList<Comment> comments = new ArrayList<Comment>();
@@ -742,10 +742,72 @@ class DatabaseTest {
     }
 
     @Test
+    void testRetrieveMultiplePostTwo() {
+        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+        Database.save(user);
+        ArrayList<Post> posts = new ArrayList<Post>();
+        try {
+            for (int i = 0; i < 5; i++) {
+                Post post = new Post(0, "testID", "title " + i, "0", "0", "0", 0, 0, false, 0, true, "");
+                Database.save(post);
+                posts.add(post);
+            }
+            ArrayList<Post> result = new ArrayList<Post>();
+            Database.retrieve(result, posts.get(0).getPostID(), 5, false);
+            assertEquals(5, result.size());
+            for (int i = 0; i < 5; i++) {
+                assertEquals(posts.get(i).getTitle(), result.get(i).getTitle());
+            }
+            ArrayList<Post> result2 = new ArrayList<Post>();
+            Database.retrieve(result2, posts.get(4).getPostID(), 2, true);
+            assertEquals(2, result2.size());
+            assertEquals(posts.get(4).getTitle(), result2.get(0).getTitle());
+            assertEquals(posts.get(3).getTitle(), result2.get(1).getTitle());
+
+            Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void testRetrieveMultipleCommentTwo() {
+        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+        Database.save(user);
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "");
+        Database.save(post);
+        ArrayList<Comment> comments = new ArrayList<Comment>();
+        try {
+            for (int i = 0; i < 5; i++) {
+                Comment comment = new Comment(post.getPostID(), 0, "testID", "content" + i, "0", "0", 0, 0, false);
+                Database.save(comment);
+                comments.add(comment);
+            }
+            ArrayList<Comment> result = new ArrayList<Comment>();
+            Database.retrieve(result, post.getPostID(), comments.get(0).getCommentID(), 5, false);
+            assertEquals(5, result.size());
+            for (int i = 0; i < 5; i++) {
+                assertEquals(comments.get(i).getContent(), result.get(i).getContent());
+            }
+            ArrayList<Comment> result2 = new ArrayList<Comment>();
+            Database.retrieve(result2, post.getPostID(), comments.get(4).getCommentID(), 2, true);
+            assertEquals(2, result2.size());
+            assertEquals(comments.get(4).getContent(), result2.get(0).getContent());
+            assertEquals(comments.get(3).getContent(), result2.get(1).getContent());
+
+            Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
     void testSavePromotionRequest() {
         // Create a user as a foreign key of promotion request
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        
+
         // Create a new promotion request
         PromotionRequest request = new PromotionRequest(0);
         request.setUserID("testID");
