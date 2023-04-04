@@ -1139,7 +1139,7 @@ class UnitTests {
     }
 
     @Test
-    void testPromotionRequestAsJSONObjectTwo() {
+    void testPromotionRequestAsJSONObjectTwo() throws JSONException{
         promotionRequest = new PromotionRequest(
                 9,
                 "45",
@@ -1166,7 +1166,7 @@ class UnitTests {
     }
 
     @Test
-    void testPromotionRequestAsJSONString() {
+    void testPromotionRequestAsJSONString() throws JSONException {
         promotionRequest = new PromotionRequest(
                 9,
                 "45",
