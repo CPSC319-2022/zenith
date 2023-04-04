@@ -9,7 +9,6 @@ const getApiUrl = () => {
 };
 
 const apiUrl = getApiUrl();
-console.log('apiUrl: ', apiUrl);
 export const getPosts = async ({ postIDStart, count, reverse }) => {
   try {
     const response = await axios.get(`${apiUrl}/post/gets`, {
