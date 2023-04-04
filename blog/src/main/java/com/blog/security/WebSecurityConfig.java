@@ -16,7 +16,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers("/","/post/highest/**", "/post/gets/**", "/post/get/**", "/post/create/**",
-                        "/post/edit/**", "/post/upvote/**", "/post/downvote/**",
+                        "/post/edit/**", "/post/upvote/**", "/post/downvote/**", "/post/byUser/**",
                         "/post/delete/**", "/post/search/**", "/comment/get/**", "/comment/gets/**", "/comment/create/**",
                         "/comment/upvote/**", "/comment/downvote/**", "/comment/edit/**",
                         "/comment/delete/**", "/user/get/**", "/user/requestPromotion/**", "/user/edit/**","/admin/gets/**",
