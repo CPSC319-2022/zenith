@@ -16,6 +16,11 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 
+  .no-posts {
+    text-align: center;
+    margin: 2rem;
+  }
+
   .posts {
     display: flex;
     justify-content: center;
