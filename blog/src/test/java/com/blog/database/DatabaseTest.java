@@ -1,12 +1,15 @@
 package com.blog.database;
 
+import com.blog.exception.BlogException;
 import com.blog.exception.DoesNotExistException;
+import com.blog.exception.IsDeletedException;
 import com.blog.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class DatabaseTest {
     @Test
@@ -17,7 +20,7 @@ class DatabaseTest {
         user.setCreationDate("time1");
         user.setLastLogin("time2");
         user.setProfilePicture("link");
-        user.setbio("testbio");
+        user.setBio("testbio");
         user.setUserLevel(UserLevel.CONTRIBUTOR);
         user.setDeleted(false);
 
@@ -27,7 +30,7 @@ class DatabaseTest {
         update.setCreationDate("updatedtime1");
         update.setLastLogin("updatedtime2");
         update.setProfilePicture("updatedlink");
-        update.setbio("updatedtestbio");
+        update.setBio("updatedtestbio");
         update.setUserLevel(UserLevel.ADMIN);
         update.setDeleted(false);
         try {
@@ -174,7 +177,7 @@ class DatabaseTest {
         Database.save(user);
 
         // Create a user as a foreign key of comment
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "");
         Database.save(post);
 
         // Create a new comment
@@ -237,7 +240,7 @@ class DatabaseTest {
         Database.save(user);
 
         // Create a user as a foreign key of comment
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "");
         Database.save(post);
 
         // Create a new comment
@@ -278,7 +281,7 @@ class DatabaseTest {
     @Test
     void testDeletePost() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "");
         try {
             Database.save(post);
             Database.delete(post);
@@ -295,7 +298,7 @@ class DatabaseTest {
     @Test
     void testDeleteComment() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true);
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "");
         Comment comment = new Comment(post.getPostID(), 0, "testID", "0", "0", "0", 0, 0, false);
         try {
             Database.save(comment);
@@ -318,7 +321,7 @@ class DatabaseTest {
         user.setCreationDate("time1");
         user.setLastLogin("time2");
         user.setProfilePicture("link");
-        user.setbio("testbio");
+        user.setBio("testbio");
         user.setUserLevel(UserLevel.READER);
         user.setDeleted(false);
         try {
@@ -362,12 +365,12 @@ class DatabaseTest {
         user.setCreationDate("time1");
         user.setLastLogin("time2");
         user.setProfilePicture("link");
-        user.setbio("testbio");
+        user.setBio("testbio");
         user.setUserLevel(UserLevel.READER);
         user.setDeleted(true);
+        User result = new User("testID");
         try {
             Database.save(user);
-            User result = new User("testID");
             Database.retrieve(result);
 
             Database.hardDelete(user);
@@ -416,6 +419,68 @@ class DatabaseTest {
     }
 
     @Test
+    void testRetrieveMultiplePost() {
+        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+        Database.save(user);
+        ArrayList<Post> posts = new ArrayList<Post>();
+        try {
+            for (int i = 0; i < 5; i++) {
+                Post post = new Post(0, "testID", "title " + i, "0", "0", "0", 0, 0, false, 0, true, "");
+                Database.save(post);
+                posts.add(post);
+            }
+            ArrayList<Post> result = new ArrayList<Post>();
+            Database.retrieve(result, posts.get(0).getPostID(), 5, false);
+            assertEquals(5, result.size());
+            for (int i = 0; i < 5; i++) {
+                assertEquals(posts.get(i).getTitle(), result.get(i).getTitle());
+            }
+            ArrayList<Post> result2 = new ArrayList<Post>();
+            Database.retrieve(result2, posts.get(4).getPostID(), 2, true);
+            assertEquals(2, result2.size());
+            assertEquals(posts.get(4).getTitle(), result2.get(0).getTitle());
+            assertEquals(posts.get(3).getTitle(), result2.get(1).getTitle());
+
+            Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void testRetrieveMultipleComment() {
+        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+        Database.save(user);
+        Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "");
+        Database.save(post);
+        ArrayList<Comment> comments = new ArrayList<Comment>();
+        try {
+            for (int i = 0; i < 5; i++) {
+                Comment comment = new Comment(post.getPostID(), 0, "testID", "content" + i, "0", "0", 0, 0, false);
+                Database.save(comment);
+                comments.add(comment);
+            }
+            ArrayList<Comment> result = new ArrayList<Comment>();
+            Database.retrieve(result, post.getPostID(), comments.get(0).getCommentID(), 5, false);
+            assertEquals(5, result.size());
+            for (int i = 0; i < 5; i++) {
+                assertEquals(comments.get(i).getContent(), result.get(i).getContent());
+            }
+            ArrayList<Comment> result2 = new ArrayList<Comment>();
+            Database.retrieve(result2, post.getPostID(), comments.get(4).getCommentID(), 2, true);
+            assertEquals(2, result2.size());
+            assertEquals(comments.get(4).getContent(), result2.get(0).getContent());
+            assertEquals(comments.get(3).getContent(), result2.get(1).getContent());
+
+            Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
     void testSavePromotionRequest() {
         // Create a user as a foreign key of promotion request
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
@@ -448,7 +513,7 @@ class DatabaseTest {
             assertEquals(false, result.isDeleted());
 
             // Test for update
-            update.setPostID(request.getPostID());
+            // TODO: update.setPostID(request.getPostID());
             Database.save(update);
             PromotionRequest result2 = new PromotionRequest(request.getRequestID());
             Database.retrieve(result2);
@@ -468,9 +533,9 @@ class DatabaseTest {
 
     @Test
     void testSavePromotionRequestInvalid() {
+        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
         try {
             // Create a user as a foreign key of promotion request
-            User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
             Database.save(user);
 
             // Create a new promotion request
@@ -487,6 +552,9 @@ class DatabaseTest {
         } catch (Error e) {
             Database.hardDelete(user);
             // Expected
+        } catch (BlogException e) {
+            // for compilation
+            throw new RuntimeException(e);
         }
     }
 
