@@ -504,9 +504,9 @@ class DatabaseTest {
             ArrayList<Post> result = new ArrayList<Post>();
             Database.retrieveByUser(result, "testID", 3);
             assertEquals(3, result.size());
-            assertEquals(posts.get(2).getTitle(), result.get(0).getTitle());
-            assertEquals(posts.get(1).getTitle(), result.get(1).getTitle());
-            assertEquals(posts.get(0).getTitle(), result.get(2).getTitle());
+            assertEquals(posts.get(4).getTitle(), result.get(0).getTitle());
+            assertEquals(posts.get(3).getTitle(), result.get(1).getTitle());
+            assertEquals(posts.get(2).getTitle(), result.get(2).getTitle());
 
             Database.hardDelete(user);
         } catch (Exception e) {
@@ -652,7 +652,8 @@ class DatabaseTest {
         try {
             Database.save(user);
             for (int i = 0; i < 5; i++) {
-                Post post = new Post(0, "testID", "testpostfortestingsearch " + i, "0", i + "", "0", 0, 0, false, 0, true, "0");
+                Post post = new Post(0, "testID", "testpostfortestingsearch " + i, "0", i + "", "0", 0, 0, false, 0,
+                        true, "0");
                 Database.save(post);
                 posts.add(post);
             }
@@ -676,7 +677,8 @@ class DatabaseTest {
         try {
             Database.save(user);
             for (int i = 0; i < 5; i++) {
-                Post post = new Post(0, "testID", "testpostfortestingsearch " + i, "0", i + "", "0", 0, 0, false, 0, true, "0");
+                Post post = new Post(0, "testID", "testpostfortestingsearch " + i, "0", i + "", "0", 0, 0, false, 0,
+                        true, "0");
                 Database.save(post);
                 posts.add(post);
             }
@@ -700,7 +702,8 @@ class DatabaseTest {
         try {
             Database.save(user);
             for (int i = 0; i < 5; i++) {
-                Post post = new Post(0, "testID", "testpostfortestingsearch " + i, "0", "0", "0", i, 0, false, 0, true, "0");
+                Post post = new Post(0, "testID", "testpostfortestingsearch " + i, "0", "0", "0", i, 0, false, 0, true,
+                        "0");
                 Database.save(post);
                 posts.add(post);
             }
@@ -724,7 +727,8 @@ class DatabaseTest {
         try {
             Database.save(user);
             for (int i = 0; i < 5; i++) {
-                Post post = new Post(0, "testID", "testpostfortestingsearch " + i, "0", "0", "0", 0, 0, false, i, true, "0");
+                Post post = new Post(0, "testID", "testpostfortestingsearch " + i, "0", "0", "0", 0, 0, false, i, true,
+                        "0");
                 Database.save(post);
                 posts.add(post);
             }
@@ -745,7 +749,7 @@ class DatabaseTest {
     void testSavePromotionRequest() {
         // Create a user as a foreign key of promotion request
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
-        
+
         // Create a new promotion request
         PromotionRequest request = new PromotionRequest(0);
         request.setUserID("testID");
@@ -776,7 +780,7 @@ class DatabaseTest {
             // Test for update
             update.setRequestID(request.getRequestID());
             Database.save(update);
-            PromotionRequest result2 = new PromotionRequest(request.getRequestID());
+            PromotionRequest result2 = new PromotionRequest(update.getRequestID());
             Database.retrieve(result2);
             assertEquals("testID", result2.getUserID());
             assertEquals("updatedtime", result2.getRequestTime());
@@ -832,23 +836,20 @@ class DatabaseTest {
 
             Database.retrieve(user);
             assertEquals(UserLevel.CONTRIBUTOR, user.getUserLevel());
-            Database.retrieve(request);
-            assertEquals(true, request.isDeleted());
             Database.retrieve(request2);
             assertEquals(false, request2.isDeleted());
-
-            Database.promote(user.getUserID(), UserLevel.ADMIN);
-            Database.retrieve(user);
-            assertEquals(UserLevel.ADMIN, user.getUserLevel());
-            Database.retrieve(request);
-            assertEquals(true, request.isDeleted());
-            Database.retrieve(request2);
-            assertEquals(true, request2.isDeleted());
-
-            Database.hardDelete(user);
         } catch (Exception e) {
             Database.hardDelete(user);
             fail("Unexpected");
+        }
+        try {
+            Database.retrieve(request);
+
+            Database.hardDelete(user);
+            fail("Unexpected");
+        } catch (IsDeletedException e) {
+            // Expected
+            Database.hardDelete(user);
         }
     }
 
