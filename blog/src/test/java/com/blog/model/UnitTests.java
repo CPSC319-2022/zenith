@@ -299,7 +299,7 @@ class UnitTests {
     }
 
     @Test
-    void userAsJSONObject() {
+    void userAsJSONObject() throws JSONException {
         JSONObject expectedJson = new JSONObject()
                 .put("userID", "99")
                 .put("username", "Admin")
@@ -330,7 +330,7 @@ class UnitTests {
     }
 
     @Test
-    void userAsJSONString() {
+    void userAsJSONString() throws JSONException {
         JSONObject expectedJson = new JSONObject()
                 .put("userID", "99")
                 .put("username", "Admin")
@@ -566,7 +566,7 @@ class UnitTests {
     }
 
     @Test
-    void commentAsJSONObject() {
+    void commentAsJSONObject() throws JSONException{
         JSONObject expectedJson = new JSONObject()
                 .put("postID", 10)
                 .put("commentID", 11);
@@ -592,7 +592,7 @@ class UnitTests {
     }
 
     @Test
-    void commentAsJSONString() {
+    void commentAsJSONString() throws JSONException {
         JSONObject expectedJson = new JSONObject()
                 .put("postID", 10)
                 .put("commentID", 11);
@@ -901,7 +901,7 @@ class UnitTests {
     }
 
     @Test
-    void postAsJSONObject() {
+    void postAsJSONObject() throws JSONException{
         JSONObject expectedJson = new JSONObject()
                 .put("postID", 10)
                 .put("title", "Happy New Year!")
@@ -932,7 +932,7 @@ class UnitTests {
     }
 
     @Test
-    void postAsJSONString() {
+    void postAsJSONString() throws JSONException{
         JSONObject expectedJson = new JSONObject()
                 .put("postID", 10)
                 .put("title", "Happy New Year!")
@@ -1114,7 +1114,7 @@ class UnitTests {
     }
 
     @Test
-    void testPromotionRequestAsJSONObjectOne() {
+    void testPromotionRequestAsJSONObjectOne() throws JSONException{
         promotionRequest = new PromotionRequest(
                 9,
                 "45",
@@ -1139,7 +1139,7 @@ class UnitTests {
     }
 
     @Test
-    void testPromotionRequestAsJSONObjectTwo() {
+    void testPromotionRequestAsJSONObjectTwo() throws JSONException{
         promotionRequest = new PromotionRequest(
                 9,
                 "45",
@@ -1166,7 +1166,7 @@ class UnitTests {
     }
 
     @Test
-    void testPromotionRequestAsJSONString() {
+    void testPromotionRequestAsJSONString() throws JSONException {
         promotionRequest = new PromotionRequest(
                 9,
                 "45",
