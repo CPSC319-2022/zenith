@@ -11,7 +11,7 @@ steps:
     id: Containerize & Test Backend
     waitFor:
       - '-'
-    timeout: 300s
+    timeout: 500s
 
   - name: gcr.io/cloud-builders/docker
     args:
@@ -28,7 +28,7 @@ steps:
     id: Containerize & Test Frontend
     waitFor:
       - '-'
-    timeout: 300s
+    timeout: 500s
 
   - name: gcr.io/cloud-builders/docker
     args:
