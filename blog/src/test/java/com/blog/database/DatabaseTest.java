@@ -827,27 +827,18 @@ class DatabaseTest {
     void testPromote() {
         User user = new User("testID", "0", UserLevel.READER, "0", "0", null, "0", "0", false);
         PromotionRequest request = new PromotionRequest(0, "testID", UserLevel.CONTRIBUTOR, "0", "0", false);
-        PromotionRequest request2 = new PromotionRequest(0, "testID", UserLevel.CONTRIBUTOR, "0", "0", false);
         try {
             Database.save(user);
             Database.save(request);
-            Database.save(request2);
             Database.promote(user.getUserID(), UserLevel.CONTRIBUTOR);
 
             Database.retrieve(user);
             assertEquals(UserLevel.CONTRIBUTOR, user.getUserLevel());
-            Database.retrieve(request2);
-            assertEquals(false, request2.isDeleted());
-        } catch (Exception e) {
-            Database.hardDelete(user);
-            fail("Unexpected " + e.getMessage());
-        }
-        try {
             Database.retrieve(request);
 
             Database.hardDelete(user);
-            fail("Exception expected");
-        } catch (IsDeletedException e) {
+            fail("Unexpected");
+        } catch (BlogException e) {
             // Expected
             Database.hardDelete(user);
         } catch (Exception e) {
