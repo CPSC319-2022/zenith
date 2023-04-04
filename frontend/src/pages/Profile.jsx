@@ -37,7 +37,7 @@ const Profile = () => {
   };
 
   const creationDate = user?.creationDate ? new Date(user.creationDate).toLocaleDateString() : '';
-  const lastLogin = user?.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : '';
+  //const lastLogin = user?.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : '';
 
   if (!user) {
     return <div>Please Log In to view Profile...</div>;
@@ -54,7 +54,7 @@ const Profile = () => {
         <h3 className="name">{user.username}</h3>
         <h5>{user.userLevel}</h5>
         <p>Account creation date: {creationDate}</p>
-        <p>Last login: {lastLogin}</p>
+        {/*<p>Last login: {lastLogin}</p>*/}
         {(!id && (user.userLevel === 'READER' || user.userLevel === 'CONTRIBUTOR')) && (
           showForm ? (
             <UpgradeRequestForm user={user} onClose={handleCloseForm} />
