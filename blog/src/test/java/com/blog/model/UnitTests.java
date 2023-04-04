@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 import java.time.Instant;
 
@@ -19,6 +20,7 @@ class UnitTests {
     private User guest;
     private Comment comment;
     private Post post;
+    PromotionRequest promotionRequest;
 
     @BeforeEach
     void beforeEach() {
@@ -57,6 +59,14 @@ class UnitTests {
                 0,
                 true,
                 "");
+        promotionRequest = new PromotionRequest(
+                9,
+                "45",
+                READER,
+                "2023-03-16T16:30:00.861336Z",
+                "I wanna be a part of the community!",
+                false,
+                "Guest");
     }
 
     /**
@@ -70,7 +80,7 @@ class UnitTests {
     @Test
     void guestConstructorTwo() {
         User user1 = new User("1");
-        assertEquals("", guest.getUserID());
+        assertEquals("1", user1.getUserID());
     }
 
 
@@ -98,8 +108,8 @@ class UnitTests {
 
     @Test
     void userCreateionDateSet() {
-         guest.setCreationDate("2023-03-15T06:00:00.861336Z");
-         assertEquals("2023-03-15T06:00:00.861336Z", guest.getCreationDate());
+        guest.setCreationDate("2023-03-15T06:00:00.861336Z");
+        assertEquals("2023-03-15T06:00:00.861336Z", guest.getCreationDate());
     }
 
     @Test
@@ -109,8 +119,8 @@ class UnitTests {
 
     @Test
     void userLastLoginSet() {
-         guest.setLastLogin("2023-03-15T06:00:00.861336Z");
-         assertEquals("2023-03-15T06:00:00.861336Z", guest.getCreationDate());
+        guest.setLastLogin("2023-03-15T06:00:00.861336Z");
+        assertEquals("2023-03-15T06:00:00.861336Z", guest.getCreationDate());
     }
 
     @Test
@@ -170,7 +180,7 @@ class UnitTests {
     }
 
     @Test
-    void userAsJSONObject(){
+    void userAsJSONObject() {
         JSONObject expectedJson = new JSONObject()
                 .put("userID", "99")
                 .put("username", "Admin")
@@ -201,7 +211,7 @@ class UnitTests {
     }
 
     @Test
-    void userAsJSONString(){
+    void userAsJSONString() {
         JSONObject expectedJson = new JSONObject()
                 .put("userID", "99")
                 .put("username", "Admin")
@@ -269,7 +279,6 @@ class UnitTests {
     }
 
 
-
     @Test
     void commentPostIDCheck() {
         assertEquals(0, comment.getPostID());
@@ -292,15 +301,16 @@ class UnitTests {
         try {
             comment.validateContent("");
             fail("a blog exception should be thrown.");
-        } catch (BlogException be){
+        } catch (BlogException be) {
             // success
         }
     }
+
     @Test
     void commentValidCommentTwo() {
         try {
             comment.validateContent("Happy New Year!");
-        } catch (BlogException be){
+        } catch (BlogException be) {
             fail("a blog exception should not be thrown.");
         }
     }
@@ -339,6 +349,7 @@ class UnitTests {
     void commentGetUpvotes() {
         assertEquals(0, comment.getUpvotes());
     }
+
     @Test
     void commentUpvote() {
         assertEquals(0, comment.getUpvotes());
@@ -424,7 +435,7 @@ class UnitTests {
     }
 
     @Test
-    void commentAsJSONObject(){
+    void commentAsJSONObject() {
         JSONObject expectedJson = new JSONObject()
                 .put("postID", 10)
                 .put("commentID", 11);
@@ -450,7 +461,7 @@ class UnitTests {
     }
 
     @Test
-    void commentAsJSONString(){
+    void commentAsJSONString() {
         JSONObject expectedJson = new JSONObject()
                 .put("postID", 10)
                 .put("commentID", 11);
@@ -557,7 +568,7 @@ class UnitTests {
         try {
             post.validateTitle("");
             fail("a blog exception should be thrown.");
-        } catch (BlogException be){
+        } catch (BlogException be) {
             // success
         }
     }
@@ -566,7 +577,7 @@ class UnitTests {
     void postValidTitleTwo() {
         try {
             post.validateTitle("Happy New Year");
-        } catch (BlogException be){
+        } catch (BlogException be) {
             fail("a blog exception should not be thrown.");
         }
     }
@@ -576,7 +587,7 @@ class UnitTests {
         try {
             post.validateContent("");
             fail("a blog exception should be thrown.");
-        } catch (BlogException be){
+        } catch (BlogException be) {
             // success
         }
     }
@@ -585,7 +596,7 @@ class UnitTests {
     void postValidContentTwo() {
         try {
             post.validateContent("Happy New Year");
-        } catch (BlogException be){
+        } catch (BlogException be) {
             fail("a blog exception should not be thrown.");
         }
     }
@@ -627,6 +638,7 @@ class UnitTests {
     void postGetUpvotes() {
         assertEquals(0, post.getUpvotes());
     }
+
     @Test
     void postUpvote() {
         assertEquals(0, post.getUpvotes());
@@ -716,7 +728,7 @@ class UnitTests {
     }
 
     @Test
-    void postAsJSONObject(){
+    void postAsJSONObject() {
         JSONObject expectedJson = new JSONObject()
                 .put("postID", 10)
                 .put("title", "Happy New Year!")
@@ -745,4 +757,207 @@ class UnitTests {
             fail("JSON type is not the same.");
         }
     }
+
+    /**
+     * Tests for PromotionRequest
+     */
+    @Test
+    void testPromotionRequestConstructorOne() {
+        PromotionRequest promotionRequest1 = new PromotionRequest(1);
+        assertEquals(promotionRequest1.getRequestID(), 1);
+    }
+
+    @Test
+    void testPromotionRequestConstructorTwo() {
+        PromotionRequest promotionRequest1 = new PromotionRequest(
+                9,
+                "45",
+                READER,
+                "2023-03-16T16:30:00.861336Z",
+                "I wanna be a part of the community!",
+                false,
+                "Guest");
+        assertEquals(promotionRequest1.getRequestID(), 9);
+        assertEquals(promotionRequest1.getUserID(), "45");
+        assertEquals(promotionRequest1.getTarget(), READER);
+        assertEquals(promotionRequest1.getRequestTime(), "2023-03-16T16:30:00.861336Z");
+        assertEquals(promotionRequest1.getReason(), "I wanna be a part of the community!");
+    }
+
+    @Test
+    void testPromotionRequestConstructorThree() {
+        assertEquals(promotionRequest.getRequestID(), 9);
+        assertEquals(promotionRequest.getUserID(), "45");
+        assertEquals(promotionRequest.getTarget(), READER);
+        assertEquals(promotionRequest.getRequestTime(), "2023-03-16T16:30:00.861336Z");
+        assertEquals(promotionRequest.getReason(), "I wanna be a part of the community!");
+        assertEquals(promotionRequest.getUsername(), "Guest");
+    }
+
+    @Test
+    void testPromotionRequestGetRequestID() {
+        assertEquals(promotionRequest.getRequestID(), 9);
+    }
+
+    @Test
+    void testPromotionRequestSetRequestID() {
+        assertEquals(promotionRequest.getRequestID(), 9);
+        promotionRequest.setRequestID(8);
+        assertEquals(promotionRequest.getRequestID(), 8);
+    }
+
+    @Test
+    void testPromotionRequestGetUserID() {
+        assertEquals(promotionRequest.getUserID(), "45");
+    }
+
+    @Test
+    void testPromotionRequestSetUserID() {
+        assertEquals(promotionRequest.getUserID(), "45");
+        promotionRequest.setUserID("55");
+        assertEquals(promotionRequest.getUserID(), "55");
+    }
+
+    @Test
+    void testPromotionRequestGetTarget() {
+        assertEquals(promotionRequest.getTarget(), READER);
+    }
+
+    @Test
+    void testPromotionRequestSetTarget() {
+        assertEquals(promotionRequest.getTarget(), READER);
+        promotionRequest.setTarget(ADMIN);
+        assertEquals(promotionRequest.getTarget(), ADMIN);
+    }
+
+    @Test
+    void testPromotionRequestGetRequestTime() {
+        assertEquals(promotionRequest.getRequestTime(), "2023-03-16T16:30:00.861336Z");
+    }
+
+    @Test
+    void testPromotionRequestSetRequestTime() {
+        assertEquals(promotionRequest.getRequestTime(), "2023-03-16T16:30:00.861336Z");
+        promotionRequest.setRequestTime("2023-03-18T10:32:00.861336Z");
+        assertEquals(promotionRequest.getRequestTime(), "2023-03-18T10:32:00.861336Z");
+    }
+
+    @Test
+    void testPromotionRequestGetReason() {
+        assertEquals(promotionRequest.getReason(), "I wanna be a part of the community!");
+    }
+
+    @Test
+    void testPromotionRequestSetReason() {
+        assertEquals(promotionRequest.getReason(), "I wanna be a part of the community!");
+        promotionRequest.setReason(";)");
+        assertEquals(promotionRequest.getReason(), ";)");
+    }
+
+    @Test
+    void testPromotionRequestGetUserName() {
+        assertEquals(promotionRequest.getUsername(), "Guest");
+    }
+
+    @Test
+    void testPromotionRequestSetUserName() {
+        assertEquals(promotionRequest.getUsername(), "Guest");
+        promotionRequest.setUsername("Admin");
+        assertEquals(promotionRequest.getUsername(), "Admin");
+    }
+
+    @Test
+    void testPromotionRequestAsJSONObjectOne() {
+        promotionRequest = new PromotionRequest(
+                9,
+                "45",
+                READER,
+                "2023-03-16T16:30:00.861336Z",
+                "I wanna be a part of the community!",
+                false);
+        JSONObject expectedJson = new JSONObject()
+                .put("requestID", 9)
+                .put("userID", "45")
+                .put("target", READER)
+                .put("requestTime", "2023-03-16T16:30:00.861336Z")
+                .put("reason", "I wanna be a part of the community!");
+
+        JSONObject actualJson = promotionRequest.asJSONObject();
+
+        try {
+            JSONAssert.assertEquals(expectedJson, actualJson, false);
+        } catch (JSONException je) {
+            fail("JSON type is not the same.");
+        }
+    }
+
+    @Test
+    void testPromotionRequestAsJSONObjectTwo() {
+        promotionRequest = new PromotionRequest(
+                9,
+                "45",
+                READER,
+                "2023-03-16T16:30:00.861336Z",
+                "I wanna be a part of the community!",
+                false,
+                "Guest");
+        JSONObject expectedJson = new JSONObject()
+                .put("requestID", 9)
+                .put("userID", "45")
+                .put("target", READER)
+                .put("requestTime", "2023-03-16T16:30:00.861336Z")
+                .put("reason", "I wanna be a part of the community!")
+                .put("username", "Guest");
+
+        JSONObject actualJson = promotionRequest.asJSONObject();
+
+        try {
+            JSONAssert.assertEquals(expectedJson, actualJson, false);
+        } catch (JSONException je) {
+            fail("JSON type is not the same.");
+        }
+    }
+
+    @Test
+    void testPromotionRequestAsJSONString() {
+        promotionRequest = new PromotionRequest(
+                9,
+                "45",
+                READER,
+                "2023-03-16T16:30:00.861336Z",
+                "I wanna be a part of the community!",
+                false,
+                "Guest");
+        JSONObject expectedOutput = new JSONObject()
+                .put("requestID", 9)
+                .put("userID", "45")
+                .put("target", READER)
+                .put("requestTime", "2023-03-16T16:30:00.861336Z")
+                .put("reason", "I wanna be a part of the community!")
+                .put("username", "Guest");
+
+        String expectedResult = expectedOutput.toString();
+        String actualResult = promotionRequest.asJSONString();
+
+        try {
+            JSONAssert.assertEquals(expectedResult, actualResult, false);
+        } catch (JSONException je) {
+            fail("JSON type is not the same.");
+        }
+    }
+
+    // TODO
+    @Test
+    void testPromotionRequestRetrieve() {
+        PromotionRequest result = null;
+        try {
+            result = promotionRequest.retrieve(9);
+            assertEquals(result.getUsername(), "Guest");
+        } catch (BlogException e) {
+            assertEquals(result.getUsername(), "Guest");
+            throw new RuntimeException(e);
+        }
+
+    }
+
 }
