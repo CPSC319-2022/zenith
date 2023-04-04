@@ -491,6 +491,31 @@ class DatabaseTest {
     }
 
     @Test
+    void testRetrieveByUser() {
+        User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
+        ArrayList<Post> posts = new ArrayList<Post>();
+        try {
+            Database.save(user);
+            for (int i = 0; i < 5; i++) {
+                Post post = new Post(0, "testID", "title " + i, "0", "0" + i, "0", 0, 0, false, 0, true, "0");
+                Database.save(post);
+                posts.add(post);
+            }
+            ArrayList<Post> result = new ArrayList<Post>();
+            Database.retrieveByUser(result, "testID", 3);
+            assertEquals(3, result.size());
+            assertEquals(posts.get(2).getTitle(), result.get(0).getTitle());
+            assertEquals(posts.get(1).getTitle(), result.get(1).getTitle());
+            assertEquals(posts.get(0).getTitle(), result.get(2).getTitle());
+
+            Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
     void testUpvoteDownvotePost() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
         Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
