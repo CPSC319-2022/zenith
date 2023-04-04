@@ -397,6 +397,11 @@ class UnitTests {
         assertEquals(false, comment1.isDeleted());
     }
 
+    @Test
+    void testCommentIsAuthoredBy() {
+        User user1 = new User("2");
+        assertTrue(comment.isAuthoredBy(user1));
+    }
 
     @Test
     void commentPostIDCheck() {
@@ -637,8 +642,50 @@ class UnitTests {
     }
 
     @Test
+    void postConstructorThree() {
+        post = new Post(
+                0,
+                "1",
+                "",
+                "",
+                "2023-03-16T16:30:00.861336Z",
+                "2023-03-16T16:30:00.861336Z",
+                0,
+                0,
+                false,
+                0,
+                true,
+                "google.ca");
+        assertEquals(0, post.getPostID());
+        assertEquals("1", post.getAuthorID());
+        assertEquals("", post.getTitle());
+        assertEquals("", post.getContent());
+        assertEquals("2023-03-16T16:30:00.861336Z", post.getCreationDate());
+        assertEquals("2023-03-16T16:30:00.861336Z", post.getLastModified());
+        assertEquals(0, post.getUpvotes());
+        assertEquals(0, post.getDownvotes());
+        assertEquals(false, post.isDeleted());
+        assertEquals(0, post.getViews());
+        assertEquals(true, post.isAllowComments());
+        assertEquals("google.ca", post.getThumbnailURL());
+    }
+
+    @Test
+    void testPostIsAuthoredBy() {
+        User user1 = new User("1");
+        assertTrue(post.isAuthoredBy(user1));
+    }
+
+    @Test
     void postPostIDCheck() {
         assertEquals(0, post.getPostID());
+    }
+
+    @Test
+    void postPostIDSet() {
+        assertEquals(0, post.getPostID());
+        post.setPostID(2);
+        assertEquals(2, post.getPostID());
     }
 
     @Test
@@ -884,6 +931,80 @@ class UnitTests {
         }
     }
 
+    @Test
+    void postAsJSONString() {
+        JSONObject expectedJson = new JSONObject()
+                .put("postID", 10)
+                .put("title", "Happy New Year!")
+                .put("views", 201)
+                .put("allowComments", true);
+
+        Post post1 = new Post(
+                10,
+                "11",
+                "Happy New Year!",
+                "I wish everyone is having fun in Christmas and wish all of us a happy new year!",
+                "2022-01-01T00:00:00.861336Z",
+                "2022-01-02T06:00:00.861336Z",
+                18,
+                1,
+                true,
+                201,
+                true,
+                ""
+        );
+
+        String expectedResult = expectedJson.toString();
+        String actualResult = post1.asJSONString();
+
+        try {
+            JSONAssert.assertEquals(expectedResult, actualResult, false);
+        } catch (JSONException je) {
+            fail("JSON type is not the same.");
+        }
+    }
+
+    @Test
+    void testGetThumbnailURL(){
+        post = new Post(
+                0,
+                "1",
+                "",
+                "",
+                "2023-03-16T16:30:00.861336Z",
+                "2023-03-16T16:30:00.861336Z",
+                0,
+                0,
+                false,
+                0,
+                true,
+                "google.ca");
+        assertEquals("google.ca", post.getThumbnailURL());
+    }
+
+    @Test
+    void testSetThumbnailURL(){
+        post = new Post(
+                0,
+                "1",
+                "",
+                "",
+                "2023-03-16T16:30:00.861336Z",
+                "2023-03-16T16:30:00.861336Z",
+                0,
+                0,
+                false,
+                0,
+                true,
+                "google.ca");
+        assertEquals("google.ca", post.getThumbnailURL());
+        post.setThumbnailURL("");
+        assertEquals("https://storage.googleapis.com/zenith-blog-thumbnailurl/default_thumbnail.png", post.getThumbnailURL());
+        post.setThumbnailURL("abc.ca");
+        assertEquals("abc.ca", post.getThumbnailURL());
+    }
+
+
     /**
      * Tests for PromotionRequest
      */
@@ -1071,30 +1192,5 @@ class UnitTests {
             fail("JSON type is not the same.");
         }
     }
-
-    // TODO
-    @Test
-    void testPromotionRequestRetrieve() {
-        PromotionRequest result = null;
-        try {
-            result = promotionRequest.retrieve(9);
-            assertEquals(result.getUsername(), "Guest");
-        } catch (BlogException e) {
-            assertEquals(result.getUsername(), "Guest");
-            throw new RuntimeException(e);
-        }
-    }
-
-//    @Test
-//    void testPostRetrieve() {
-//        Post result = null;
-//        try {
-//            result = promotionRequest.retrieve(9);
-//            assertEquals(result.getUsername(), "Guest");
-//        } catch (BlogException e) {
-//            assertEquals(result.getUsername(), "Guest");
-//            throw new RuntimeException(e);
-//        }
-//    }
 
 }
