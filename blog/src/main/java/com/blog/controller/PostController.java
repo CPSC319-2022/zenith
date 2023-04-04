@@ -329,6 +329,46 @@ public class PostController {
     }
 
     /**
+     * Returns a JSON string containing the requested posts.
+     *
+     * @param userID The author of the posts to search for.
+     * @param count   The number of requested posts.
+     * @return The JSON string representing the posts using the following syntax:
+     * [
+     * {                            //
+     * "postID":        int,        //
+     * "authorID":      String,     //
+     * "title":         String,     //
+     * "content":       String,     //
+     * "creationDate":  String,     //
+     * "lastModified":  String,     // <--- This represents one post!
+     * "upvotes":       int,        //
+     * "downvotes":     int,        //
+     * "isDeleted":     boolean,    //
+     * "views":         int,        //
+     * "allowComments": boolean     //
+     * },                           //
+     * ...  // The JSON array will contain at most <code>count</code> number of post representations.
+     * ]
+     */
+    private static String byUserPosts(String userID, int count) {
+        // Create array to store retrieved posts
+        ArrayList<Post> posts = new ArrayList<>();
+
+        // Retrieve the posts
+        Database.retrieveByUser(posts, userID, count);
+
+        // Build the JSON response
+        JSONArray response = new JSONArray();
+        for (Post post : posts) {
+            response.put(post.asJSONObject());
+        }
+
+        // Return the JSON response
+        return response.toString();
+    }
+
+    /**
      * Returns the highest postID currently in the database.
      *
      * @return The highest postID.
@@ -485,6 +525,17 @@ public class PostController {
             return ResponseEntity.ok(searchPosts(pattern, start, count, sortBy));
         } catch (BlogException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/byUser")
+    @ResponseBody
+    public ResponseEntity<String> byUser(@RequestParam("userID") String userID,
+                                         @RequestParam(value = "count", defaultValue = "10") int count) {
+        try {
+            return ResponseEntity.ok(byUserPosts(userID, count));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -211,7 +211,6 @@ public class Database {
      * @param posts
      * @param postIDStart
      * @param count
-     * @throws DoesNotExistException
      */
     public static void retrieve(ArrayList<Post> posts, int postIDStart, int count, boolean reverse) {
         try {
@@ -654,6 +653,7 @@ public class Database {
         try {
             String sql = "SELECT views FROM Post WHERE post_ID = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, postID);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
                 throw new DoesNotExistException("Post does not exist.");
@@ -1046,7 +1046,6 @@ public class Database {
         } catch (SQLException e) {
             throw new Error(e.getMessage());
         } catch (IsDeletedException e) {
-            // not sure how to deal with this
             throw new DoesNotExistException(userID);
         }
     }
@@ -1156,44 +1155,46 @@ public class Database {
         }
     }
 
-    public static void hardDelete(Post post) {
+    /**
+     * Retrieves the most recent <code>count</code> displayable posts by the given user.
+     * @param posts
+     * @param userID
+     * @param count
+     */
+    public static void retrieveByUser(ArrayList<Post> posts, String userID, int count) {
         try {
             String sql = """
-                    DELETE FROM Post
-                    WHERE post_ID = ?
-                        """;
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, post.getPostID());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new Error(e.getMessage());
-        }
-    }
+                    SELECT *
+                    FROM   Post
+                    WHERE  user_ID = ? AND is_deleted = false
+                    ORDER BY creation_date DESC
+                    LIMIT ?
+                    """;
 
-    public static void hardDelete(Comment comment) {
-        try {
-            String sql = """
-                    DELETE FROM Comment
-                    WHERE post_ID = ? AND comment_number = ?
-                        """;
+            // Set up the prepared statement
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, comment.getPostID());
-            ps.setInt(2, comment.getCommentID());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new Error(e.getMessage());
-        }
-    }
-    
-    public static void hardDelete(PromotionRequest request) {
-        try {
-            String sql = """
-                    DELETE FROM Promotion_Request
-                    WHERE request_ID = ?
-                        """;
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, request.getRequestID());
-            ps.executeUpdate();
+            ps.setString(1, userID);
+            ps.setInt(2, count);
+
+            // Execute the query
+            ResultSet rs = ps.executeQuery();
+
+            // Fill posts with the results
+            while (rs.next()) {
+                posts.add(new Post(
+                        rs.getInt("post_ID"),
+                        rs.getString("user_ID"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getString("creation_date"),
+                        rs.getString("last_modified"),
+                        rs.getInt("upvotes"),
+                        rs.getInt("downvotes"),
+                        rs.getBoolean("is_deleted"),
+                        rs.getInt("views"),
+                        rs.getBoolean("allow_comments"),
+                        rs.getString("thumbnail_url")));
+            }
         } catch (SQLException e) {
             throw new Error(e.getMessage());
         }
