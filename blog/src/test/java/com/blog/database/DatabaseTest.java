@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DatabaseTest {
@@ -306,10 +306,11 @@ class DatabaseTest {
     void testDeleteComment() {
         User user = new User("testID", "0", UserLevel.CONTRIBUTOR, "0", "0", null, "0", "0", false);
         Post post = new Post(0, "testID", "0", "0", "0", "0", 0, 0, false, 0, true, "0");
-        Comment comment = new Comment(post.getPostID(), 0, "testID", "0", "0", "0", 0, 0, false);
+        Comment comment = new Comment(0, 0, "testID", "0", "0", "0", 0, 0, false);
         try {
             Database.save(user);
             Database.save(post);
+            comment.setPostID(post.getPostID());
             Database.save(comment);
             Database.delete(comment);
             Comment result = new Comment(comment.getPostID(), comment.getCommentID());
@@ -631,7 +632,7 @@ class DatabaseTest {
                 posts.add(post);
             }
             ArrayList<Post> result = new ArrayList<Post>();
-            Database.search(result, "testpostfortestingsearch", 1, 2, "new");
+            Database.search(result, "testpostfortestingsearch", 2, 2, "new");
             assertEquals(2, result.size());
             assertEquals(posts.get(3).getTitle(), result.get(0).getTitle());
             assertEquals(posts.get(2).getTitle(), result.get(1).getTitle());
@@ -655,7 +656,7 @@ class DatabaseTest {
                 posts.add(post);
             }
             ArrayList<Post> result = new ArrayList<Post>();
-            Database.search(result, "testpostfortestingsearch", 1, 2, "old");
+            Database.search(result, "testpostfortestingsearch", 2, 2, "old");
             assertEquals(2, result.size());
             assertEquals(posts.get(1).getTitle(), result.get(0).getTitle());
             assertEquals(posts.get(2).getTitle(), result.get(1).getTitle());
@@ -679,7 +680,7 @@ class DatabaseTest {
                 posts.add(post);
             }
             ArrayList<Post> result = new ArrayList<Post>();
-            Database.search(result, "testpostfortestingsearch", 1, 2, "top");
+            Database.search(result, "testpostfortestingsearch", 2, 2, "top");
             assertEquals(2, result.size());
             assertEquals(posts.get(3).getTitle(), result.get(0).getTitle());
             assertEquals(posts.get(2).getTitle(), result.get(1).getTitle());
@@ -703,7 +704,7 @@ class DatabaseTest {
                 posts.add(post);
             }
             ArrayList<Post> result = new ArrayList<Post>();
-            Database.search(result, "testpostfortestingsearch", 1, 2, "top");
+            Database.search(result, "testpostfortestingsearch", 2, 2, "view");
             assertEquals(2, result.size());
             assertEquals(posts.get(3).getTitle(), result.get(0).getTitle());
             assertEquals(posts.get(2).getTitle(), result.get(1).getTitle());
@@ -730,11 +731,11 @@ class DatabaseTest {
 
         // Create another promotion request for update
         PromotionRequest update = new PromotionRequest(0);
-        request.setUserID("testID");
-        request.setRequestTime("updatedtime");
-        request.setTarget(UserLevel.ADMIN);
-        request.setReason("updatedtimereason");
-        request.setDeleted(false);
+        update.setUserID("testID");
+        update.setRequestTime("updatedtime");
+        update.setTarget(UserLevel.ADMIN);
+        update.setReason("updatedtimereason");
+        update.setDeleted(false);
         try {
             Database.save(user);
             // Test for insert
@@ -839,6 +840,7 @@ class DatabaseTest {
             Database.save(user);
             Database.save(request);
             Database.delete(request);
+            Database.retrieve(request);
 
             Database.hardDelete(user);
             fail("Unexpected");

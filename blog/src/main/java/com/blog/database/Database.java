@@ -654,6 +654,7 @@ public class Database {
         try {
             String sql = "SELECT views FROM Post WHERE post_ID = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, postID);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
                 throw new DoesNotExistException("Post does not exist.");
