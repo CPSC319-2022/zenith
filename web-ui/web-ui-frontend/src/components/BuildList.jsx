@@ -1,35 +1,36 @@
-// src/BuildList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const BuildList = () => {
   const [builds, setBuilds] = useState([]);
 
-//   useEffect(() => {
-//     const fetchBuilds = async () => {
-//       try {
-//         const response = await axios.get('/api/builds');
-//         setBuilds(response.data);
-//       } catch (error) {
-//         console.error('Error fetching build data:', error);
-//       }
-//     };
-
-//     fetchBuilds();
-//   }, []);
-
   useEffect(() => {
     const getTester = async () => {
-        try {
-            const response = await axios.get('https://web-ui-backend-t27edy3enq-uc.a.run.app/api/');
-            console.log(response.data);
-        } catch (error) {
-            console.error('Error fetching tester data:', error);
-        }
+      try {
+        const response = await axios.get('https://web-ui-backend-t27edy3enq-uc.a.run.app/api/');
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching tester data:', error);
+      }
     };
     getTester();
-    }, []);
 
+    // WebSocket connection
+    const ws = new WebSocket('wss://web-ui-backend-t27edy3enq-uc.a.run.app');
+    ws.onopen = (event) => {
+      console.log('WebSocket connection opened:', event);
+    };
+    ws.onmessage = (event) => {
+      console.log('WebSocket message received:', event.data);
+      const buildData = JSON.parse(event.data);
+      setBuilds((prevBuilds) => [buildData, ...prevBuilds]);
+    };
+
+    // Clean up WebSocket connection when component is unmounted
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   return (
     <ul>
