@@ -5,12 +5,14 @@ import com.blog.exception.DoesNotExistException;
 import com.blog.exception.IsDeletedException;
 import com.blog.model.*;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@SpringBootTest
 class DatabaseTest {
     @Test
     void testSaveUser() {
