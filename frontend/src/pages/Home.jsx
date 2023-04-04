@@ -23,7 +23,7 @@ const Home = () => {
   const error = useSelector((state) => state.posts.error);
 
   const [prevCall, setPrevCall] = useState(false);
-  const [indexRef, setIndexRef] = useState(new Set([0]));
+  const [indexRef, setIndexRef] = useState(new Set([]));
 
   useEffect(() => {
     const fetchCurrentPosts = () => {
@@ -35,19 +35,18 @@ const Home = () => {
             postIDStart = 10000;
             increment = -1;
           }
+          setIndexRef(indexRef.add(postIDStart));
           dispatch(fetchPosts({ postIDStart, count: postsPerPage, reverse: isReverse }))
             .then((postsRes) => {
               setIndexRef(indexRef.add(postsRes.payload[postsRes.payload.length-1].postID+increment));
             }); 
         } else {
-          if (prevCall) {
-            dispatch(fetchPosts({ postIDStart: [...indexRef][currentPage-2], count: postsPerPage, reverse: isReverse }));
-            setPrevCall(false);
-            //delete future indexes from indexRef?
-          }
-
           if (isReverse) {
             increment = -1;
+          }
+          if (prevCall) {
+            setPrevCall(false);
+            //delete front indexs?
           }
           dispatch(fetchPosts({ postIDStart: [...indexRef][currentPage-1], count: postsPerPage, reverse: isReverse }))
             .then((postsRes) => {    

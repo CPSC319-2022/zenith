@@ -299,6 +299,24 @@ const SinglePost = () => {
                         <AiFillDislike /> {post.downvotes}
                       </Button>
                     )}
+                    {!isAuthenticated && (
+                      <Button
+                        variant="outline-primary"
+                        className='post-actions'
+                        disabled
+                      >
+                        <AiFillLike/> {post.upvotes}
+                      </Button>
+                    )}
+                    {!isAuthenticated && (
+                      <Button
+                        variant="outline-danger"
+                        className='post-actions'
+                        disabled
+                      >
+                        <AiFillDislike /> {post.downvotes}
+                      </Button>
+                    )}
                     {isAuthenticated && (
                       editingPost ? (
                         <>
