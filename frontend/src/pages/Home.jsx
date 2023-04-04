@@ -46,7 +46,7 @@ const Home = () => {
           }
           if (prevCall) {
             setPrevCall(false);
-            //delete front indexs?
+            //delete front index?
           }
           dispatch(fetchPosts({ postIDStart: [...indexRef][currentPage-1], count: postsPerPage, reverse: isReverse }))
             .then((postsRes) => {    
