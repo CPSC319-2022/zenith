@@ -13,8 +13,7 @@ import java.time.Instant;
 
 import static com.blog.model.UserLevel.*;
 import static com.blog.model.UserStatus.OFFLINE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UnitTests {
     private User guest;
@@ -96,6 +95,14 @@ class UnitTests {
     }
 
     @Test
+    void userSetUserID() {
+        assertEquals("", guest.getUserID());
+        guest.setUserID("Admin");
+        assertEquals("Admin", guest.getUserID());
+    }
+
+
+    @Test
     void guestToOtherLevels() {
         assertEquals(UserLevel.VIEWER, guest.getUserLevel());
         guest.setUserLevel(READER);
@@ -145,6 +152,98 @@ class UnitTests {
     }
 
     @Test
+    void testUserLevelBelow() {
+        assertFalse(guest.below(VIEWER));
+        assertTrue(guest.below(READER));
+        assertTrue(guest.below(CONTRIBUTOR));
+        assertTrue(guest.below(ADMIN));
+    }
+
+    @Test
+    void testUserLevelAbove() {
+        User admin = new User(
+                "",
+                "Guest Username",
+                ADMIN,
+                "2023-03-15T06:00:00.861336Z",
+                "2023-03-16T06:00:00.861336Z",
+                UserStatus.ONLINE,
+                "url to profile picture",
+                "Guest bio",
+                false
+        );
+        assertTrue(admin.above(VIEWER));
+        assertTrue(admin.above(READER));
+        assertTrue(admin.above(CONTRIBUTOR));
+        assertFalse(admin.above(ADMIN));
+    }
+
+    @Test
+    void testUserSetDeleted() {
+        assertFalse(guest.isDeleted());
+        guest.setDeleted(true);
+        assertTrue(guest.isDeleted());
+    }
+
+    @Test
+    void testUserIsUserTrue() {
+        assertTrue(guest.is(guest));
+    }
+
+    @Test
+    void testUserIsUserFalse() {
+        User admin = new User(
+                "98",
+                "Admin",
+                ADMIN,
+                "2023-03-15T06:00:00.861336Z",
+                "2023-03-16T06:00:00.861336Z",
+                UserStatus.ONLINE,
+                "url to profile picture",
+                "Guest bio",
+                false
+        );
+        assertFalse(guest.is(admin));
+    }
+
+    @Test
+    void testUserIsUserLevelTrue() {
+        assertTrue(guest.is(VIEWER));
+    }
+
+    @Test
+    void testUserIsUserLevelFalse() {
+        assertFalse(guest.is(ADMIN));
+    }
+
+    @Test
+    void testUserBelow() {
+        assertFalse(guest.below(VIEWER));
+        assertTrue(guest.below(READER));
+        assertTrue(guest.below(CONTRIBUTOR));
+        assertTrue(guest.below(ADMIN));
+    }
+
+    @Test
+    void testUserAbove() {
+        User admin = new User(
+                "",
+                "Guest Username",
+                ADMIN,
+                "2023-03-15T06:00:00.861336Z",
+                "2023-03-16T06:00:00.861336Z",
+                UserStatus.ONLINE,
+                "url to profile picture",
+                "Guest bio",
+                false
+        );
+        assertTrue(admin.above(VIEWER));
+        assertTrue(admin.above(READER));
+        assertTrue(admin.above(CONTRIBUTOR));
+        assertFalse(admin.above(ADMIN));
+    }
+
+    @Test
     void userGetProfilePicture() {
         assertEquals("url to profile picture", guest.getProfilePicture());
     }
@@ -177,6 +276,26 @@ class UnitTests {
     void userSetBioTry() {
         guest.setBio("a1ns8");
         assertEquals("a1ns8", guest.getBio());
+    }
+
+    @Test
+    void userValidateBio() {
+        try {
+            guest.validateBio("");
+            fail();
+        } catch (BlogException e){
+            // success;
+        }
+    }
+
+    @Test
+    void userValidateUsername() {
+        try {
+            guest.validateUsername("");
+            fail();
+        } catch (BlogException e){
+            // success;
+        }
     }
 
     @Test
@@ -282,6 +401,13 @@ class UnitTests {
     @Test
     void commentPostIDCheck() {
         assertEquals(0, comment.getPostID());
+    }
+
+    @Test
+    void commentPostIDSet() {
+        assertEquals(0, comment.getPostID());
+        comment.setPostID(1);
+        assertEquals(1, comment.getPostID());
     }
 
     @Test
@@ -957,7 +1083,18 @@ class UnitTests {
             assertEquals(result.getUsername(), "Guest");
             throw new RuntimeException(e);
         }
-
     }
+
+//    @Test
+//    void testPostRetrieve() {
+//        Post result = null;
+//        try {
+//            result = promotionRequest.retrieve(9);
+//            assertEquals(result.getUsername(), "Guest");
+//        } catch (BlogException e) {
+//            assertEquals(result.getUsername(), "Guest");
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 }
