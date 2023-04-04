@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 50vh;
     padding: 1rem;
   }
   
@@ -15,7 +15,62 @@
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   }
+
+  .no-posts {
+    text-align: center;
+    margin: 2rem;
+  }
+
+  .posts {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    padding: 1rem;
+  }
+
+  .posts-header {
+    text-align: center;
+  }
+
+  .posts-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .post {
+    width: 100%;
+  }
+
+  .post-row {
+    align-items: center;
+  }
   
+  .thumbnail-col {
+    width: 30%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .post-thumbnail {
+    display: inline-block;
+    width: 550px;
+    padding: 1rem;
+  }
+
+  .body-col {
+    width: 70%;
+  }
+
+  .post-body {
+    width: 100%;
+  }
+
   .email {
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -47,3 +102,25 @@
     font-family: 'Roboto', sans-serif;
   }
   
+  .header {
+    text-align: center;
+  }
+
+  .post-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: inline-block;
+}
+.post-content {
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Change this value to the number of lines you want */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .post-area {
+    justify-content: center;
+}

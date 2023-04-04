@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPromotionRequests, promoteUser, deleteRequest } from '../redux/slices/adminSlice';
 import { Table, Button, Spinner, Alert } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const AdminPage = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const AdminPage = () => {
           <tr>
             <th>Request ID</th>
             <th>User ID</th>
+            <th>Username</th>
             <th>Target</th>
             <th>Request Time</th>
             <th>Reason</th>
@@ -52,6 +54,11 @@ const AdminPage = () => {
             <tr key={row.requestID}>
               <td>{row.requestID}</td>
               <td>{row.userID}</td>
+              <td>
+                <Link to={`/profile/${row.userID}`}>
+                  {row.username}
+                </Link>
+              </td>
               <td>{row.target}</td>
               <td>{new Date(row.requestTime).toLocaleString()}</td>
               <td>{row.reason}</td>

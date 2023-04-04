@@ -32,6 +32,19 @@ export const getPost = async ({postID}) => {
     return response.data;
 };
 
+export const getPostsByUser = async ({ userID, count }) => {
+  try {
+    const response = await axios.get(`${apiUrl}/post/byUser`, {
+      params: {
+        userID,
+        count,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
 
 export const createPost = async ({ title, content, allowComments, image }) => {
   const token = getAccessToken();

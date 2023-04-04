@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Row, Col, Button } from 'react-bootstrap';
+import { Form, Row, Col, Button, FormLabel } from 'react-bootstrap';
 import { promoteUser } from '../api';
 import '../styles/UpgradeRequestForm.css';
 
@@ -9,6 +9,7 @@ const UpgradeRequestForm = ({ user, onClose }) => {
   const [promotionReason, setPromotionReason] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [renderForm, setRenderForm] = useState(true);
 
   const resetMessages = () => {
     setErrorMessage('');
@@ -19,9 +20,10 @@ const UpgradeRequestForm = ({ user, onClose }) => {
     e.preventDefault();
     try {
       await promoteUser({
-        target: promotionLevel,
+        target: (user.userLevel === 'CONTRIBUTOR' ? 'Admin' : promotionLevel),
         reason: promotionReason,
       });
+      setRenderForm(false);
       setSuccessMessage('Promotion request sent successfully.');
     } catch (error) {
       console.error('Error requesting promotion:', error);
@@ -31,19 +33,24 @@ const UpgradeRequestForm = ({ user, onClose }) => {
 
   return (
     <>
+    {renderForm &&
       <Form onSubmit={handlePromotionRequest} className="upgrade-request-form">
         <Row className="mb-3">
           <Form.Group as={Col} controlId="promotionLevel">
             <Form.Label>Promotion Level</Form.Label>
-            <Form.Select
+            {user.userLevel === 'READER' &&
+              <Form.Select
               value={promotionLevel}
               onChange={(e) => setPromotionLevel(e.target.value)}
-            >
-              {user.userLevel === 'READER' } 
+              >
                 <option>Contributor</option>
-               <option>Admin</option>
-            
-            </Form.Select>
+                <option>Admin</option>  
+              </Form.Select>
+            }
+            {user.userLevel === 'CONTRIBUTOR' &&
+              <FormLabel>Admin</FormLabel>
+            }
+
           </Form.Group>
         </Row>
         <Row className="mb-3">
@@ -58,9 +65,10 @@ const UpgradeRequestForm = ({ user, onClose }) => {
           </Form.Group>
         </Row>
         <Button variant="primary" type="submit">
-          Submit Request
+          Submit/Update Request
         </Button>
       </Form>
+    }
       {errorMessage && (
         <div className="alert alert-danger">
           {errorMessage}

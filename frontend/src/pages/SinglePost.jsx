@@ -258,6 +258,7 @@ const SinglePost = () => {
                       </Link>
                     </div>
                     <h1>{post.title}</h1>
+                    <p>Published: {new Date(post.creationDate).toLocaleDateString()}</p>
                     <div className="post-thumbnail">
                       <img src={post.thumbnailURL} alt="Post Thumbnail" referrerpolicy="no-referrer"/>
                     </div>
@@ -276,7 +277,6 @@ const SinglePost = () => {
                     )}
                   </>
                 )}
-
                 {/* Add upvote, downvote, edit, and delete buttons for the post */}
                 {post && (
                   <div className="post-votes">
@@ -295,6 +295,24 @@ const SinglePost = () => {
                         variant="outline-danger"
                         className='post-actions'
                         onClick={() => handleDownvotePost(post.postID)}
+                      >
+                        <AiFillDislike /> {post.downvotes}
+                      </Button>
+                    )}
+                    {!isAuthenticated && (
+                      <Button
+                        variant="outline-primary"
+                        className='post-actions'
+                        disabled
+                      >
+                        <AiFillLike/> {post.upvotes}
+                      </Button>
+                    )}
+                    {!isAuthenticated && (
+                      <Button
+                        variant="outline-danger"
+                        className='post-actions'
+                        disabled
                       >
                         <AiFillDislike /> {post.downvotes}
                       </Button>

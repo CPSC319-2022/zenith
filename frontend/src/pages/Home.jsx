@@ -23,7 +23,7 @@ const Home = () => {
   const error = useSelector((state) => state.posts.error);
 
   const [prevCall, setPrevCall] = useState(false);
-  const [indexRef, setIndexRef] = useState(new Set([0]));
+  const [indexRef, setIndexRef] = useState(new Set([]));
 
   useEffect(() => {
     const fetchCurrentPosts = () => {
@@ -35,19 +35,18 @@ const Home = () => {
             postIDStart = 10000;
             increment = -1;
           }
+          setIndexRef(indexRef.add(postIDStart));
           dispatch(fetchPosts({ postIDStart, count: postsPerPage, reverse: isReverse }))
             .then((postsRes) => {
               setIndexRef(indexRef.add(postsRes.payload[postsRes.payload.length-1].postID+increment));
             }); 
         } else {
-          if (prevCall) {
-            dispatch(fetchPosts({ postIDStart: [...indexRef][currentPage-2], count: postsPerPage, reverse: isReverse }));
-            setPrevCall(false);
-            //delete future indexes from indexRef?
-          }
-
           if (isReverse) {
             increment = -1;
+          }
+          if (prevCall) {
+            setPrevCall(false);
+            //delete front indexs?
           }
           dispatch(fetchPosts({ postIDStart: [...indexRef][currentPage-1], count: postsPerPage, reverse: isReverse }))
             .then((postsRes) => {    
@@ -148,14 +147,14 @@ const Home = () => {
       <div className="container post-area">
         <div className="row">
           {posts.map((post) => (
-            <div className="col-md-4 col-sm-6 mb-4 post-cards " key={post.postID}>
+            <div className="col-md-4 col-sm-6 mb-4 post-cards" key={post.postID}>
               <Card style={{ width: '18rem' }}>
-                <Card.Img variant="top" src={post.thumbnailURL} />
+                <Link className="link post-title" to={`/single-post/${post.postID}`}>
+                  <Card.Img variant="top" src={post.thumbnailURL} />
+                </Link>
                 <Card.Body>
                   <Card.Title>
-                    <Link className="link post-title" to={`/single-post/${post.postID}`}>
-                      {post.title}
-                    </Link>
+                    {post.title}
                   </Card.Title>
                   <Card.Text  className='post-content'>
                     <div dangerouslySetInnerHTML={{ __html: post.content}}></div>
