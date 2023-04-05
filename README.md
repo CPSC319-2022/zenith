@@ -32,6 +32,7 @@ Muhammad Saad Shahid |  Param Tully | Ruchir Malik | Shawn Zhu | Andrew Liu | An
 ## 3. Start the Cypress GUI (from root)
 ```cd frontend```
 ```npx cypress open```
+Both e2e and component tests are included
 
 # Deployed Website
 ## https://zenithblog.ca
