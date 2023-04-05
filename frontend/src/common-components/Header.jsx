@@ -27,6 +27,7 @@ const Header = () => {
 
     return (
         <Navbar className='nav-bar' bg="light" expand="lg">
+            
             <Container>
                 <Navbar.Brand href="/">
                     <img
