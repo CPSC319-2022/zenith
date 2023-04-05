@@ -27,8 +27,7 @@ const Header = () => {
 
     return (
         <Navbar className='nav-bar' bg="light" expand="lg">
-            {console.log("user nav: ", user)}
-            {console.log("userLevle nav: ", user, user?.userLevel)}
+            
             <Container>
                 <Navbar.Brand href="/">
                     <img
@@ -54,7 +53,6 @@ const Header = () => {
                             </>
                         )}
 
-                        <Nav.Link href='/wip'>WIP</Nav.Link>
                         {isAuthenticated ? (
                             <Nav.Link href='/logout'>LOGOUT</Nav.Link>
                         ) : (

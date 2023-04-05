@@ -259,7 +259,7 @@ const SinglePost = () => {
                     </div>
                     <h1>{post.title}</h1>
                     <p>Published: {new Date(post.creationDate).toLocaleDateString()}</p>
-                    <div className="post-thumbnail">
+                    <div className="post-thumbnail-pic">
                       <img src={post.thumbnailURL} alt="Post Thumbnail" referrerpolicy="no-referrer"/>
                     </div>
                     {editingPost ? (
@@ -271,7 +271,7 @@ const SinglePost = () => {
                       />
                     ) : (
                       <div
-                        className="post-content"
+                        className="post-content-complete"
                         dangerouslySetInnerHTML={{ __html: post.content }}
                       ></div>
                     )}
