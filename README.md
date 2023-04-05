@@ -2,10 +2,12 @@
 
 For this project, the team will be building a CI/CD pipeline primarily in the Google Cloud Platform.
 
-This project will involve each team building a simple blog application (supports authentication, commenting, posting new blogs), and running that blog platform through an automated testing ahttps://www.students.cs.ubc.cand deployment process. The blog project itself should be containerized (i.e. run in Docker). The goal is for teams to get exposure to continuous improvement (CI) and continuous deployment (CD) processes in modern software teams. The blog solution is to help showcase the core CI/CD and integration aspects of your solution. Given the purpose and the simplicity of the blog solution, teams are not allowed to use prebuild public blog libraries solutions for the development of the blog.
+This project will involve each team building a simple blog application (supports authentication, commenting, posting new blogs), and running that blog platform through an automated testing at https://zenithblog.ca and deployment process. The blog project itself should be containerized (i.e. run in Docker). The goal is for teams to get exposure to continuous improvement (CI) and continuous deployment (CD) processes in modern software teams. The blog solution is to help showcase the core CI/CD and integration aspects of your solution. Given the purpose and the simplicity of the blog solution, teams are not allowed to use prebuild public blog libraries solutions for the development of the blog.
 
 The team members for the project are:
 Muhammad Saad Shahid |  Param Tully | Ruchir Malik | Shawn Zhu | Andrew Liu | Anusha Saleem | Cheryl Yu | Eric Wong | Anthony Baek
+
+### The Documents Folder in our repo contains all our documents for this project(TOR, Test Plan, Requirements etc) including the Installation and User Guides
 
 ## Project Goals
 ### MVP
@@ -32,6 +34,7 @@ Muhammad Saad Shahid |  Param Tully | Ruchir Malik | Shawn Zhu | Andrew Liu | An
 ## 3. Start the Cypress GUI (from root)
 ```cd frontend```
 ```npx cypress open```
+Both e2e and component tests are included
 
 # Deployed Website
 ## https://zenithblog.ca
