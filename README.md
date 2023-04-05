@@ -7,6 +7,8 @@ This project will involve each team building a simple blog application (supports
 The team members for the project are:
 Muhammad Saad Shahid |  Param Tully | Ruchir Malik | Shawn Zhu | Andrew Liu | Anusha Saleem | Cheryl Yu | Eric Wong | Anthony Baek
 
+### The Documents Folder in our repo contains all our documents for this project(TOR, Test Plan, Requirements etc) including the Installation and User Guides
+
 ## Project Goals
 ### MVP
 - :white_check_mark:The blog platform should support the ability for readers and contributors to login. The account login creation should be a simple form       for any users and once a user creates a post, that user will be classified as a contributor.
