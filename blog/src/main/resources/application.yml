@@ -15,6 +15,16 @@ spring:
           google:
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: sub
+  datasource:
+    url: jdbc:mysql://google/blog?cloudSqlInstance=zenith-blog-pipe:us-central1:blog-database
+    username: blog-connect
+    password: N|/R(,XD4%fa;ck~
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+    properties:
+      socketFactory: com.google.cloud.sql.mysql.SocketFactory
+      cloudSqlInstance: zenith-blog-pipe:us-central1:blog-database
 google:
   cloud:
     storage:
