@@ -13,9 +13,10 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [highestIndex, setHighestIndex] = useState(null);
   const [isReverse, setIsReverse] = useState(true);
+  const [carouselContentElements, setCarouselContentElements] = useState([]);
   const postsPerPage = 9;
   const { resetStatus } = postSliceActions;
-  
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
@@ -38,8 +39,8 @@ const Home = () => {
           setIndexRef(indexRef.add(postIDStart));
           dispatch(fetchPosts({ postIDStart, count: postsPerPage, reverse: isReverse }))
             .then((postsRes) => {
-              setIndexRef(indexRef.add(postsRes.payload[postsRes.payload.length-1].postID+increment));
-            }); 
+              setIndexRef(indexRef.add(postsRes.payload[postsRes.payload.length - 1].postID + increment));
+            });
         } else {
           if (isReverse) {
             increment = -1;
@@ -48,9 +49,9 @@ const Home = () => {
             setPrevCall(false);
             //delete front indexs?
           }
-          dispatch(fetchPosts({ postIDStart: [...indexRef][currentPage-1], count: postsPerPage, reverse: isReverse }))
-            .then((postsRes) => {    
-              setIndexRef(indexRef.add(postsRes.payload[postsRes.payload.length-1].postID+increment));
+          dispatch(fetchPosts({ postIDStart: [...indexRef][currentPage - 1], count: postsPerPage, reverse: isReverse }))
+            .then((postsRes) => {
+              setIndexRef(indexRef.add(postsRes.payload[postsRes.payload.length - 1].postID + increment));
             });
         }
       }
@@ -64,12 +65,12 @@ const Home = () => {
         console.error('Failed to fetch the highest post index:', error.message);
       }
     };
-  
+
     fetchCurrentPosts();
     if (highestIndex === null) {
       fetchHighestIndex();
     }
-  
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, status, dispatch, highestIndex, isReverse]);
 
@@ -109,7 +110,7 @@ const Home = () => {
 
 
     <div className="home">
-     
+
       {posts.length > 0 && (
         <Carousel>
           {posts.slice(0, 3).map((post) => (
@@ -125,24 +126,26 @@ const Home = () => {
                 </Link>
                 <div
                   className="carousel-content carousel-post-content-home"
-                  dangerouslySetInnerHTML={{ __html: post.content}}
+                  dangerouslySetInnerHTML={{
+                    __html: post.content.substring(0, 70) + '...'
+                  }}
                 ></div>
               </Carousel.Caption>
             </Carousel.Item>
           ))}
         </Carousel>
       )}
-        
-            <div className="switch-container">
-              <Form.Check
-                type="switch"
-                id="custom-switch"
-                label={isReverse ? "Newest to Oldest" : "Oldest to Newest" }
-                checked={!isReverse}
-                onChange={handleReverse}
-              />
-            </div>
-          
+
+      <div className="switch-container">
+        <Form.Check
+          type="switch"
+          id="custom-switch"
+          label={isReverse ? "Newest to Oldest" : "Oldest to Newest"}
+          checked={!isReverse}
+          onChange={handleReverse}
+        />
+      </div>
+
 
       <div className="container post-area">
         <div className="row">
@@ -156,8 +159,8 @@ const Home = () => {
                   <Card.Title>
                     {post.title}
                   </Card.Title>
-                  <Card.Text  className='post-content'>
-                    <div dangerouslySetInnerHTML={{ __html: post.content}}></div>
+                  <Card.Text className='post-content'>
+                    <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
                   </Card.Text>
                   <Button className="read-button" onClick={() => handleClick({ post })}>
                     Read More
@@ -174,7 +177,7 @@ const Home = () => {
         <div className="row">
           <div className="col-12 d-flex flex-column align-items-center gap-2">
             {posts.map((post) => {
-              if ((post.postID == (posts.at(postsPerPage-1) ? posts.at(postsPerPage-1).postID : -1)) && post.postID != highestIndex) {
+              if ((post.postID == (posts.at(postsPerPage - 1) ? posts.at(postsPerPage - 1).postID : -1)) && post.postID != highestIndex) {
                 return (
                   <Button className="next-button btn-lg mb-2" style={{ width: '200px' }} onClick={nextPage}>
                     Next
