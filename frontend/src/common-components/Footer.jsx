@@ -6,7 +6,7 @@ const Footer = () => {
         <footer className="footer">
             <span>
             
-                Team Zenith CPSC 319 version 1.0.0
+                Thanks from the Zenith Team!
 
             </span>
         </footer>
