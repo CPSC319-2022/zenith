@@ -67,8 +67,8 @@ jobs:
     timeout-minutes: 3
     if: always()
     needs: 
-      - deploy
-      - cleanUp
+      - testBackend
+      - testFrontEnd
     runs-on: ubuntu-latest
     steps:
       - name: Sends report of commit to project slack channel
