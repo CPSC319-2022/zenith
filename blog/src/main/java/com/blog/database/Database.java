@@ -1199,4 +1199,34 @@ public class Database {
             throw new Error(e.getMessage());
         }
     }
+
+    /**
+     * Checks whether the given user has a pending promotion request to the given target.
+     *
+     * @param userID
+     * @param target
+     * @return boolean
+     */
+    public static boolean hasRequest(String userID, UserLevel target) {
+        try {
+            String sql = """
+                    SELECT 1
+                    FROM   Promotion_Request
+                    WHERE  userID = ? AND target_level = ? AND is_deleted = false
+                    """;
+
+            // Set up the prepared statement
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, userID);
+            ps.setInt(2, target.ordinal());
+
+            // Execute the query
+            ResultSet rs = ps.executeQuery();
+
+            // Return whether we got a result
+            return rs.next();
+        } catch (SQLException e) {
+            throw new Error(e.getMessage());
+        }
+    }
 }
