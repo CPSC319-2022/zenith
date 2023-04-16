@@ -1212,7 +1212,7 @@ public class Database {
             String sql = """
                     SELECT 1
                     FROM   Promotion_Request
-                    WHERE  userID = ? AND target_level = ? AND is_deleted = false
+                    WHERE  user_ID = ? AND target_level = ? AND is_deleted = false
                     """;
 
             // Set up the prepared statement

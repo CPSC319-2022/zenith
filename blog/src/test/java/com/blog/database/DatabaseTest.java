@@ -824,6 +824,26 @@ class DatabaseTest {
     }
 
     @Test
+    void testHasRequest() {
+        User user = new User("testID", "0", UserLevel.READER, "0", "0", null, "0", "0", false);
+        PromotionRequest request = new PromotionRequest(0, "testID", UserLevel.CONTRIBUTOR, "0", "0", false);
+        try {
+            Database.save(user);
+            Database.save(request);
+
+            Boolean result = Database.hasRequest(user, UserLevel.CONTRIBUTOR);
+            Boolean result2 = Database.hasRequest(user, UserLevel.ADMIN);
+            assertEquals(true, result);
+            assertEquals(false, result2);
+
+            Database.hardDelete(user);
+        } catch (Exception e) {
+            Database.hardDelete(user);
+            fail("Unexpected " + e.getMessage());
+        }
+    }
+
+    @Test
     void testPromote() {
         User user = new User("testID", "0", UserLevel.READER, "0", "0", null, "0", "0", false);
         PromotionRequest request = new PromotionRequest(0, "testID", UserLevel.CONTRIBUTOR, "0", "0", false);
