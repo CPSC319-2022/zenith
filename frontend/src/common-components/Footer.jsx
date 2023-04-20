@@ -6,7 +6,7 @@ const Footer = () => {
         <footer className="footer">
             <span>
             
-                Thanks from the Zenith Team!!!
+                Thanks from the team Zenith!
 
             </span>
         </footer>
