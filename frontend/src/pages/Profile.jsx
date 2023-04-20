@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsAuthenticated } from '../redux/slices/auth';
-import { userSliceActions, fetchCurrentUserByToken } from '../redux/slices/userSlice';
+import { userSliceActions, fetchCurrentUserByToken, fetchCurrentUserPromotionRequest } from '../redux/slices/userSlice';
 import "../styles/Profile.css";
 import avatar from "../images/avatar.jpg";
 import UpgradeRequestForm from '../components/UpgradeRequestForm';
-import { Button } from 'react-bootstrap'; 
+import { Button } from 'react-bootstrap';
+import { hasRequestedPromotion } from '../api';
+
+
 
 const Profile = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
+
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   useEffect(() => {
@@ -29,6 +33,9 @@ const Profile = () => {
       });
     }
   }, [id, dispatch, isAuthenticated]);
+
+
+
 
   const [showForm, setShowForm] = useState(false);
 
@@ -55,9 +62,13 @@ const Profile = () => {
         <h5>{user.userLevel}</h5>
         <p>Account creation date: {creationDate}</p>
         {/*<p>Last login: {lastLogin}</p>*/}
+     
         {(!id && (user.userLevel === 'READER' || user.userLevel === 'CONTRIBUTOR')) && (
           showForm ? (
-            <UpgradeRequestForm user={user} onClose={handleCloseForm} />
+
+            <UpgradeRequestForm
+              user={user}
+              onClose={handleCloseForm} />
           ) : (
             <Button variant="primary" onClick={() => setShowForm(true)}>Request Level Upgrade</Button>
           )

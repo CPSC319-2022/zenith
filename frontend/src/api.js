@@ -424,6 +424,28 @@ export const promoteUser = async ({ target, reason }) => {
   }
 };
 
+
+
+export const hasRequestedPromotion = async ({ target }) => {
+  const token = getAccessToken();
+  try {
+    const response = await axios.get(`${apiUrl}/user/hasRequest`, {
+      params: { target },
+      headers: {
+        Authorization: `Bearer ${token.credential}`,
+        'X-Oauth-Provider': 'google',
+        'X-Oauth-Credential': JSON.stringify(token.credential),
+      },
+    });
+    console.log("hasRequest: ", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+
+
 //admin related API functions
 export const getPromotionRequests = async (requestIDStart, count, reverse) => {
   const token = getAccessToken();

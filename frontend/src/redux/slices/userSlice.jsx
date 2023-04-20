@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getUsers, getUser, editUser as editUserAPI } from '../../api';
+import { getUsers, getUser, hasRequestedPromotion, editUser as editUserAPI } from '../../api';
 
 
 export const fetchUsers = createAsyncThunk(
@@ -49,6 +49,18 @@ export const editUser = createAsyncThunk(
         }
     }
 );
+export const fetchCurrentUserPromotionRequest = createAsyncThunk(
+    'users/fetchCurrentUserPromotionRequest',
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await hasRequestedPromotion();
+            return response;
+        } catch (err) {
+            return rejectWithValue(err.message);
+        }
+    }
+);
+
 
 const initialState = {
     users: [],
