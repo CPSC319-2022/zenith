@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Locale;
+
 import static com.blog.model.PromotionRequest.NEW_PROMOTION_REQUEST_ID;
 import static com.blog.model.UserLevel.ADMIN;
 
@@ -211,6 +213,31 @@ public class UserController {
         return request.asJSONString();
     }
 
+    /**
+     * Checks whether the given user has a request for promotion to the given target level.
+     *
+     * @param accessToken The user.
+     * @param input       The target level.
+     * @return Whether a pending promotion request exists.
+     * @throws BlogException
+     */
+    private static String getHasRequest(String accessToken, String input) throws BlogException {
+        UserLevel target;
+
+        // Set target
+        try {
+            target = UserLevel.valueOf(input.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new BlogException("Requested target user level is invalid. \n" + e.getMessage());
+        }
+
+        // Retrieve the user
+        User user = User.retrieveByAccessToken(accessToken);
+
+        // Return the result
+        return String.valueOf(Database.hasRequest(user.getUserID(), target));
+    }
+
     @GetMapping("/get")
     @ResponseBody
     public ResponseEntity<String> get(@RequestHeader(value = "Authorization", required = false) String accessToken,
@@ -298,6 +325,25 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/hasRequest")
+    @ResponseBody
+    public ResponseEntity<String> hasRequest(@RequestHeader("Authorization") String accessToken,
+                                             @RequestParam("target") String target) {
+        try {
+            return ResponseEntity.ok(getHasRequest(accessToken, target));
+        } catch (IsDeletedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (LoginFailedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (InitializationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (DoesNotExistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BlogException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
-
-
