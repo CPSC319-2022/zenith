@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Instant;
 
@@ -16,7 +15,6 @@ import static com.blog.model.UserLevel.*;
 import static com.blog.model.UserStatus.OFFLINE;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class UnitTests {
     private User guest;
     private Comment comment;
